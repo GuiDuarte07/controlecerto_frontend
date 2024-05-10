@@ -10,13 +10,17 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 export class ModalComponent {
   @Input() id: string = '';
   @Input() header: string = '';
+  @Input() disabledButton: boolean = false;
 
-  @Output() setEvent = new EventEmitter<void>();
+  @Output() onSubmit = new EventEmitter<void>();
+  @Output() onClose = new EventEmitter<void>();
 
-  // Método chamado quando o botão "I Accept" é clicado
-  set() {
-    this.setEvent.emit();
+  submit() {
+    this.onSubmit.emit();
   }
 
+  close() {
+    this.onClose.emit();
+  }
   ngOnInit() {}
 }

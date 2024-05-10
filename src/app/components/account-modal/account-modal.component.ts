@@ -7,6 +7,7 @@ import {
   FormBuilder,
   FormControl,
   FormGroup,
+  ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
 
@@ -24,7 +25,7 @@ interface IAccountForm {
 @Component({
   selector: 'app-account-modal',
   standalone: true,
-  imports: [ModalComponent, CommonModule],
+  imports: [ModalComponent, CommonModule, ReactiveFormsModule],
   templateUrl: './account-modal.component.html',
   styleUrl: './account-modal.component.scss',
 })
@@ -53,20 +54,26 @@ export class AccountModalComponent implements OnInit {
   ];
 
   ngOnInit(): void {
-    this.setRandomDefaultColor();
-
     this.accountForm = new FormGroup({
       balance: new FormControl<number>(0, {
         nonNullable: true,
-        validators: [Validators.required],
+        validators: [Validators.required, Validators.min(0)],
       }),
       description: new FormControl<string>('', {
         nonNullable: true,
-        validators: [Validators.required],
+        validators: [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(100),
+        ],
       }),
       bank: new FormControl<string>('', {
         nonNullable: true,
-        validators: [Validators.required],
+        validators: [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(100),
+        ],
       }),
       accountType: new FormControl<AccountTypeEnum>(AccountTypeEnum.CHECKING, {
         nonNullable: true,
@@ -77,14 +84,20 @@ export class AccountModalComponent implements OnInit {
         validators: [Validators.required],
       }),
     });
+
+    this.setRandomDefaultColor();
   }
 
   createNewAccount() {
     let accountToCreate = new CreateAccountRequest(
       this.accountForm.getRawValue()
     );
-
+    this.accountForm.reset();
     console.log(accountToCreate);
+  }
+
+  cleanForm() {
+    this.accountForm.reset();
   }
 
   setDefaultColor(color: Color) {
@@ -94,6 +107,8 @@ export class AccountModalComponent implements OnInit {
         c.selected = true;
       }
     });
+
+    this.accountForm.patchValue({ color: color.code });
   }
 
   resetSelectedColor() {
@@ -107,6 +122,8 @@ export class AccountModalComponent implements OnInit {
         at.selected = true;
       }
     });
+
+    this.accountForm.patchValue({ accountType: acctype.code });
   }
 
   setRandomDefaultColor() {
@@ -115,5 +132,8 @@ export class AccountModalComponent implements OnInit {
     );
 
     this.defaultColors[indiceAleatorio].selected = true;
+    this.accountForm.patchValue({
+      color: this.defaultColors[indiceAleatorio].code,
+    });
   }
 }

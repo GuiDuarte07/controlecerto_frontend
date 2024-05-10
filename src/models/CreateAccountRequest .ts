@@ -2,22 +2,22 @@ import { AccountTypeEnum } from '../enums/AccountTypeEnum ';
 
 export class CreateAccountRequest {
   balance: number;
-  description?: string;
+  description: string;
   bank: string;
   accountType: AccountTypeEnum;
-  color?: string;
+  color: string;
 
-  constructor(
-    balance: number,
-    description: string | undefined,
-    bank: string,
-    accountType: AccountTypeEnum,
-    color: string | undefined
-  ) {
-    this.balance = balance;
-    this.description = description;
-    this.bank = bank;
-    this.accountType = accountType;
-    this.color = color;
+  constructor(data: {
+    balance: number;
+    description: string;
+    bank: string;
+    accountType: AccountTypeEnum;
+    color: string;
+  }) {
+    this.balance = data.balance;
+    this.description = data.description;
+    this.bank = data.bank;
+    this.accountType = data.accountType;
+    this.color = data.color;
   }
 }

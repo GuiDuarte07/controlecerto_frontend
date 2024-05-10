@@ -17,4 +17,6 @@ export class ModalComponent {
   set() {
     this.setEvent.emit();
   }
+
+  ngOnInit() {}
 }

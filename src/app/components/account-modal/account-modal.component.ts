@@ -1,12 +1,119 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ModalComponent } from '../modal/modal.component';
+import { AccountTypeEnum } from '../../../enums/AccountTypeEnum ';
+import { CommonModule } from '@angular/common';
+import { CreateAccountRequest } from '../../../models/CreateAccountRequest ';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
+
+type Color = { code: string; selected: boolean };
+type AccountType = { name: string; code: AccountTypeEnum; selected: boolean };
+
+interface IAccountForm {
+  balance: FormControl<number>;
+  description: FormControl<string>;
+  bank: FormControl<string>;
+  accountType: FormControl<AccountTypeEnum>;
+  color: FormControl<string>;
+}
 
 @Component({
   selector: 'app-account-modal',
   standalone: true,
-  imports: [],
+  imports: [ModalComponent, CommonModule],
   templateUrl: './account-modal.component.html',
-  styleUrl: './account-modal.component.scss'
+  styleUrl: './account-modal.component.scss',
 })
-export class AccountModalComponent {
+export class AccountModalComponent implements OnInit {
+  accountForm!: FormGroup<IAccountForm>;
 
+  defaultColors: Color[] = [
+    { code: '#FF5733', selected: false },
+    { code: '#FFD700', selected: false },
+    { code: '#32CD32', selected: false },
+    { code: '#4682B4', selected: false },
+    { code: '#9400D3', selected: false },
+    { code: '#FF1493', selected: false },
+    { code: '#00CED1', selected: false },
+    { code: '#8A2BE2', selected: false },
+    { code: '#F08080', selected: false },
+    { code: '#7FFFD4', selected: false },
+  ];
+
+  accountTypes: AccountType[] = [
+    { name: 'Corrente', code: AccountTypeEnum.CHECKING, selected: true },
+    { name: 'Poupança', code: AccountTypeEnum.SAVINGS, selected: false },
+    { name: 'Crédito', code: AccountTypeEnum.CREDIT, selected: false },
+    { name: 'Investimento', code: AccountTypeEnum.INVESTMENT, selected: false },
+    { name: 'Outro', code: AccountTypeEnum.OTHER, selected: false },
+  ];
+
+  ngOnInit(): void {
+    this.setRandomDefaultColor();
+
+    this.accountForm = new FormGroup({
+      balance: new FormControl<number>(0, {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+      description: new FormControl<string>('', {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+      bank: new FormControl<string>('', {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+      accountType: new FormControl<AccountTypeEnum>(AccountTypeEnum.CHECKING, {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+      color: new FormControl<string>('', {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+    });
+  }
+
+  createNewAccount() {
+    let accountToCreate = new CreateAccountRequest(
+      this.accountForm.getRawValue()
+    );
+
+    console.log(accountToCreate);
+  }
+
+  setDefaultColor(color: Color) {
+    this.defaultColors.forEach((c) => {
+      c.selected = false;
+      if (c.code === color.code) {
+        c.selected = true;
+      }
+    });
+  }
+
+  resetSelectedColor() {
+    this.defaultColors.forEach((c) => (c.selected = true));
+  }
+
+  setAccountType(acctype: AccountType) {
+    this.accountTypes.forEach((at) => {
+      at.selected = false;
+      if (at.code === acctype.code) {
+        at.selected = true;
+      }
+    });
+  }
+
+  setRandomDefaultColor() {
+    const indiceAleatorio = Math.floor(
+      Math.random() * this.defaultColors.length
+    );
+
+    this.defaultColors[indiceAleatorio].selected = true;
+  }
 }

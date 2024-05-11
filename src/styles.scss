@@ -4,78 +4,6 @@
 @tailwind components;
 @tailwind utilities;
 
-.roboto-thin {
-  font-family: "Roboto", sans-serif;
-  font-weight: 100;
-  font-style: normal;
-}
-
-.roboto-light {
-  font-family: "Roboto", sans-serif;
-  font-weight: 300;
-  font-style: normal;
-}
-
-.roboto-regular {
-  font-family: "Roboto", sans-serif;
-  font-weight: 400;
-  font-style: normal;
-}
-
-.roboto-medium {
-  font-family: "Roboto", sans-serif;
-  font-weight: 500;
-  font-style: normal;
-}
-
-.roboto-bold {
-  font-family: "Roboto", sans-serif;
-  font-weight: 700;
-  font-style: normal;
-}
-
-.roboto-black {
-  font-family: "Roboto", sans-serif;
-  font-weight: 900;
-  font-style: normal;
-}
-
-.roboto-thin-italic {
-  font-family: "Roboto", sans-serif;
-  font-weight: 100;
-  font-style: italic;
-}
-
-.roboto-light-italic {
-  font-family: "Roboto", sans-serif;
-  font-weight: 300;
-  font-style: italic;
-}
-
-.roboto-regular-italic {
-  font-family: "Roboto", sans-serif;
-  font-weight: 400;
-  font-style: italic;
-}
-
-.roboto-medium-italic {
-  font-family: "Roboto", sans-serif;
-  font-weight: 500;
-  font-style: italic;
-}
-
-.roboto-bold-italic {
-  font-family: "Roboto", sans-serif;
-  font-weight: 700;
-  font-style: italic;
-}
-
-.roboto-black-italic {
-  font-family: "Roboto", sans-serif;
-  font-weight: 900;
-  font-style: italic;
-}
-
 * {
   font-family: "Roboto", sans-serif;
   padding: 0;
@@ -87,26 +15,34 @@ body {
   background-color: rgb(228, 232, 236);
 }
 
-button,
-input,
-optgroup,
-select,
-input:focus,
-textarea,html input[type="button"],
-input[type="reset"],
-input[type="submit"],button[disabled],
-html input[disabled],button::-moz-focus-inner,
-input::-moz-focus-inner, input[type="checkbox"],
-input[type="radio"], input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button, input[type="search"], input[type="search"]::-webkit-search-cancel-button,
-input[type="search"]::-webkit-search-decoration {
-  border:none;
-  background-image:none;
-  background-color:transparent;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-  padding: 0;
-  border: none;
-  outline: none;
+.label {
+  @apply block mb-2 text-sm font-medium text-gray-900 dark:text-white;
+}
+
+.input {
+  @apply bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500
+}
+
+.btn-xs {
+  @apply px-3 py-2 text-xs font-medium text-center text-white rounded-lg focus:outline-none;
+}
+
+.btn-sm {
+  @apply px-3 py-2 text-sm font-medium text-center text-white rounded-lg focus:outline-none;
+}
+
+.btn {
+  @apply px-5 py-2.5 text-sm font-medium text-center text-white rounded-lg focus:outline-none;
+}
+
+.btn-lg {
+  @apply px-6 py-3 text-base font-medium text-center text-white rounded-lg focus:outline-none;
+}
+
+.btn-xl {
+  @apply px-5 py-3.5 text-base font-medium text-center text-white rounded-lg focus:outline-none;
+}
+
+.btn-principal {
+  @apply bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800;
 }

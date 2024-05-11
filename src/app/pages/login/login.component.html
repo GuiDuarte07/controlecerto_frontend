@@ -1,0 +1,55 @@
+<div class="w-screen h-screen flex">
+  <!-- IMG Section -->
+  <section class="w-1/2 overflow-hidden h-full">
+    <img src="/assets/FinanTechImageIA.jpeg" alt="" />
+  </section>
+
+  <section class="w-1/2">
+    <form (submit)="login()" [formGroup]="loginForm" class="m-20 p-4 bg-slate-50 rounded-lg shadow-xl">
+      <h2 class="text-center font-medium text-xl text-gray-700">
+        Bem-vindo ao Programa FinanTech
+      </h2>
+      <p class="text-center text-base font-medium text-gray-700 mb-6 mt-4 block dark:text-white">
+        Faça seu login para usar o programa.
+      </p>
+
+      <div>
+        <div class="mb-6">
+          <label
+            for="email"
+            class="label text-6xl"
+            >E-mail</label
+          >
+          <input
+            formControlName="email"
+            type="text"
+            id="email"
+            class="input"
+            placeholder="user@email.com"
+            required
+          />
+        </div>
+
+        <div class="mb-6">
+          <label
+            for="password"
+            class="label"
+            >Senha</label
+          >
+          <input
+            formControlName="password"
+            type="password"
+            id="password"
+            class="input"
+            placeholder="•••••••••"
+            required
+          />
+        </div>
+      </div>
+
+      <div class="w-full">
+        <button type="submit" [disabled]="!loginForm.valid" class="btn btn-principal">Acessar</button>
+      </div>
+    </form>
+  </section>
+</div>

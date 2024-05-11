@@ -1,27 +1,27 @@
 import { ExpenseTypeEnum } from '../enums/ExpenseTypeEnum';
 
-type ExpenseType = {
+interface IExpenseType {
   amount: number;
   expenseType: ExpenseTypeEnum;
   purchaseDate: Date;
   destination: string;
-  description: string | undefined;
+  description: string;
   accountId: number;
   categoryId: number;
   justForRecord: boolean;
-};
+}
 
 export class CreateExpense {
   amount: number;
   expenseType: ExpenseTypeEnum;
   purchaseDate: Date;
   destination: string;
-  description?: string;
+  description: string;
   accountId: number;
   categoryId: number;
   justForRecord: boolean;
 
-  constructor(data: ExpenseType) {
+  constructor(data: IExpenseType) {
     this.amount = data.amount;
     this.expenseType = data.expenseType;
     this.purchaseDate = data.purchaseDate;

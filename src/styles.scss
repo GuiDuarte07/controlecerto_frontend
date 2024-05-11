@@ -24,25 +24,25 @@ body {
 }
 
 .btn-xs {
-  @apply px-3 py-2 text-xs font-medium text-center text-white rounded-lg focus:outline-none;
+  @apply px-3 py-2 text-xs font-medium text-center text-white rounded-lg focus:outline-none disabled:bg-gray-400 disabled:hover:bg-gray-400;
 }
 
 .btn-sm {
-  @apply px-3 py-2 text-sm font-medium text-center text-white rounded-lg focus:outline-none;
+  @apply px-3 py-2 text-sm font-medium text-center text-white rounded-lg focus:outline-none disabled:bg-gray-400 disabled:hover:bg-gray-400;
 }
 
 .btn {
-  @apply px-5 py-2.5 text-sm font-medium text-center text-white rounded-lg focus:outline-none;
+  @apply px-5 py-2.5 text-sm font-medium text-center text-white rounded-lg focus:outline-none disabled:bg-gray-400 disabled:hover:bg-gray-400;
 }
 
 .btn-lg {
-  @apply px-6 py-3 text-base font-medium text-center text-white rounded-lg focus:outline-none;
+  @apply px-6 py-3 text-base font-medium text-center text-white rounded-lg focus:outline-none disabled:bg-gray-400 disabled:hover:bg-gray-400;
 }
 
 .btn-xl {
-  @apply px-5 py-3.5 text-base font-medium text-center text-white rounded-lg focus:outline-none;
+  @apply px-5 py-3.5 text-base font-medium text-center text-white rounded-lg focus:outline-none disabled:bg-gray-400 disabled:hover:bg-gray-400;
 }
 
 .btn-principal {
-  @apply bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800;
+  @apply  bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800;
 }

@@ -1,0 +1,75 @@
+<section
+  class="w-20 h-screen absolute top-0 left-0 bg-white flex flex-col gap-6 pt-12 items-center"
+>
+  <button
+    type="button"
+    class="size-12 bg-emerald-400 rounded-full flex justify-center items-center transition-transform transform hover:rotate-90 duration-300"
+  >
+    <span class="material-icons-outlined"> add </span>
+  </button>
+
+  <a
+    [class.active-route-sidebar]="isCurrentRoute('/home')"
+    routerLink="/home"
+    class="pointer flex justify-center items-center w-full py-2 rounded-tl-lg rounded-bl-lg"
+  >
+    <span
+      style="font-size: 1.5rem"
+      class="text-gray-500 material-icons-outlined"
+    >
+      home
+    </span>
+  </a>
+
+  <a
+    [class.active-route-sidebar]="isCurrentRoute('/accounts')"
+    routerLink="/accounts"
+    class="flex justify-center items-center w-full py-2 rounded-tl-lg rounded-bl-lg"
+  >
+    <span
+      style="font-size: 1.5rem"
+      class="text-gray-500 material-icons-outlined"
+    >
+      account_balance
+    </span>
+  </a>
+
+  <a
+    [class.active-route-sidebar]="isCurrentRoute('/transactions')"
+    routerLink="/transactions"
+    class="flex justify-center items-center w-full py-2 rounded-tl-lg rounded-bl-lg"
+  >
+    <span
+      style="font-size: 1.5rem"
+      class="text-gray-500 material-icons-outlined"
+    >
+      analytics
+    </span>
+  </a>
+
+  <a
+    [class.active-route-sidebar]="isCurrentRoute('/credit-cards')"
+    routerLink="/credit-cards"
+    class="flex justify-center items-center w-full py-2 rounded-tl-lg rounded-bl-lg"
+  >
+    <span
+      style="font-size: 1.5rem"
+      class="text-gray-500 material-icons-outlined"
+    >
+      credit_card
+    </span>
+  </a>
+
+  <a
+    [class.active-route-sidebar]="isCurrentRoute('/categories')"
+    routerLink="/categories"
+    class="flex justify-center items-center w-full py-2 rounded-tl-lg rounded-bl-lg"
+  >
+    <span
+      style="font-size: 1.5rem"
+      class="text-gray-500 material-icons-outlined"
+    >
+      category
+    </span>
+  </a>
+</section>

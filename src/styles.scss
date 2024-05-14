@@ -50,3 +50,7 @@ body {
 .create-record-options {
   @apply flex items-center gap-2 font-light text-white text-xl w-60 h-36 justify-center rounded-2xl shadow transition-transform transform hover:scale-105
 }
+
+.active-route-sidebar {
+  @apply bg-slate-200
+}

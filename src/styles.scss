@@ -46,3 +46,7 @@ body {
 .btn-principal {
   @apply  bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800;
 }
+
+.create-record-options {
+  @apply flex items-center gap-2 font-light text-white text-xl w-60 h-36 justify-center rounded-2xl shadow transition-transform transform hover:scale-105
+}

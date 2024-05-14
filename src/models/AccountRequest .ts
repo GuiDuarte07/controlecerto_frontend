@@ -1,6 +1,7 @@
 import { AccountTypeEnum } from '../enums/AccountTypeEnum ';
 
-export class CreateAccountRequest {
+export class Account {
+  id?: number;
   balance: number;
   description: string;
   bank: string;
@@ -13,7 +14,9 @@ export class CreateAccountRequest {
     bank: string;
     accountType: AccountTypeEnum;
     color: string;
+    id?: number;
   }) {
+    this.id = data.id;
     this.balance = data.balance;
     this.description = data.description;
     this.bank = data.bank;

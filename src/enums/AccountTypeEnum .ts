@@ -3,5 +3,6 @@ export enum AccountTypeEnum {
   SAVINGS,
   CREDIT,
   INVESTMENT,
+  WALLET,
   OTHER,
 }

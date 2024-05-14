@@ -1,1 +1,45 @@
 <app-sidebar></app-sidebar>
+<main class="pl-24">
+  <div class="mt-8 flex w-full gap-8  flex-wrap">
+    @for(account of accounts; track account) {
+    <div [ngStyle]="{'border-color': account.color}" class="border-b-8 px-2 py-4 w-56 rounded-md bg-white">
+      <div class="flex gap-3 py-1">
+        <span *ngIf="account.accountType === 0" class="material-icons-outlined">
+          account_balance
+        </span>
+        <span *ngIf="account.accountType === 1" class="material-icons-outlined">
+          savings
+        </span>
+        <span *ngIf="account.accountType === 2" class="material-icons-outlined">
+          shopping_bag
+        </span>
+        <span *ngIf="account.accountType === 3" class="material-icons-outlined">
+          trending_up
+        </span>
+        <span *ngIf="account.accountType === 4" class="material-icons-outlined">
+          account_balance_wallet
+        </span>
+        <span *ngIf="account.accountType === 5" class="material-icons-outlined">
+          star
+        </span>
+
+        <h3 class="">{{ account.bank }}</h3>
+      </div>
+      <div class="w-full flex justify-between py-2">
+        <p class="text-sm font-medium">Saldo atual</p>
+        <p class="text-sm font-medium text-green-500">R$ {{ account.balance }}</p>
+      </div>
+    </div>
+    }
+    <div class="w-56 rounded bg-white flex justify-center items-center ">
+      <button data-modal-target="account-modal" data-modal-toggle="account-modal" class="flex gap-3 px-2 py-4 ">
+        <p class="">Criar nova conta</p>
+        <span class="material-icons-outlined">
+          add
+        </span>
+      </button>
+    </div>
+  </div>
+</main>
+
+<app-account-modal></app-account-modal>

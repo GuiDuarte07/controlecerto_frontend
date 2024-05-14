@@ -2,9 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ModalComponent } from '../modal/modal.component';
 import { AccountTypeEnum } from '../../../enums/AccountTypeEnum ';
 import { CommonModule } from '@angular/common';
-import { CreateAccountRequest } from '../../../models/CreateAccountRequest ';
+import { Account } from '../../../models/AccountRequest ';
 import {
-  FormBuilder,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
@@ -89,9 +88,7 @@ export class AccountModalComponent implements OnInit {
   }
 
   createNewAccount() {
-    let accountToCreate = new CreateAccountRequest(
-      this.accountForm.getRawValue()
-    );
+    let accountToCreate = new Account(this.accountForm.getRawValue());
     this.accountForm.reset();
     console.log(accountToCreate);
   }

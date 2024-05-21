@@ -5,7 +5,8 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 interface ILoginForm {
   email: FormControl<string>;
@@ -21,6 +22,8 @@ interface ILoginForm {
 })
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup<ILoginForm>;
+
+  constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
     this.loginForm = new FormGroup({
@@ -45,6 +48,16 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-    console.log(this.loginForm.getRawValue());
+    const email = this.loginForm.value.email!;
+    const password = this.loginForm.value.password!;
+    this.authService.authenticate(email, password).subscribe({
+      next: (response) => {
+        console.log(response);
+        this.router.navigateByUrl('/home');
+      },
+      error: (error) => {
+        console.error('Authentication failed', error);
+      },
+    });
   }
 }

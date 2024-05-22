@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { AccountService } from './../../services/account.service';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { ModalComponent } from '../modal/modal.component';
 import { AccountTypeEnum } from '../../enums/AccountTypeEnum ';
 import { CommonModule } from '@angular/common';
@@ -29,6 +30,8 @@ interface IAccountForm {
   styleUrl: './account-modal.component.scss',
 })
 export class AccountModalComponent implements OnInit {
+  @Output() onAccountCreated = new EventEmitter<void>();
+
   accountForm!: FormGroup<IAccountForm>;
 
   defaultColors: Color[] = [
@@ -51,6 +54,8 @@ export class AccountModalComponent implements OnInit {
     { name: 'Investimento', code: AccountTypeEnum.INVESTMENT, selected: false },
     { name: 'Outro', code: AccountTypeEnum.OTHER, selected: false },
   ];
+
+  constructor(private accountService: AccountService) {}
 
   ngOnInit(): void {
     this.accountForm = new FormGroup({
@@ -89,8 +94,11 @@ export class AccountModalComponent implements OnInit {
 
   createNewAccount() {
     let accountToCreate = new Account(this.accountForm.getRawValue());
-    this.accountForm.reset();
     console.log(accountToCreate);
+    this.accountService.createAccount(accountToCreate).subscribe(() => {
+      this.accountForm.reset();
+      this.onAccountCreated.emit();
+    });
   }
 
   cleanForm() {

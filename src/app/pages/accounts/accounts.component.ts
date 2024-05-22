@@ -1,6 +1,6 @@
 import { AccountService } from './../../services/account.service';
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 import { AccountTypeEnum } from '../../enums/AccountTypeEnum ';
 import { AccountModalComponent } from '../../components/account-modal/account-modal.component';
@@ -17,9 +17,16 @@ import { Account } from '../../models/AccountRequest ';
 export class AccountsComponent implements OnInit {
   $accounts!: Observable<Account[]>;
 
+  @ViewChild(AccountModalComponent)
+  accountModalComponent!: AccountModalComponent;
+
   constructor(private accountService: AccountService) {}
 
   ngOnInit(): void {
+    this.updatedAccounts();
+  }
+
+  updatedAccounts() {
     this.$accounts = this.accountService.getAccounts();
   }
 }

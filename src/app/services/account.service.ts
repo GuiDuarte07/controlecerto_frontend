@@ -14,4 +14,12 @@ export class AccountService {
   getAccounts(): Observable<Account[]> {
     return this.httpClient.get<Account[]>(this.hostAddress);
   }
+
+  createAccount(account: Account): Observable<Account> {
+    const suffix = 'CreateAccount';
+    return this.httpClient.post<Account>(
+      `${this.hostAddress}/${suffix}`,
+      account
+    );
+  }
 }

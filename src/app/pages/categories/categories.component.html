@@ -1,0 +1,36 @@
+<app-sidebar></app-sidebar>
+<main class="pl-24 pr-8">
+  <div class="mt-8 flex w-full gap-8 justify-around flex-wrap">
+    @for(category of $categories | async; track category) {
+    <div
+      [ngStyle]="{ 'border-color': category.color }"
+      class="border-b-8 px-2 py-4 w-56 rounded-md bg-white"
+    >
+      <div class="flex items-center gap-3">
+        <div [ngStyle]="{ 'background-color': category.color }" class="text-white rounded-full w-8 h-8 flex items-center justify-center">
+          <span class="material-icons-outlined">
+            {{ category.icon }}
+          </span>
+        </div>
+
+        <h3 class="pl-4">{{ category.name }}</h3>
+      </div>
+      <!-- <div class="w-full flex justify-between py-2">
+        <p class="text-sm font-medium">Saldo atual</p>
+        <p class="text-sm font-medium text-green-500">R$ {{ category. }}</p>
+      </div> -->
+    </div>
+    }
+    <div class="w-56 rounded bg-white flex justify-center items-center">
+      <button
+        disabled
+        data-modal-target="category-modal"
+        data-modal-toggle="category-modal"
+        class="flex gap-3 px-2 py-4"
+      >
+        <p class="">Criar nova categoria</p>
+        <span class="material-icons-outlined"> add </span>
+      </button>
+    </div>
+  </div>
+</main>

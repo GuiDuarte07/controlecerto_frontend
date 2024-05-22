@@ -1,15 +1,14 @@
 import { Injectable } from '@angular/core';
-import { InfoUserResponse } from '../../models/InfoUserResponse';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
-import { AuthResponse } from '../../models/AuthResponse';
 import { CookieService } from 'ngx-cookie-service';
+import { AuthResponse } from '../models/AuthResponse';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private hostAddress = 'http://localhost:5037/api';
+  private hostAddress = 'http://localhost:5037/api/Auth';
 
   constructor(private http: HttpClient, private cookieService: CookieService) {}
 
@@ -17,7 +16,7 @@ export class AuthService {
     email: string,
     password: string
   ): Observable<AuthResponse> {
-    const suffix = 'Auth/Authenticate';
+    const suffix = 'Authenticate';
     const body = { email, password };
     return this.http
       .post<AuthResponse>(`${this.hostAddress}/${suffix}`, body)

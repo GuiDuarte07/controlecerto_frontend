@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalComponent } from '../modal/modal.component';
-import { ExpenseTypeEnum } from '../../../enums/ExpenseTypeEnum';
+import { ExpenseTypeEnum } from '../../enums/ExpenseTypeEnum';
 import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { CreateExpense } from '../../../models/CreateExpense';
 import { CommonModule } from '@angular/common';
+import { CreateExpense } from '../../models/CreateExpense';
 
 interface IExpenseForm {
   amount: FormControl<number>;

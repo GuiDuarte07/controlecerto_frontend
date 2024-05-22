@@ -1,7 +1,7 @@
 <app-sidebar></app-sidebar>
 <main class="pl-24">
   <div class="mt-8 flex w-full gap-8  flex-wrap">
-    @for(account of accounts; track account) {
+    @for(account of $accounts | async; track account) {
     <div [ngStyle]="{'border-color': account.color}" class="border-b-8 px-2 py-4 w-56 rounded-md bg-white">
       <div class="flex gap-3 py-1">
         <span *ngIf="account.accountType === 0" class="material-icons-outlined">

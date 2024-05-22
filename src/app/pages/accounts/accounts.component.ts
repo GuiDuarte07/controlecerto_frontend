@@ -1,9 +1,11 @@
+import { AccountService } from './../../services/account.service';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SidebarComponent } from '../../components/sidebar/sidebar.component';
-import { Account } from '../../../models/AccountRequest ';
-import { AccountTypeEnum } from '../../../enums/AccountTypeEnum ';
+import { AccountTypeEnum } from '../../enums/AccountTypeEnum ';
 import { AccountModalComponent } from '../../components/account-modal/account-modal.component';
+import { Observable } from 'rxjs';
+import { Account } from '../../models/AccountRequest ';
 
 @Component({
   selector: 'app-accounts',
@@ -12,8 +14,18 @@ import { AccountModalComponent } from '../../components/account-modal/account-mo
   templateUrl: './accounts.component.html',
   styleUrl: './accounts.component.scss',
 })
-export class AccountsComponent {
-  accounts = [
+export class AccountsComponent implements OnInit {
+  $accounts!: Observable<Account[]>;
+
+  constructor(private accountService: AccountService) {}
+
+  ngOnInit(): void {
+    this.$accounts = this.accountService.getAccounts();
+  }
+}
+
+/*
+accounts = [
     new Account({
       balance: 120,
       description: 'Minha cartera',
@@ -38,5 +50,4 @@ export class AccountsComponent {
       color: '#196CA5',
       id: 54,
     }),
-  ];
-}
+  ]; */

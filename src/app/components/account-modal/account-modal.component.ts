@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalComponent } from '../modal/modal.component';
-import { AccountTypeEnum } from '../../../enums/AccountTypeEnum ';
+import { AccountTypeEnum } from '../../enums/AccountTypeEnum ';
 import { CommonModule } from '@angular/common';
-import { Account } from '../../../models/AccountRequest ';
 import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { Account } from '../../models/AccountRequest ';
 
 type Color = { code: string; selected: boolean };
 type AccountType = { name: string; code: AccountTypeEnum; selected: boolean };

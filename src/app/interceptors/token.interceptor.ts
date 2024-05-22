@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
 
 @Injectable()
-export class AuthInterceptor implements HttpInterceptor {
+export class TokenInterceptor implements HttpInterceptor {
   constructor(private cookieService: CookieService) {}
 
   intercept(
@@ -17,6 +17,8 @@ export class AuthInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
     const authToken = this.cookieService.get('BearerToken');
+    console.log(authToken);
+    console.log('AuthInterceptor - interceptando requisição:', request.url);
 
     if (authToken) {
       request = request.clone({

@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CreateTansactionsTypesComponent } from './create-tansactions-types.component';
+import { CreateTansactionsTypesComponent } from './create-transactions-types.component';
 
 describe('CreateTansactionsTypesComponent', () => {
   let component: CreateTansactionsTypesComponent;
@@ -8,10 +8,9 @@ describe('CreateTansactionsTypesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CreateTansactionsTypesComponent]
-    })
-    .compileComponents();
-    
+      imports: [CreateTansactionsTypesComponent],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(CreateTansactionsTypesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

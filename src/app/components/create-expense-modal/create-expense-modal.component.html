@@ -1,8 +1,8 @@
 <app-modal
   [id]="'expense-modal'"
   [header]="'Registrar Gasto'"
-  (onSubmit)="createExpense()"
   [disabledButton]="!expenseForm.valid"
+  (onSubmit)="createExpense()"
   (onClose)="cleanForm()"
 >
   <form [formGroup]="expenseForm" class="m-4 flex flex-col gap-6">

@@ -1,3 +1,5 @@
+import { AccountService } from './../../services/account.service';
+import { TransactionService } from './../../services/transaction.service';
 import { Component, OnInit } from '@angular/core';
 import { ModalComponent } from '../modal/modal.component';
 import { ExpenseTypeEnum } from '../../enums/ExpenseTypeEnum';
@@ -9,6 +11,10 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CreateExpense } from '../../models/CreateExpense';
+import { Account } from '../../models/AccountRequest ';
+import { Category } from '../../models/Caterogy';
+import { CategoryService } from '../../services/category.service';
+import { forkJoin } from 'rxjs';
 
 interface IExpenseForm {
   amount: FormControl<number>;
@@ -32,6 +38,14 @@ type ExpenseType = { name: string; code: ExpenseTypeEnum; selected: boolean };
 })
 export class CreateExpenseModalComponent implements OnInit {
   expenseForm!: FormGroup<IExpenseForm>;
+  accounts: Account[] = [];
+  categories: Category[] = [];
+
+  constructor(
+    private transactionService: TransactionService,
+    private accountService: AccountService,
+    private categoryService: CategoryService
+  ) {}
 
   dateOptions = {
     today: true,
@@ -94,6 +108,16 @@ export class CreateExpenseModalComponent implements OnInit {
         validators: [Validators.required],
       }),
     });
+
+    this.accountService.getAccounts().subscribe((data) => {
+      this.accounts = data;
+      this.expenseForm.patchValue({ accountId: this.accounts[0].id });
+    });
+
+    this.categoryService.GetCategories().subscribe((data) => {
+      this.categories = data;
+      this.expenseForm.patchValue({ categoryId: this.categories[0].id });
+    });
   }
 
   createExpense() {
@@ -102,6 +126,8 @@ export class CreateExpenseModalComponent implements OnInit {
     const expenseToCreate = new CreateExpense(this.expenseForm.getRawValue());
 
     console.log(expenseToCreate);
+
+    this.transactionService.createExpense(expenseToCreate);
   }
 
   cleanForm() {

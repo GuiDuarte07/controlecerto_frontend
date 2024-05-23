@@ -1,9 +1,14 @@
 <div
-  data-twe-toggle="modal"
-  class="bg-gray-600 bg-opacity-50 overflow-y-auto overflow-x-hidden fixed flex top-0 right-0 left-0 z-10 justify-center items-center w-full md:inset-0 h-full max-h-full"
+  id="transactions-types"
+  tabindex="-1"
+  aria-hidden="false"
+  data-twe-toggle="transactions-types"
+  class="hidden bg-gray-600 bg-opacity-50 overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-full max-h-full"
 >
   <div class="flex gap-16">
     <button
+      data-modal-target="expense-modal"
+      data-modal-toggle="expense-modal"
       type="button"
       class="create-record-options bg-red-700"
     >
@@ -35,3 +40,5 @@
     </button>
   </div>
 </div>
+
+<app-create-expense-modal></app-create-expense-modal>

@@ -16,6 +16,8 @@
       Gasto
     </button>
     <button
+      data-modal-target="income-modal"
+      data-modal-toggle="income-modal"
       type="button"
       class="create-record-options bg-green-600"
     >
@@ -41,4 +43,5 @@
   </div>
 </div>
 
-<app-create-expense-modal></app-create-expense-modal>
+<app-create-expense-modal [id]="'expense-modal'" [transactionType]="0" ></app-create-expense-modal>
+<app-create-expense-modal [id]="'income-modal'" [transactionType]="1" ></app-create-expense-modal>

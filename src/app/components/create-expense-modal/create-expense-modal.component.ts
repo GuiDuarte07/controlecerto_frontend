@@ -1,6 +1,6 @@
 import { AccountService } from './../../services/account.service';
 import { TransactionService } from './../../services/transaction.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit, input } from '@angular/core';
 import { ModalComponent } from '../modal/modal.component';
 import { ExpenseTypeEnum } from '../../enums/ExpenseTypeEnum';
 import {
@@ -15,10 +15,13 @@ import { Account } from '../../models/AccountRequest ';
 import { Category } from '../../models/Caterogy';
 import { CategoryService } from '../../services/category.service';
 import { forkJoin } from 'rxjs';
+import { TransactionTypeEnum } from '../../enums/TransactionTypeEnum';
+import { IncomeTypeEnum } from '../../enums/IncomeTypeEnum';
+import { CreateIncome } from '../../models/CreateIncome';
 
-interface IExpenseForm {
+interface ITransactionForm {
   amount: FormControl<number>;
-  expenseType: FormControl<ExpenseTypeEnum>;
+  expenseType: FormControl<number>;
   purchaseDate: FormControl<Date>;
   destination: FormControl<string>;
   description: FormControl<string>;
@@ -28,6 +31,7 @@ interface IExpenseForm {
 }
 
 type ExpenseType = { name: string; code: ExpenseTypeEnum; selected: boolean };
+type IncomeType = { name: string; code: IncomeTypeEnum; selected: boolean };
 
 @Component({
   selector: 'app-create-expense-modal',
@@ -37,7 +41,11 @@ type ExpenseType = { name: string; code: ExpenseTypeEnum; selected: boolean };
   styleUrl: './create-expense-modal.component.scss',
 })
 export class CreateExpenseModalComponent implements OnInit {
-  expenseForm!: FormGroup<IExpenseForm>;
+  @Input() transactionType!: TransactionTypeEnum;
+  @Input() id!: string;
+
+  transactionForm!: FormGroup<ITransactionForm>;
+
   accounts: Account[] = [];
   categories: Category[] = [];
 
@@ -65,8 +73,38 @@ export class CreateExpenseModalComponent implements OnInit {
     { name: 'Outro', code: ExpenseTypeEnum.OTHER, selected: false },
   ];
 
+  incomeTypes: IncomeType[] = [
+    { name: 'PIX', code: IncomeTypeEnum.PIX, selected: true },
+    { name: 'Dinheiro', code: IncomeTypeEnum.CASH, selected: false },
+    { name: 'Cheque', code: IncomeTypeEnum.CHECK, selected: false },
+    {
+      name: 'Cartão de débito',
+      code: IncomeTypeEnum.DEBIT_CARD,
+      selected: false,
+    },
+    { name: 'Depósito', code: IncomeTypeEnum.DEPOSIT, selected: false },
+    { name: 'Juros', code: IncomeTypeEnum.INTEREST, selected: false },
+    { name: 'Dividendo', code: IncomeTypeEnum.DIVIDEND, selected: false },
+    { name: 'Reembolso', code: IncomeTypeEnum.REFUND, selected: false },
+    { name: 'Outro', code: IncomeTypeEnum.OTHER, selected: false },
+  ];
+
+  getTypes(): IncomeType[] | ExpenseType[] {
+    if (this.transactionType === TransactionTypeEnum.INCOME) {
+      return this.incomeTypes;
+    }
+    return this.expenseTypes;
+  }
+
   ngOnInit(): void {
-    this.expenseForm = new FormGroup({
+    let inicialValueType = 0;
+    if (this.transactionType === TransactionTypeEnum.INCOME) {
+      inicialValueType = IncomeTypeEnum.PIX;
+    } else {
+      inicialValueType = ExpenseTypeEnum.PIX;
+    }
+
+    this.transactionForm = new FormGroup({
       amount: new FormControl<number>(0, {
         nonNullable: true,
         validators: [Validators.required, Validators.min(0)],
@@ -95,7 +133,7 @@ export class CreateExpenseModalComponent implements OnInit {
         nonNullable: true,
         validators: [Validators.required],
       }),
-      expenseType: new FormControl<ExpenseTypeEnum>(ExpenseTypeEnum.CASH, {
+      expenseType: new FormControl<number>(inicialValueType, {
         nonNullable: true,
         validators: [Validators.required],
       }),
@@ -111,38 +149,69 @@ export class CreateExpenseModalComponent implements OnInit {
 
     this.accountService.getAccounts().subscribe((data) => {
       this.accounts = data;
-      this.expenseForm.patchValue({ accountId: this.accounts[0].id });
+      this.transactionForm.patchValue({ accountId: this.accounts[0].id });
     });
 
     this.categoryService.GetCategories().subscribe((data) => {
       this.categories = data;
-      this.expenseForm.patchValue({ categoryId: this.categories[0].id });
+      this.transactionForm.patchValue({ categoryId: this.categories[0].id });
     });
   }
 
-  createExpense() {
-    if (this.expenseForm.invalid) return;
+  createTransaction() {
+    if (this.transactionForm.invalid) return;
 
-    const expenseToCreate = new CreateExpense(this.expenseForm.getRawValue());
+    if (this.transactionType === TransactionTypeEnum.INCOME) {
+      let data = this.transactionForm.getRawValue();
+      const incomeToCreate = new CreateIncome({
+        accountId: data.accountId,
+        amount: data.amount,
+        categoryId: data.categoryId,
+        description: data.description,
+        incomeType: data.expenseType as IncomeTypeEnum,
+        justForRecord: data.justForRecord,
+        origin: data.description,
+        purchaseDate: data.purchaseDate,
+      });
+      console.log(incomeToCreate);
+      //this.transactionService.createIncome(incomeToCreate);
+    }
 
-    console.log(expenseToCreate);
-
-    this.transactionService.createExpense(expenseToCreate);
+    if (this.transactionType === TransactionTypeEnum.EXPENSE) {
+      const expenseToCreate = new CreateExpense(
+        this.transactionForm.getRawValue()
+      );
+      console.log(expenseToCreate);
+      this.transactionService.createExpense(expenseToCreate);
+    }
   }
 
   cleanForm() {
-    this.expenseForm.reset();
+    this.transactionForm.reset();
   }
 
-  setExpenseType(exptype: ExpenseType) {
-    this.expenseTypes.forEach((ep) => {
-      ep.selected = false;
-      if (ep.code === exptype.code) {
-        ep.selected = true;
-      }
-    });
+  setExpenseType(exptype: ExpenseType | IncomeType) {
+    if (this.transactionType === TransactionTypeEnum.INCOME) {
+      this.incomeTypes.forEach((inc) => {
+        inc.selected = false;
+        if (inc.code === exptype.code) {
+          inc.selected = true;
+        }
+      });
 
-    this.expenseForm.patchValue({ expenseType: exptype.code });
+      this.transactionForm.patchValue({ expenseType: exptype.code });
+    }
+
+    if (this.transactionType === TransactionTypeEnum.EXPENSE) {
+      this.expenseTypes.forEach((ep) => {
+        ep.selected = false;
+        if (ep.code === exptype.code) {
+          ep.selected = true;
+        }
+      });
+
+      this.transactionForm.patchValue({ expenseType: exptype.code });
+    }
   }
 
   setDateOption(opt: number) {
@@ -151,22 +220,22 @@ export class CreateExpenseModalComponent implements OnInit {
     this.dateOptions.yesterday = false;
     if (opt === 0) {
       this.dateOptions.today = true;
-      this.expenseForm.value.purchaseDate = new Date();
+      this.transactionForm.value.purchaseDate = new Date();
     } else if (opt === 1) {
       this.dateOptions.yesterday = true;
-      this.expenseForm.value.purchaseDate = new Date(
+      this.transactionForm.value.purchaseDate = new Date(
         new Date().setDate(new Date().getDate() - 1)
       );
     } else if (opt === 2) {
       this.dateOptions.otherdate = true;
-      this.expenseForm.value.purchaseDate = new Date(
+      this.transactionForm.value.purchaseDate = new Date(
         new Date().setDate(new Date().getDate() - 3)
       );
     }
   }
 
   formatedDate() {
-    const date = this.expenseForm.value.purchaseDate!;
+    const date = this.transactionForm.value.purchaseDate!;
 
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');

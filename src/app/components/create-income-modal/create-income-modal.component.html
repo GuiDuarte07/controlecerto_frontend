@@ -1,24 +1,22 @@
 <app-modal
-  [id]="id"
-  [header]="transactionType === 0 ? 'Registar Gasto' : 'Registar Receita'"
-  [disabledButton]="!transactionForm.valid"
-  (onSubmit)="createTransaction()"
+  [id]="'income-modal'"
+  [header]="'Registrar Gasto'"
+  [disabledButton]="!incomeForm.valid"
+  (onSubmit)="createIncome()"
   (onClose)="cleanForm()"
 >
-  <form [formGroup]="transactionForm" class="m-4 flex flex-col gap-6">
+  <form [formGroup]="incomeForm" class="m-4 flex flex-col gap-6">
     <div
-      [ngClass]="{'border-red-700': transactionType === 0,'border-green-600': transactionType === 1}"
-      class="flex gap-2 items-center justify-center border-b-2"
+      class="flex gap-2 items-center justify-center border-b-2 border-red-700"
     >
-      <label [ngClass]="{'text-red-700': transactionType === 0,'text-green-600': transactionType === 1}" for="visitors" class="h-full text-2xl dark:text-white"
+      <label for="visitors" class="h-full text-2xl text-red-700 dark:text-white"
         >R$
       </label>
       <input
         formControlName="amount"
         type="number"
         id="visitors"
-        [ngClass]="{'text-red-700': transactionType === 0, 'text-green-600': transactionType === 1}"
-        class="text-2xl border-none focus:border-none block w-full"
+        class="text-2xl text-red-700 border-none focus:border-none block w-full"
         placeholder=""
         required
       />
@@ -35,36 +33,35 @@
         id="description"
         rows="4"
         class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-        placeholder="Insira uma descrição para esse registro..."
+        placeholder="Insira uma descrição para esse gasto..."
       ></textarea>
     </div>
 
     <div>
       <label
-        for="destination"
+        for="origin"
         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-        >Destino</label
+        >Recebido de:</label
       >
       <input
-        formControlName="destination"
+        formControlName="origin"
         type="text"
-        id="destination"
+        id="origin"
         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-        [placeholder]="transactionType === 0 ? 'Destino do Gasto' : 'Origem da Receita'"
+        placeholder="Origem da receita"
         required
       />
     </div>
 
     <div class="">
       <p class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-        Data do registro
+        Data da Receita
       </p>
       <div class="flex w-full gap-2">
         <button
           type="button"
           class="rounded-2xl bg-gray-200 text-sm py-1 px-4 text-gray-900"
-          [ngClass]="{ 'bg-red-600 font-normal text-white': dateOptions.today && transactionType === 0 }"
-          [ngClass]="{ 'bg-green-600 font-normal text-white': dateOptions.today && transactionType === 1 }"
+          [ngClass]="{ 'bg-red-600 font-normal text-white': dateOptions.today }"
           (click)="setDateOption(0)"
         >
           Hoje
@@ -72,8 +69,7 @@
         <button
           type="button"
           class="rounded-2xl bg-gray-200 text-sm py-1 px-4 text-gray-900"
-          [ngClass]="{ 'bg-red-600 font-normal text-white': dateOptions.yesterday && transactionType === 0 }"
-          [ngClass]="{ 'bg-green-600 font-normal text-white': dateOptions.yesterday && transactionType === 1 }"
+          [ngClass]="{ 'bg-red-600 font-normal text-white': dateOptions.yesterday }"
           (click)="setDateOption(1)"
         >
           Ontem
@@ -81,8 +77,7 @@
 
         <button
           type="button"
-          [ngClass]="{ 'bg-red-600 font-normal text-white': dateOptions.otherdate && transactionType === 0 }"
-          [ngClass]="{ 'bg-green-600 font-normal text-white': dateOptions.otherdate && transactionType === 1 }"
+          [ngClass]="{ 'bg-red-600 font-normal text-white': dateOptions.otherdate }"
           class="rounded-2xl bg-gray-200 text-sm py-1 px-4 text-gray-900"
           (click)="setDateOption(2)"
         >
@@ -93,10 +88,10 @@
 
     <div class="">
       <p class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-        Tipo da conta
+        Tipo da Receita
       </p>
       <div class="flex w-full gap-2 flex-wrap">
-        @for(type of getTypes(); track type) {
+        @for(type of incomeTypes; track type) {
         <button
           type="button"
           (click)="setExpenseType(type)"

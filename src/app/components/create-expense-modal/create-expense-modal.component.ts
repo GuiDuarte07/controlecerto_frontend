@@ -12,7 +12,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { CreateExpense } from '../../models/CreateExpense';
 import { Account } from '../../models/AccountRequest ';
-import { Category } from '../../models/Caterogy';
+import { Category } from '../../models/Category';
 import { CategoryService } from '../../services/category.service';
 import { forkJoin } from 'rxjs';
 import { TransactionTypeEnum } from '../../enums/TransactionTypeEnum';

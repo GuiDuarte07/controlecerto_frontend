@@ -6,6 +6,7 @@ import { AccountsComponent } from './pages/accounts/accounts.component';
 import { AuthGuard } from './guards/Auth.guard';
 import { CategoriesComponent } from './pages/categories/categories.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
+import { TransactionsComponent } from './pages/transactions/transactions.component';
 
 export const routes: Routes = [
   {
@@ -15,6 +16,7 @@ export const routes: Routes = [
       { path: 'home', component: HomeComponent },
       { path: 'accounts', component: AccountsComponent },
       { path: 'categories', component: CategoriesComponent },
+      { path: 'transactions', component: TransactionsComponent },
       { path: '', redirectTo: '/home', pathMatch: 'full' },
     ],
   },

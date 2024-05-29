@@ -1,0 +1,49 @@
+<app-sidebar></app-sidebar>
+<main class="pl-24 pr-8 mt-4">
+  <section class="w-full mx-8 flex gap-4 flex-col">
+    @for(transaction of transactions; track transaction) {
+    <div class="flex w-8/12 items-center py-3 px-3 bg-white rounded-md">
+      <div
+        [ngStyle]="{ 'background-color': transaction.category.color }"
+        class="text-white rounded-full w-8 h-8 flex items-center justify-center ml-3 p-2"
+      >
+        <span class="material-icons-outlined">
+          {{ transaction.category.icon }}
+        </span>
+      </div>
+
+      <div class="p-2 flex flex-col justify-between h-full ">
+        <h3 class="pl-4 text-sm font-medium text-gray-700">
+          {{ transaction.category.name }}
+        </h3>
+        <p class="pl-4 text-xs font-medium text-gray-700">Nubank</p>
+      </div>
+
+      <div class="p-2 flex flex-col flex-1 justify-between overflow-hidden">
+        <p class="text-sm font-medium text-gray-700">
+          {{ transaction.description }}
+        </p>
+        <p class="text-xs font-medium text-gray-700">
+          {{ transaction.source }}
+        </p>
+      </div>
+
+      <div class="p-2 flex items-end flex-col flex-1 justify-between">
+        <p
+          class="font-bold"
+          [ngClass]="{
+            'text-green-500': transaction.transactionType === 1,
+            'text-red-600': transaction.transactionType !== 1
+          }"
+        >
+          <span>{{ transaction.transactionType === 1 ? "+" : "-" }}</span
+          >{{ transaction.amount }}
+        </p>
+        <p class="text-xs font-medium text-gray-700">
+          {{formatDateString(transaction.purchaseDate)}}
+        </p>
+      </div>
+    </div>
+    }
+  </section>
+</main>

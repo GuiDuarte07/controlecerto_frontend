@@ -7,7 +7,7 @@ import {
 } from '@angular/forms';
 import { IncomeTypeEnum } from '../../enums/IncomeTypeEnum';
 import { Account } from '../../models/AccountRequest ';
-import { Category } from '../../models/Caterogy';
+import { Category } from '../../models/Category';
 import { TransactionService } from '../../services/transaction.service';
 import { AccountService } from '../../services/account.service';
 import { CategoryService } from '../../services/category.service';

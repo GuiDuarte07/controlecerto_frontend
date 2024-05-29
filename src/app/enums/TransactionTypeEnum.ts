@@ -1,6 +1,6 @@
 export enum TransactionTypeEnum {
   EXPENSE,
   INCOME,
-  CREDIT,
+  CREDITEXPENSE,
   TRANSFERENCE,
 }

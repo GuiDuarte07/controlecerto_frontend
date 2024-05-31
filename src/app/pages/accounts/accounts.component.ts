@@ -6,6 +6,7 @@ import { AccountTypeEnum } from '../../enums/AccountTypeEnum ';
 import { AccountModalComponent } from '../../components/account-modal/account-modal.component';
 import { Observable } from 'rxjs';
 import { Account } from '../../models/AccountRequest ';
+import { BalanceStatement } from '../../models/BalanceStatement';
 
 @Component({
   selector: 'app-accounts',
@@ -16,6 +17,7 @@ import { Account } from '../../models/AccountRequest ';
 })
 export class AccountsComponent implements OnInit {
   $accounts!: Observable<Account[]>;
+  balance!: BalanceStatement;
 
   @ViewChild(AccountModalComponent)
   accountModalComponent!: AccountModalComponent;
@@ -24,6 +26,8 @@ export class AccountsComponent implements OnInit {
 
   ngOnInit(): void {
     this.updatedAccounts();
+
+    this.accountService.getBalance().subscribe((b) => (this.balance = b));
   }
 
   updatedAccounts() {

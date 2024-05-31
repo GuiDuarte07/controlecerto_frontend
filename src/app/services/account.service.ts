@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Account } from '../models/AccountRequest ';
+import { BalanceStatement } from '../models/BalanceStatement';
 
 @Injectable({
   providedIn: 'root',
@@ -20,6 +21,13 @@ export class AccountService {
     return this.httpClient.post<Account>(
       `${this.hostAddress}/${suffix}`,
       account
+    );
+  }
+
+  getBalance(): Observable<BalanceStatement> {
+    const suffix = 'GetBalanceStatementAsync';
+    return this.httpClient.get<BalanceStatement>(
+      `${this.hostAddress}/${suffix}`
     );
   }
 }

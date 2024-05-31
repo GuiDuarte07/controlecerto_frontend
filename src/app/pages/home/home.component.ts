@@ -23,7 +23,12 @@ import { CommonModule } from '@angular/common';
   styleUrl: './home.component.scss',
 })
 export class HomeComponent implements OnInit {
-  balance!: BalanceStatement;
+  balance: BalanceStatement = {
+    balance: 0,
+    expenses: 0,
+    incomes: 0,
+    invoices: 0,
+  };
 
   accountModalComponent!: AccountModalComponent;
 

@@ -37,7 +37,7 @@
           }"
         >
           <span>{{ transaction.transactionType === 1 ? "+" : "-" }}</span
-          > {{ transaction.amount | currency:'BRL':true}}
+          > {{ transaction.amount | currency:'BRL':'symbol'}}
         </p>
         <p class="text-xs font-medium text-gray-700">
           {{formatDateString(transaction.purchaseDate)}}

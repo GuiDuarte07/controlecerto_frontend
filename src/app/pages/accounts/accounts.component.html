@@ -27,7 +27,7 @@
       </div>
       <div class="w-full flex justify-between py-2">
         <p class="text-sm font-medium">Saldo atual</p>
-        <p class="text-sm font-medium text-green-500">{{ account.balance | currency:'BRL':true}}</p>
+        <p class="text-sm font-medium text-green-500">{{ account.balance | currency:'BRL':'symbol'}}</p>
       </div>
     </div>
     }

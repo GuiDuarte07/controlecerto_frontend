@@ -1,4 +1,4 @@
-import { Component, LOCALE_ID, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ModalComponent } from '../../components/modal/modal.component';
 import { AccountModalComponent } from '../../components/account-modal/account-modal.component';
 import { CreateExpenseModalComponent } from '../../components/create-expense-modal/create-expense-modal.component';
@@ -6,7 +6,7 @@ import { CreateTansactionsTypesComponent } from '../../components/create-transac
 import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 import { AccountService } from '../../services/account.service';
 import { BalanceStatement } from '../../models/BalanceStatement';
-import { CommonModule, CurrencyPipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-home',
@@ -18,9 +18,6 @@ import { CommonModule, CurrencyPipe } from '@angular/common';
     CreateExpenseModalComponent,
     CreateTansactionsTypesComponent,
     SidebarComponent,
-  ],
-  providers: [
-    /* { provide: LOCALE_ID, useValue: 'pt-BR' } */
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',

@@ -1,4 +1,4 @@
-import { ApplicationConfig, Provider } from '@angular/core';
+import { ApplicationConfig, LOCALE_ID, Provider } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
@@ -8,7 +8,11 @@ import {
   provideHttpClient,
   withInterceptorsFromDi,
 } from '@angular/common/http';
+import localePt from '@angular/common/locales/pt';
 import { TokenInterceptor } from './interceptors/token.interceptor';
+import { registerLocaleData } from '@angular/common';
+
+registerLocaleData(localePt);
 
 const tokenInterceptorProvider: Provider = {
   provide: HTTP_INTERCEPTORS,
@@ -23,5 +27,9 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(),
     CookieService,
+    {
+      provide: LOCALE_ID,
+      useValue: 'pt-BR',
+    },
   ],
 };

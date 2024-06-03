@@ -7,6 +7,7 @@ import { AuthGuard } from './guards/Auth.guard';
 import { CategoriesComponent } from './pages/categories/categories.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { TransactionsComponent } from './pages/transactions/transactions.component';
+import { CreditcardsComponent } from './pages/creditcards/creditcards.component';
 
 export const routes: Routes = [
   {
@@ -17,6 +18,7 @@ export const routes: Routes = [
       { path: 'accounts', component: AccountsComponent },
       { path: 'categories', component: CategoriesComponent },
       { path: 'transactions', component: TransactionsComponent },
+      { path: 'creditcards', component: CreditcardsComponent },
       { path: '', redirectTo: '/home', pathMatch: 'full' },
     ],
   },

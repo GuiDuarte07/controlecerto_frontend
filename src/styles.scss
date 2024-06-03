@@ -15,6 +15,10 @@ body {
   background-color: rgb(228, 232, 236);
 }
 
+.text-low {
+  @apply text-sm font-medium text-gray-700;
+}
+
 .label {
   @apply block mb-2 text-sm font-medium text-gray-900 dark:text-white;
 }

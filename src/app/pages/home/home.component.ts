@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ModalComponent } from '../../components/modal/modal.component';
 import { AccountModalComponent } from '../../components/account-modal/account-modal.component';
 import { CreateExpenseModalComponent } from '../../components/create-expense-modal/create-expense-modal.component';
@@ -7,6 +7,7 @@ import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 import { AccountService } from '../../services/account.service';
 import { BalanceStatement } from '../../models/BalanceStatement';
 import { CommonModule } from '@angular/common';
+import { initFlowbite } from 'flowbite';
 
 @Component({
   selector: 'app-home',
@@ -22,7 +23,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, AfterViewInit {
   balance: BalanceStatement = {
     balance: 0,
     expenses: 0,
@@ -38,5 +39,9 @@ export class HomeComponent implements OnInit {
     this.accountService.getBalance().subscribe((b) => {
       this.balance = b;
     });
+  }
+
+  ngAfterViewInit(): void {
+    initFlowbite();
   }
 }

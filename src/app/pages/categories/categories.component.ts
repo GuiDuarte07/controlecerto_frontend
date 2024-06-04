@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { CategoryService } from '../../services/category.service';
 import { Observable } from 'rxjs';
 import { Category } from '../../models/Category';
 import { CommonModule } from '@angular/common';
 import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 import { CategoryModalComponent } from '../../components/category-modal/category-modal.component';
+import { initFlowbite } from 'flowbite';
 
 @Component({
   selector: 'app-categories',
@@ -13,12 +14,16 @@ import { CategoryModalComponent } from '../../components/category-modal/category
   templateUrl: './categories.component.html',
   styleUrl: './categories.component.scss',
 })
-export class CategoriesComponent implements OnInit {
+export class CategoriesComponent implements OnInit, AfterViewInit {
   $categories!: Observable<Category[]>;
 
   constructor(private categoryService: CategoryService) {}
 
   ngOnInit(): void {
     this.$categories = this.categoryService.GetCategories();
+  }
+
+  ngAfterViewInit(): void {
+    initFlowbite();
   }
 }

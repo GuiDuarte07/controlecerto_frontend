@@ -9,6 +9,7 @@ import {
 import { BillTypeEnum } from '../../enums/BillTypeEnum';
 import { ModalComponent } from '../modal/modal.component';
 import { CommonModule } from '@angular/common';
+import { initFlowbite } from 'flowbite';
 
 type Color = { code: string; selected: boolean };
 

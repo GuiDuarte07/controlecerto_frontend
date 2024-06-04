@@ -8,11 +8,13 @@ import { CategoriesComponent } from './pages/categories/categories.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { TransactionsComponent } from './pages/transactions/transactions.component';
 import { CreditcardsComponent } from './pages/creditcards/creditcards.component';
+import { MasterComponent } from './layouts/master/master.component';
 
 export const routes: Routes = [
   {
     path: '',
     canActivate: [AuthGuard],
+    component: MasterComponent,
     children: [
       { path: 'home', component: HomeComponent },
       { path: 'accounts', component: AccountsComponent },

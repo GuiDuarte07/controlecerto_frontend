@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { initFlowbite } from 'flowbite';
 
 @Component({
@@ -13,7 +13,14 @@ import { initFlowbite } from 'flowbite';
 export class AppComponent {
   title = 'Finantech';
 
+  constructor(private router: Router) {}
+
   ngOnInit(): void {
     initFlowbite();
+    /* this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        initFlowbite();
+      }
+    }); */
   }
 }

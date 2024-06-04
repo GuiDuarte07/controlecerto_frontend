@@ -1,12 +1,13 @@
 import { AccountService } from './../../services/account.service';
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 import { AccountTypeEnum } from '../../enums/AccountTypeEnum ';
 import { AccountModalComponent } from '../../components/account-modal/account-modal.component';
 import { Observable } from 'rxjs';
 import { Account } from '../../models/AccountRequest ';
 import { BalanceStatement } from '../../models/BalanceStatement';
+import { initFlowbite } from 'flowbite';
 
 @Component({
   selector: 'app-accounts',

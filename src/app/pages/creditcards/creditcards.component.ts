@@ -1,9 +1,10 @@
 import { Observable } from 'rxjs';
 import { CreditCardService } from './../../services/credit-card.service';
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { CreditCardInfo } from '../../models/CreditCardInfo';
 import { CommonModule } from '@angular/common';
 import { SidebarComponent } from '../../components/sidebar/sidebar.component';
+import { initFlowbite } from 'flowbite';
 
 @Component({
   selector: 'app-creditcards',
@@ -12,7 +13,7 @@ import { SidebarComponent } from '../../components/sidebar/sidebar.component';
   templateUrl: './creditcards.component.html',
   styleUrl: './creditcards.component.scss',
 })
-export class CreditcardsComponent implements OnInit {
+export class CreditcardsComponent implements OnInit, AfterViewInit {
   $creditCards!: Observable<CreditCardInfo[]>;
 
   constructor(private creditCardService: CreditCardService) {}
@@ -20,6 +21,10 @@ export class CreditcardsComponent implements OnInit {
   ngOnInit(): void {
     this.$creditCards = this.creditCardService.getCreditCards();
     this.$creditCards.subscribe((d) => console.log(d));
+  }
+
+  ngAfterViewInit(): void {
+    initFlowbite();
   }
 
   formatDateString(dateString: string | Date): string {

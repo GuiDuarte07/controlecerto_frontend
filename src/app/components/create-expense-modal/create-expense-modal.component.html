@@ -78,7 +78,14 @@
         class="w-full py-2 border-b-2 border-solid border-gray-500"
         type="button"
       >
-      <p class="rounded-2xl bg-gray-200 text-sm py-1 px-4 text-gray-900 w-fit">{{selectedCategory?.name}}</p>
+        <p
+          [ngStyle]="{'border-color': selectedCategory?.color}"
+          class="flex items-center gap-2 rounded-2xl  border-2 border-solid bg-gray-200 text-sm py-1 px-4 text-gray-900 w-fit"
+        >
+          <span class="material-icons-outlined">
+            {{ selectedCategory?.icon }} </span
+          >{{ selectedCategory?.name }}
+        </p>
       </button>
 
       <!-- Dropdown menu -->
@@ -93,11 +100,53 @@
           @for(category of categories; track category) {
           <li>
             <button
-              (click)="changeSelectedCategory(category)"
+              (click)="changeSelectedItem(category)"
+              type="button"
+              class="flex items-center gap-2 w-full text-start px-4 py-2 hover:bg-white dark:hover:bg-gray-600 dark:hover:text-white"
+            >
+              <span class="material-icons-outlined"> {{ category.icon }} </span>
+              {{ category.name }}
+            </button>
+          </li>
+          }
+        </ul>
+      </div>
+    </div>
+
+    <div class="w-full">
+      <p class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+        Conta
+      </p>
+      <button
+        [attr.data-dropdown-toggle]="id + 'conta'"
+        class="w-full py-2 border-b-2 border-solid border-gray-500"
+        type="button"
+      >
+        <p
+          [ngStyle]="{'border-color': selectedAccount?.color}"
+          class="rounded-2xl border-2 border-solid bg-gray-200 text-sm py-1 px-4 text-gray-900 w-fit"
+        >
+          {{ selectedAccount?.bank }}
+        </p>
+      </button>
+
+      <!-- Dropdown menu -->
+      <div
+        [id]="id + 'conta'"
+        class="z-10 hidden bg-slate-50 divide-y divide-gray-100 rounded-lg shadow w-full dark:bg-gray-700"
+      >
+        <ul
+          class="h-44 overflow-y-auto py-2 text-sm text-gray-700 dark:text-gray-200"
+          [attr.aria-labelledby]="id + 'conta'"
+        >
+          @for(account of accounts; track account) {
+          <li>
+            <button
+              (click)="changeSelectedItem(account)"
               type="button"
               class="w-full text-start block px-4 py-2 hover:bg-white dark:hover:bg-gray-600 dark:hover:text-white"
             >
-              {{category.name}}
+              {{ account.bank }}
             </button>
           </li>
           }

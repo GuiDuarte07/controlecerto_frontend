@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { Account } from '../models/AccountRequest ';
 import { BalanceStatement } from '../models/BalanceStatement';
 
@@ -13,7 +13,21 @@ export class AccountService {
   constructor(private httpClient: HttpClient) {}
 
   getAccounts(): Observable<Account[]> {
-    return this.httpClient.get<Account[]>(this.hostAddress);
+    return this.httpClient.get<Account[]>(this.hostAddress).pipe(
+      map((data) =>
+        data.map(
+          (item) =>
+            new Account({
+              id: item.id,
+              balance: item.balance,
+              description: item.description,
+              bank: item.bank,
+              accountType: item.accountType,
+              color: item.color,
+            })
+        )
+      )
+    );
   }
 
   createAccount(account: Account): Observable<Account> {

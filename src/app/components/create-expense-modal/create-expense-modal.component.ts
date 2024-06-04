@@ -1,6 +1,6 @@
 import { AccountService } from './../../services/account.service';
 import { TransactionService } from './../../services/transaction.service';
-import { Component, Input, OnInit, input } from '@angular/core';
+import { Component, Input, OnInit, Renderer2, input } from '@angular/core';
 import { ModalComponent } from '../modal/modal.component';
 import { ExpenseTypeEnum } from '../../enums/ExpenseTypeEnum';
 import {
@@ -49,11 +49,13 @@ export class CreateExpenseModalComponent implements OnInit {
   accounts: Account[] = [];
   categories: Category[] = [];
   selectedCategory!: Category;
+  selectedAccount!: Account;
 
   constructor(
     private transactionService: TransactionService,
     private accountService: AccountService,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private renderer: Renderer2
   ) {}
 
   dateOptions = {
@@ -151,6 +153,7 @@ export class CreateExpenseModalComponent implements OnInit {
     this.accountService.getAccounts().subscribe((data) => {
       this.accounts = data;
       this.transactionForm.patchValue({ accountId: this.accounts[0].id });
+      this.selectedAccount = this.accounts[0];
     });
 
     this.categoryService.GetCategories().subscribe((data) => {
@@ -160,7 +163,22 @@ export class CreateExpenseModalComponent implements OnInit {
     });
   }
 
-  changeSelectedCategory(category: Category) {
+  changeSelectedItem(item: Category | Account) {
+    if (item instanceof Category) {
+      this.selectedCategory = item;
+      this.transactionForm.patchValue({ categoryId: item.id });
+    } else if (item instanceof Account) {
+      this.selectedAccount = item;
+      this.transactionForm.patchValue({ accountId: item.id });
+    }
+
+    /* const dropdown = document.getElementById(this.id + 'category');
+    if (dropdown) {
+      this.renderer.addClass(dropdown, 'hidden');
+    } */
+  }
+
+  changeSelectedAcc(category: Category) {
     this.selectedCategory = category;
     this.transactionForm.patchValue({ categoryId: category.id });
   }

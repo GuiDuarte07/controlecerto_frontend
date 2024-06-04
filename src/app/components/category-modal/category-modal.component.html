@@ -1,0 +1,77 @@
+<app-modal
+  [id]="'category-modal'"
+  [header]="'Criar Categoria'"
+  (onSubmit)="createNewCategory()"
+  [disabledButton]="!categoryForm.valid"
+  (onClose)="cleanForm()"
+>
+  <form
+    [formGroup]="categoryForm"
+    (ngSubmit)="createNewCategory()"
+    class="m-4 flex flex-col gap-6"
+  >
+
+
+    <div>
+      <label
+        for="name"
+        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+        >Nome da Categoria</label
+      >
+      <input
+        formControlName="name"
+        type="text"
+        id="name"
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        placeholder="Digite o nome da categoria."
+        required
+      />
+    </div>
+
+    <div class="">
+      <p class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+        Tipo da Categoria
+      </p>
+      <div class="flex w-full gap-2">
+        <button
+          type="button"
+          (click)="changeBillType(0)"
+          [ngClass]="{ 'border-4 border-gray-600': categoryForm.value.billType === 0 }"
+          class="rounded-2xl bg-gray-200 text-sm py-2 px-3 text-gray-900"
+        >
+          Gasto
+        </button>
+
+        <button
+          type="button"
+          (click)="changeBillType(1)"
+          [ngClass]="{ 'border-4 border-gray-600': categoryForm.value.billType === 1}"
+          class="rounded-2xl bg-gray-200 text-sm py-2 px-3 text-gray-900"
+        >
+          Receita
+        </button>
+      </div>
+    </div>
+
+    <div class="">
+      <div class="">
+        <p class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+          Cor da Catagoria
+        </p>
+        <div class="flex w-full gap-2">
+          @for(color of defaultColors; track color) {
+          <button
+            type="button"
+            (click)="setDefaultColor(color)"
+            [style.background-color]="color.code"
+            class="size-8 rounded-full"
+            [ngClass]="{ 'border-[3px] border-gray-700': color.selected }"
+          >
+            @if(color.selected) { }
+          </button>
+          }
+        </div>
+      </div>
+    </div>
+  </form>
+</app-modal>

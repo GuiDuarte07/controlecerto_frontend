@@ -1,6 +1,17 @@
 <app-sidebar></app-sidebar>
 <main class="pl-24 pr-8">
   <div class="mt-8 flex w-full gap-8 justify-around flex-wrap">
+    <div class="w-56 rounded bg-white flex justify-center items-center">
+      <button
+        data-modal-target="category-modal"
+        data-modal-toggle="category-modal"
+        class="flex gap-3 px-2 py-4"
+      >
+        <p class="">Criar nova categoria</p>
+        <span class="material-icons-outlined"> add </span>
+      </button>
+    </div>
+
     @for(category of $categories | async; track category) {
     <div
       [ngStyle]="{ 'border-color': category.color }"
@@ -21,16 +32,8 @@
       </div> -->
     </div>
     }
-    <div class="w-56 rounded bg-white flex justify-center items-center">
-      <button
-        disabled
-        data-modal-target="category-modal"
-        data-modal-toggle="category-modal"
-        class="flex gap-3 px-2 py-4"
-      >
-        <p class="">Criar nova categoria</p>
-        <span class="material-icons-outlined"> add </span>
-      </button>
-    </div>
+
   </div>
 </main>
+
+<app-category-modal></app-category-modal>

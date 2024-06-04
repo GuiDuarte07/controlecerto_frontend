@@ -7,7 +7,9 @@
     >
       <div class="h-full flex flex-col justify-between">
         <p class="pt-4 text-slate-600">Saldo atual</p>
-        <p class="py-4 font-bold">{{balance.balance | currency:'BRL':'symbol'}}</p>
+        <p class="py-4 font-bold">
+          {{ balance.balance | currency : "BRL" : "symbol" }}
+        </p>
       </div>
       <div class="rounded-full w-14 h-14 bg-blue-600"></div>
     </div>
@@ -18,7 +20,9 @@
     >
       <div class="h-full flex flex-col justify-between">
         <p class="pt-4 text-slate-600">Receitas do mês</p>
-        <p class="py-4 font-bold">{{balance.incomes | currency:'BRL':'symbol'}}</p>
+        <p class="py-4 font-bold">
+          {{ balance.incomes | currency : "BRL" : "symbol" }}
+        </p>
       </div>
       <div class="rounded-full w-14 h-14 bg-green-700"></div>
     </div>
@@ -29,7 +33,9 @@
     >
       <div class="h-full flex flex-col justify-between">
         <p class="pt-4 text-slate-600">Despesas do mês</p>
-        <p class="py-4 font-bold">{{balance.expenses | currency:'BRL':'symbol'}}</p>
+        <p class="py-4 font-bold">
+          {{ balance.expenses | currency : "BRL" : "symbol" }}
+        </p>
       </div>
       <div class="rounded-full w-14 h-14 bg-red-600"></div>
     </div>
@@ -40,11 +46,15 @@
     >
       <div class="h-full flex flex-col justify-between">
         <p class="pt-4 text-slate-600">Fatura do mês</p>
-        <p class="py-4 font-bold">{{balance.invoices | currency:'BRL':'symbol'}}</p>
+        <p class="py-4 font-bold">
+          {{ balance.invoices | currency : "BRL" : "symbol" }}
+        </p>
       </div>
       <div class="rounded-full w-14 h-14 bg-yellow-400"></div>
     </div>
   </div>
+
+
+
+
 </section>
-
-

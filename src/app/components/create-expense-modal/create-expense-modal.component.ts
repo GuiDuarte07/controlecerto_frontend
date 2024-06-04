@@ -48,6 +48,7 @@ export class CreateExpenseModalComponent implements OnInit {
 
   accounts: Account[] = [];
   categories: Category[] = [];
+  selectedCategory!: Category;
 
   constructor(
     private transactionService: TransactionService,
@@ -155,7 +156,13 @@ export class CreateExpenseModalComponent implements OnInit {
     this.categoryService.GetCategories().subscribe((data) => {
       this.categories = data;
       this.transactionForm.patchValue({ categoryId: this.categories[0].id });
+      this.selectedCategory = this.categories[0];
     });
+  }
+
+  changeSelectedCategory(category: Category) {
+    this.selectedCategory = category;
+    this.transactionForm.patchValue({ categoryId: category.id });
   }
 
   createTransaction() {

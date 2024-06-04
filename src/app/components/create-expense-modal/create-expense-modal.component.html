@@ -7,17 +7,29 @@
 >
   <form [formGroup]="transactionForm" class="m-4 flex flex-col gap-6">
     <div
-      [ngClass]="{'border-red-700': transactionType === 0,'border-green-600': transactionType === 1}"
+      [ngClass]="{
+        'border-red-700': transactionType === 0,
+        'border-green-600': transactionType === 1
+      }"
       class="flex gap-2 items-center justify-center border-b-2"
     >
-      <label [ngClass]="{'text-red-700': transactionType === 0,'text-green-600': transactionType === 1}" for="visitors" class="h-full text-2xl dark:text-white"
+      <label
+        [ngClass]="{
+          'text-red-700': transactionType === 0,
+          'text-green-600': transactionType === 1
+        }"
+        for="visitors"
+        class="h-full text-2xl dark:text-white"
         >R$
       </label>
       <input
         formControlName="amount"
         type="number"
         id="visitors"
-        [ngClass]="{'text-red-700': transactionType === 0, 'text-green-600': transactionType === 1}"
+        [ngClass]="{
+          'text-red-700': transactionType === 0,
+          'text-green-600': transactionType === 1
+        }"
         class="text-2xl border-none focus:border-none block w-full"
         placeholder=""
         required
@@ -50,9 +62,47 @@
         type="text"
         id="destination"
         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-        [placeholder]="transactionType === 0 ? 'Destino do Gasto' : 'Origem da Receita'"
+        [placeholder]="
+          transactionType === 0 ? 'Destino do Gasto' : 'Origem da Receita'
+        "
         required
       />
+    </div>
+
+    <div class="w-full">
+      <p class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+        Categoria
+      </p>
+      <button
+        [attr.data-dropdown-toggle]="id + 'category'"
+        class="w-full py-2 border-b-2 border-solid border-gray-500"
+        type="button"
+      >
+      <p class="rounded-2xl bg-gray-200 text-sm py-1 px-4 text-gray-900 w-fit">{{selectedCategory?.name}}</p>
+      </button>
+
+      <!-- Dropdown menu -->
+      <div
+        [id]="id + 'category'"
+        class="z-10 hidden bg-slate-50 divide-y divide-gray-100 rounded-lg shadow w-full dark:bg-gray-700"
+      >
+        <ul
+          class="h-44 overflow-y-auto py-2 text-sm text-gray-700 dark:text-gray-200"
+          [attr.aria-labelledby]="id + 'category'"
+        >
+          @for(category of categories; track category) {
+          <li>
+            <button
+              (click)="changeSelectedCategory(category)"
+              type="button"
+              class="w-full text-start block px-4 py-2 hover:bg-white dark:hover:bg-gray-600 dark:hover:text-white"
+            >
+              {{category.name}}
+            </button>
+          </li>
+          }
+        </ul>
+      </div>
     </div>
 
     <div class="">
@@ -63,8 +113,14 @@
         <button
           type="button"
           class="rounded-2xl bg-gray-200 text-sm py-1 px-4 text-gray-900"
-          [ngClass]="{ 'bg-red-600 font-normal text-white': dateOptions.today && transactionType === 0 }"
-          [ngClass]="{ 'bg-green-600 font-normal text-white': dateOptions.today && transactionType === 1 }"
+          [ngClass]="{
+            'bg-red-600 font-normal text-white':
+              dateOptions.today && transactionType === 0
+          }"
+          [ngClass]="{
+            'bg-green-600 font-normal text-white':
+              dateOptions.today && transactionType === 1
+          }"
           (click)="setDateOption(0)"
         >
           Hoje
@@ -72,8 +128,14 @@
         <button
           type="button"
           class="rounded-2xl bg-gray-200 text-sm py-1 px-4 text-gray-900"
-          [ngClass]="{ 'bg-red-600 font-normal text-white': dateOptions.yesterday && transactionType === 0 }"
-          [ngClass]="{ 'bg-green-600 font-normal text-white': dateOptions.yesterday && transactionType === 1 }"
+          [ngClass]="{
+            'bg-red-600 font-normal text-white':
+              dateOptions.yesterday && transactionType === 0
+          }"
+          [ngClass]="{
+            'bg-green-600 font-normal text-white':
+              dateOptions.yesterday && transactionType === 1
+          }"
           (click)="setDateOption(1)"
         >
           Ontem
@@ -81,12 +143,18 @@
 
         <button
           type="button"
-          [ngClass]="{ 'bg-red-600 font-normal text-white': dateOptions.otherdate && transactionType === 0 }"
-          [ngClass]="{ 'bg-green-600 font-normal text-white': dateOptions.otherdate && transactionType === 1 }"
+          [ngClass]="{
+            'bg-red-600 font-normal text-white':
+              dateOptions.otherdate && transactionType === 0
+          }"
+          [ngClass]="{
+            'bg-green-600 font-normal text-white':
+              dateOptions.otherdate && transactionType === 1
+          }"
           class="rounded-2xl bg-gray-200 text-sm py-1 px-4 text-gray-900"
           (click)="setDateOption(2)"
         >
-          {{ dateOptions.otherdate ? formatedDate() : 'Outra Data'}}
+          {{ dateOptions.otherdate ? formatedDate() : "Outra Data" }}
         </button>
       </div>
     </div>

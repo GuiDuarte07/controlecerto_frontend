@@ -16,7 +16,7 @@ import { initFlowbite } from 'flowbite';
   templateUrl: './accounts.component.html',
   styleUrl: './accounts.component.scss',
 })
-export class AccountsComponent implements OnInit {
+export class AccountsComponent implements OnInit, AfterViewInit {
   $accounts!: Observable<Account[]>;
   balance!: BalanceStatement;
 
@@ -29,6 +29,10 @@ export class AccountsComponent implements OnInit {
     this.updatedAccounts();
 
     this.accountService.getBalance().subscribe((b) => (this.balance = b));
+  }
+
+  ngAfterViewInit(): void {
+    initFlowbite();
   }
 
   updatedAccounts() {

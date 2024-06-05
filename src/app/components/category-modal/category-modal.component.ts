@@ -10,6 +10,7 @@ import { BillTypeEnum } from '../../enums/BillTypeEnum';
 import { ModalComponent } from '../modal/modal.component';
 import { CommonModule } from '@angular/common';
 import { initFlowbite } from 'flowbite';
+import { iconsOptions } from '../../utils/material_options_icons';
 
 type Color = { code: string; selected: boolean };
 
@@ -42,6 +43,11 @@ export class CategoryModalComponent implements OnInit {
     { code: '#7FFFD4', selected: false },
   ];
 
+  collapsedIcons: boolean = true;
+
+  icons: string[] = iconsOptions;
+  selectedIcon = this.icons[0];
+
   ngOnInit(): void {
     this.categoryForm = new FormGroup({
       name: new FormControl<string>('', {
@@ -52,7 +58,7 @@ export class CategoryModalComponent implements OnInit {
           Validators.maxLength(100),
         ],
       }),
-      icon: new FormControl<string>('', {
+      icon: new FormControl<string>(this.icons[0], {
         nonNullable: true,
         validators: [Validators.required],
       }),
@@ -79,6 +85,14 @@ export class CategoryModalComponent implements OnInit {
 
   cleanForm() {
     this.categoryForm.reset();
+  }
+
+  changeCollapseIcons() {
+    this.collapsedIcons = !this.collapsedIcons;
+  }
+
+  changeSelectedIcon(icon: string) {
+    this.selectedIcon = icon;
   }
 
   setDefaultColor(color: Color) {

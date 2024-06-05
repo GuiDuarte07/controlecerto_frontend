@@ -29,4 +29,9 @@ export class CategoryService {
         )
       );
   }
+
+  createCategory(category: Category) {
+    const suffix = 'CreateCategory';
+    return this.http.post<Category>(`${this.hostAddress}/${suffix}`, category);
+  }
 }

@@ -1,3 +1,4 @@
+import { CategoryService } from './../../services/category.service';
 import { Category } from './../../models/Category';
 import { Component, OnInit } from '@angular/core';
 import {
@@ -48,6 +49,8 @@ export class CategoryModalComponent implements OnInit {
   icons: string[] = iconsOptions;
   selectedIcon = this.icons[0];
 
+  constructor(private categoryService: CategoryService) {}
+
   ngOnInit(): void {
     this.categoryForm = new FormGroup({
       name: new FormControl<string>('', {
@@ -76,7 +79,22 @@ export class CategoryModalComponent implements OnInit {
   }
 
   createNewCategory() {
-    console.error('Not implemented yet.');
+    const createdCategory = new Category(
+      undefined,
+      this.categoryForm.value.name!,
+      this.categoryForm.value.icon!,
+      this.categoryForm.value.billType!,
+      this.categoryForm.value.color!
+    );
+    this.categoryService.createCategory(createdCategory).subscribe({
+      next: (value) => {
+        console.log(value);
+        this.cleanForm();
+      },
+      error(err) {
+        console.error(err);
+      },
+    });
   }
 
   changeBillType(type: BillTypeEnum) {
@@ -93,6 +111,7 @@ export class CategoryModalComponent implements OnInit {
 
   changeSelectedIcon(icon: string) {
     this.selectedIcon = icon;
+    this.categoryForm.patchValue({ icon: this.selectedIcon });
   }
 
   setDefaultColor(color: Color) {

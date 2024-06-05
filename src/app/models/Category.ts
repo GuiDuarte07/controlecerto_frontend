@@ -1,14 +1,14 @@
 import { BillTypeEnum } from '../enums/BillTypeEnum';
 
 export class Category {
-  id: number;
+  id?: number;
   name: string;
   icon: string;
   billType: BillTypeEnum;
   color: string;
 
   constructor(
-    id: number,
+    id: number | undefined,
     name: string,
     icon: string,
     billType: BillTypeEnum,

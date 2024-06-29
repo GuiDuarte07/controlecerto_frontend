@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { CreateExpenseModalComponent } from '../create-expense-modal/create-expense-modal.component';
 import { CreateIncomeModalComponent } from '../create-income-modal/create-income-modal.component';
+import { MatDialog } from '@angular/material/dialog';
+import { AccountModalComponent } from '../account-modal/account-modal.component';
 
 @Component({
   selector: 'app-create-tansactions-types',

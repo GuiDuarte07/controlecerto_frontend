@@ -1,11 +1,20 @@
+import { CreditCardService } from './../../services/credit-card.service';
 import { AccountService } from './../../services/account.service';
 import { TransactionService } from './../../services/transaction.service';
-import { Component, Input, OnInit, Renderer2, input } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  Renderer2,
+  input,
+  ɵɵsetComponentScope,
+} from '@angular/core';
 import { ModalComponent } from '../modal/modal.component';
 import { ExpenseTypeEnum } from '../../enums/ExpenseTypeEnum';
 import {
   FormControl,
   FormGroup,
+  FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -18,6 +27,8 @@ import { forkJoin } from 'rxjs';
 import { TransactionTypeEnum } from '../../enums/TransactionTypeEnum';
 import { IncomeTypeEnum } from '../../enums/IncomeTypeEnum';
 import { CreateIncome } from '../../models/CreateIncome';
+import { CreateCreditPurchaseRequest } from '../../models/CreateCreditPurchaseRequest ';
+import { CreditCardInfo } from '../../models/CreditCardInfo';
 
 interface ITransactionForm {
   amount: FormControl<number>;
@@ -25,7 +36,8 @@ interface ITransactionForm {
   purchaseDate: FormControl<Date>;
   destination: FormControl<string>;
   description: FormControl<string>;
-  accountId: FormControl<number>;
+  accountId: FormControl<number | null>;
+  creditCardId: FormControl<number | null>;
   categoryId: FormControl<number>;
   justForRecord: FormControl<boolean>;
 }
@@ -36,7 +48,7 @@ type IncomeType = { name: string; code: IncomeTypeEnum; selected: boolean };
 @Component({
   selector: 'app-create-expense-modal',
   standalone: true,
-  imports: [ModalComponent, ReactiveFormsModule, CommonModule],
+  imports: [ModalComponent, ReactiveFormsModule, CommonModule, FormsModule],
   templateUrl: './create-expense-modal.component.html',
   styleUrl: './create-expense-modal.component.scss',
 })
@@ -48,14 +60,18 @@ export class CreateExpenseModalComponent implements OnInit {
 
   accounts: Account[] = [];
   categories: Category[] = [];
-  selectedCategory!: Category;
-  selectedAccount!: Account;
+  creditCards: CreditCardInfo[] = [];
+  selectedCategory?: Category;
+  selectedAccount?: Account;
+  selectedCreditCard?: CreditCardInfo;
+
+  installments = 1;
 
   constructor(
     private transactionService: TransactionService,
+    private creditCardService: CreditCardService,
     private accountService: AccountService,
-    private categoryService: CategoryService,
-    private renderer: Renderer2
+    private categoryService: CategoryService
   ) {}
 
   dateOptions = {
@@ -129,8 +145,10 @@ export class CreateExpenseModalComponent implements OnInit {
         ],
       }),
       accountId: new FormControl<number>(0, {
-        nonNullable: true,
-        validators: [Validators.required],
+        nonNullable: false,
+      }),
+      creditCardId: new FormControl<number>(0, {
+        nonNullable: false,
       }),
       categoryId: new FormControl<number>(0, {
         nonNullable: true,
@@ -161,15 +179,24 @@ export class CreateExpenseModalComponent implements OnInit {
       this.transactionForm.patchValue({ categoryId: this.categories[0].id });
       this.selectedCategory = this.categories[0];
     });
+
+    this.creditCardService.getCreditCards().subscribe((data) => {
+      this.creditCards = data;
+      this.transactionForm.patchValue({ creditCardId: this.creditCards[0].id });
+      this.selectedCreditCard = this.creditCards[0];
+    });
   }
 
-  changeSelectedItem(item: Category | Account) {
+  changeSelectedItem(item: Category | Account | CreditCardInfo) {
     if (item instanceof Category) {
       this.selectedCategory = item;
       this.transactionForm.patchValue({ categoryId: item.id });
     } else if (item instanceof Account) {
       this.selectedAccount = item;
       this.transactionForm.patchValue({ accountId: item.id });
+    } else if (item instanceof CreditCardInfo) {
+      this.selectedCreditCard = item;
+      this.transactionForm.patchValue({ creditCardId: item.id });
     }
 
     /* const dropdown = document.getElementById(this.id + 'category');
@@ -189,7 +216,7 @@ export class CreateExpenseModalComponent implements OnInit {
     if (this.transactionType === TransactionTypeEnum.INCOME) {
       let data = this.transactionForm.getRawValue();
       const incomeToCreate = new CreateIncome({
-        accountId: data.accountId,
+        accountId: data.accountId!,
         amount: data.amount,
         categoryId: data.categoryId,
         description: data.description,
@@ -203,11 +230,37 @@ export class CreateExpenseModalComponent implements OnInit {
     }
 
     if (this.transactionType === TransactionTypeEnum.EXPENSE) {
-      const expenseToCreate = new CreateExpense(
-        this.transactionForm.getRawValue()
-      );
+      const expenseToCreate = new CreateExpense({
+        ...this.transactionForm.getRawValue(),
+        accountId: this.transactionForm.value.accountId!,
+      });
       console.log(expenseToCreate);
       this.transactionService.createExpense(expenseToCreate);
+    }
+
+    if (this.transactionType === TransactionTypeEnum.CREDITEXPENSE) {
+      const {
+        amount,
+        creditCardId,
+        categoryId,
+        description,
+        destination,
+        justForRecord,
+        purchaseDate,
+      } = this.transactionForm.value;
+      const creditPurchaseToCreate = new CreateCreditPurchaseRequest(
+        amount!,
+        this.installments,
+        undefined,
+        purchaseDate ?? new Date(),
+        destination ?? '',
+        description,
+        creditCardId!,
+        categoryId!
+      );
+
+      console.log(creditPurchaseToCreate);
+      this.creditCardService.createCreditPurchase(creditPurchaseToCreate);
     }
   }
 

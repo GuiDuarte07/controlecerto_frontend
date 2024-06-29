@@ -11,6 +11,7 @@ import {
 import localePt from '@angular/common/locales/pt';
 import { TokenInterceptor } from './interceptors/token.interceptor';
 import { registerLocaleData } from '@angular/common';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 registerLocaleData(localePt);
 
@@ -30,6 +31,6 @@ export const appConfig: ApplicationConfig = {
     {
       provide: LOCALE_ID,
       useValue: 'pt-BR',
-    },
+    }, provideAnimationsAsync(),
   ],
 };

@@ -28,6 +28,8 @@
     <button
       type="button"
       class="create-record-options bg-yellow-400"
+      data-modal-target="credit-modal"
+      data-modal-toggle="credit-modal"
     >
       <span class="material-icons-outlined"> credit_card </span>
       Cartão de Crédito
@@ -45,3 +47,4 @@
 
 <app-create-expense-modal [id]="'expense-modal'" [transactionType]="0" ></app-create-expense-modal>
 <app-create-expense-modal [id]="'income-modal'" [transactionType]="1" ></app-create-expense-modal>
+<app-create-expense-modal [id]="'credit-modal'" [transactionType]="2" ></app-create-expense-modal>

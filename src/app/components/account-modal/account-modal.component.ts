@@ -1,5 +1,5 @@
 import { AccountService } from './../../services/account.service';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ModalComponent } from '../modal/modal.component';
 import { AccountTypeEnum } from '../../enums/AccountTypeEnum ';
 import { CommonModule } from '@angular/common';
@@ -10,6 +10,16 @@ import {
   Validators,
 } from '@angular/forms';
 import { Account } from '../../models/AccountRequest ';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import {
+  MatSnackBar,
+  MatSnackBarAction,
+  MatSnackBarActions,
+  MatSnackBarLabel,
+  MatSnackBarRef,
+} from '@angular/material/snack-bar';
+import { HttpErrorResponse } from '@angular/common/http';
 
 type Color = { code: string; selected: boolean };
 type AccountType = { name: string; code: AccountTypeEnum; selected: boolean };
@@ -25,13 +35,17 @@ interface IAccountForm {
 @Component({
   selector: 'app-account-modal',
   standalone: true,
-  imports: [ModalComponent, CommonModule, ReactiveFormsModule],
+  imports: [
+    ModalComponent,
+    CommonModule,
+    ReactiveFormsModule,
+    MatButtonModule,
+    MatDialogModule,
+  ],
   templateUrl: './account-modal.component.html',
   styleUrl: './account-modal.component.scss',
 })
 export class AccountModalComponent implements OnInit {
-  @Output() onAccountCreated = new EventEmitter<void>();
-
   accountForm!: FormGroup<IAccountForm>;
 
   defaultColors: Color[] = [
@@ -55,7 +69,24 @@ export class AccountModalComponent implements OnInit {
     { name: 'Outro', code: AccountTypeEnum.OTHER, selected: false },
   ];
 
-  constructor(private accountService: AccountService) {}
+  constructor(
+    private accountService: AccountService,
+    public dialogRef: MatDialogRef<AccountModalComponent>,
+    private snackBar: MatSnackBar
+  ) {}
+
+  closeDialog(sucess: boolean) {
+    this.dialogRef.close(sucess);
+  }
+
+  openSnackBar(message: string) {
+    this.snackBar.open(message, undefined, {
+      duration: 3000,
+      horizontalPosition: 'start',
+      verticalPosition: 'top',
+      panelClass: ['.snackbar-error'],
+    });
+  }
 
   ngOnInit(): void {
     this.accountForm = new FormGroup({
@@ -95,9 +126,15 @@ export class AccountModalComponent implements OnInit {
   createNewAccount() {
     let accountToCreate = new Account(this.accountForm.getRawValue());
     console.log(accountToCreate);
-    this.accountService.createAccount(accountToCreate).subscribe(() => {
-      this.accountForm.reset();
-      this.onAccountCreated.emit();
+    this.accountService.createAccount(accountToCreate).subscribe({
+      next: () => {
+        this.openSnackBar('Conta criada com sucesso!');
+        this.accountForm.reset();
+        this.closeDialog(true);
+      },
+      error: (err: HttpErrorResponse) => {
+        this.openSnackBar('Houve um erro na criação da conta: ' + err.message);
+      },
     });
   }
 

@@ -58,3 +58,12 @@ body {
 .active-route-sidebar {
   @apply bg-slate-200
 }
+
+.snackbar-error {
+  background-color: red !important;
+  color: black !important;
+  font-size: 16px !important;
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

@@ -1,5 +1,14 @@
 <main class="pl-24">
   <div class="mt-8 flex w-full gap-8  flex-wrap">
+    <div class="w-56 rounded bg-white flex justify-center items-center ">
+      <button (click)="openAccountDialog()" class="flex gap-3 px-2 py-4 ">
+        <p class="">Criar nova conta</p>
+        <span class="material-icons-outlined">
+          add
+        </span>
+      </button>
+    </div>
+
     @for(account of $accounts | async; track account) {
     <div [ngStyle]="{'border-color': account.color}" class="border-b-8 px-2 py-4 w-56 rounded-md bg-white">
       <div class="flex gap-3 py-1">
@@ -30,15 +39,6 @@
       </div>
     </div>
     }
-    <div class="w-56 rounded bg-white flex justify-center items-center ">
-      <button data-modal-target="account-modal" data-modal-toggle="account-modal" class="flex gap-3 px-2 py-4 ">
-        <p class="">Criar nova conta</p>
-        <span class="material-icons-outlined">
-          add
-        </span>
-      </button>
-    </div>
+
   </div>
 </main>
-
-<app-account-modal (onAccountCreated)="updatedAccounts()"></app-account-modal>

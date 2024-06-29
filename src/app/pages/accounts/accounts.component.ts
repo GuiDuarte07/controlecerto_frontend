@@ -8,6 +8,7 @@ import { Observable } from 'rxjs';
 import { Account } from '../../models/AccountRequest ';
 import { BalanceStatement } from '../../models/BalanceStatement';
 import { initFlowbite } from 'flowbite';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-accounts',
@@ -23,7 +24,19 @@ export class AccountsComponent implements OnInit, AfterViewInit {
   @ViewChild(AccountModalComponent)
   accountModalComponent!: AccountModalComponent;
 
-  constructor(private accountService: AccountService) {}
+  constructor(
+    private accountService: AccountService,
+    public dialog: MatDialog
+  ) {}
+
+  openAccountDialog() {
+    const dialogRef = this.dialog.open(AccountModalComponent);
+    dialogRef.afterClosed().subscribe((sucess) => {
+      if ((sucess as boolean) === true) {
+        this.updatedAccounts();
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.updatedAccounts();

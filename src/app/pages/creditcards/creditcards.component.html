@@ -1,21 +1,49 @@
 <main class="pl-24">
   <div class="mt-8 flex w-full gap-8 flex-wrap">
-    @for(creditcard of $creditCards | async; track creditcard) {
-      <div class="w-64 min-h-36 gap-2 flex flex-col justify-between bg-slate-50 p-4 box-content rounded-lg">
-        <h3 class="font-bold">{{creditcard.cardBrand}} - {{creditcard.account.bank}}</h3>
-        <div class="flex w-full justify-between text-low">
-          <p class="">Fatura Usada: </p>
-          <p class="font-bold text-sm text-slate-600">{{creditcard.usedLimit | currency:'BRL':'symbol'}}</p>
-        </div>
-        <div class="flex w-full justify-between text-low">
-          <p class="">Fatura Disponível: </p>
-          <p class="font-bold text-sm text-slate-600">{{(creditcard.totalLimit - creditcard.usedLimit) | currency:'BRL':'symbol'}}</p>
-        </div>
-        <div class="flex w-full justify-between text-low">
-          <p class="">Fechamento: </p>
-          <p class="font-bold text-sm text-slate-600">{{formatDateString(creditcard.closeDay)}}</p>
-        </div>
+    <div
+      class="w-64 min-h-36 gap-2 flex flex-col justify-between bg-slate-50 p-4 box-content rounded-lg"
+    >
+      <button (click)="openCreditCardDialog()" type="button" class="w-full h-full flex justify-center items-center font-bold">
+        <span class="material-icons-outlined">
+          add
+        </span>
+        <p class="">Criar Novo Cartão de Crédito</p>
+      </button>
+    </div>
 
-        <button type="button" class="btn btn-principal w-6/12 self-end mt-2">Ver Datalhes</button>
+    @for(creditcard of $creditCards | async; track creditcard) {
+    <div
+      class="w-64 min-h-36 gap-2 flex flex-col justify-between bg-slate-50 p-4 box-content rounded-lg"
+    >
+      <h3 class="font-bold">
+        {{ creditcard.cardBrand }} - {{ creditcard.account.bank }}
+      </h3>
+      <div class="flex w-full justify-between text-low">
+        <p class="">Fatura Usada:</p>
+        <p class="font-bold text-sm text-slate-600">
+          {{ creditcard.usedLimit | currency : "BRL" : "symbol" }}
+        </p>
       </div>
+      <div class="flex w-full justify-between text-low">
+        <p class="">Fatura Disponível:</p>
+        <p class="font-bold text-sm text-slate-600">
+          {{
+            creditcard.totalLimit - creditcard.usedLimit
+              | currency : "BRL" : "symbol"
+          }}
+        </p>
+      </div>
+      <div class="flex w-full justify-between text-low">
+        <p class="">Fechamento:</p>
+        <p class="font-bold text-sm text-slate-600">
+          {{ formatDateString(creditcard.closeDay) }}
+        </p>
+      </div>
+
+      <button type="button" class="btn btn-principal w-6/12 self-end mt-2">
+        Ver Datalhes
+      </button>
+    </div>
     }
+  </div>
+</main>

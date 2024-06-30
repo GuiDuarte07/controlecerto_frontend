@@ -5,6 +5,8 @@ import { CreditCardInfo } from '../../models/CreditCardInfo';
 import { CommonModule } from '@angular/common';
 import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 import { initFlowbite } from 'flowbite';
+import { MatDialog } from '@angular/material/dialog';
+import { CreateCreditCardDialogComponent } from '../../components/dialogs/create-credit-card-dialog/create-credit-card-dialog.component';
 
 @Component({
   selector: 'app-creditcards',
@@ -16,11 +18,26 @@ import { initFlowbite } from 'flowbite';
 export class CreditcardsComponent implements OnInit, AfterViewInit {
   $creditCards!: Observable<CreditCardInfo[]>;
 
-  constructor(private creditCardService: CreditCardService) {}
+  constructor(
+    private creditCardService: CreditCardService,
+    public dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
+    this.updatedCreditCards();
+  }
+
+  updatedCreditCards() {
     this.$creditCards = this.creditCardService.getCreditCards();
-    this.$creditCards.subscribe((d) => console.log(d));
+  }
+
+  openCreditCardDialog() {
+    const dialogRef = this.dialog.open(CreateCreditCardDialogComponent);
+    dialogRef.afterClosed().subscribe((sucess) => {
+      if ((sucess as boolean) === true) {
+        this.updatedCreditCards();
+      }
+    });
   }
 
   ngAfterViewInit(): void {

@@ -1,0 +1,99 @@
+<h2 mat-dialog-title>Novo Cartão</h2>
+<mat-dialog-content class="w-[900px]">
+  <form
+    [formGroup]="creditCardForm"
+    class="m-4 flex flex-col gap-6"
+  >
+    <div>
+      <label
+        for="totalLimit"
+        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+        >Limite Total do Cartão</label
+      >
+      <input
+        formControlName="totalLimit"
+        type="number"
+        id="totalLimit"
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        required
+      />
+    </div>
+
+    <div>
+      <label
+        for="usedLimit"
+        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+        >Limite Usado do Cartão</label
+      >
+      <input
+        formControlName="usedLimit"
+        type="number"
+        id="usedLimit"
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        required
+      />
+    </div>
+
+    <div class="">
+      <label
+        for="description"
+        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+        >Descrição</label
+      >
+      <textarea
+        formControlName="description"
+        id="description"
+        rows="4"
+        class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        placeholder="Insira uma descrição para essa conta..."
+      ></textarea>
+    </div>
+
+    <!-- CARD BRAND -->
+    <div>
+      <label
+        for="cardBrand"
+        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+        >Bandeira do cartão</label
+      >
+      <input
+        formControlName="cardBrand"
+        type="text"
+        id="cardBrand"
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        placeholder="Bandeira do cartão"
+        required
+      />
+    </div>
+
+
+
+
+    <label
+      for="cardAccount"
+      class="block text-sm font-medium text-gray-900 dark:text-white"
+      >Conta do Cartão</label
+    >
+    <mat-form-field class="!p-0 !m-0">
+      <mat-label class="!text-sm !m-0">Conta do Cartão</mat-label>
+      <mat-select id="cardAccount" [(value)]="selectedAccountId" class="!text-sm !min-h-7 !m-0">
+        @for (account of accounts; track account) {
+          <mat-option class="!text-sm !min-h-7" [value]="account.id">{{account.bank}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+
+
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="closeDialog(false)">Cancelar</button>
+  <button
+    [disabled]="!creditCardForm.valid"
+    mat-button
+    (click)="createNewCreditCard()"
+  >
+    Criar
+  </button>
+</mat-dialog-actions>

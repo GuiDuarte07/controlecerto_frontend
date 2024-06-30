@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { CreditCardInfo } from '../models/CreditCardInfo';
 import { CreateCreditPurchaseRequest } from '../models/CreateCreditPurchaseRequest ';
+import { CreateCreditCardRequest } from '../models/CreateCreditCardRequest';
 
 @Injectable({
   providedIn: 'root',
@@ -39,11 +40,12 @@ export class CreditCardService {
     const suffix = 'CreateCreditPurchase';
     console.log('enviando', creditPurchase);
     //retorna InfoCreditPurchaseResponse, porém como não terá uso ainda, não irei implementar
-    return this.http
-      .post<any>(`${this.hostAddress}/${suffix}`, creditPurchase)
-      .subscribe({
-        next: (d) => console.log(d),
-        error: (d) => console.log(d),
-      });
+    return this.http.post<any>(`${this.hostAddress}/${suffix}`, creditPurchase);
+  }
+
+  createCreditCard(creditCard: CreateCreditCardRequest) {
+    const suffix = 'CreateCreditCard';
+    console.log('enviando', creditCard);
+    return this.http.post<any>(`${this.hostAddress}/${suffix}`, creditCard);
   }
 }

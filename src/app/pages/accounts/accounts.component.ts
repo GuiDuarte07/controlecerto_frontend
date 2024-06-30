@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 import { AccountTypeEnum } from '../../enums/AccountTypeEnum ';
-import { AccountModalComponent } from '../../components/account-modal/account-modal.component';
+import { AccountDialogComponent } from '../../components/dialogs/account-dialog/account-modal.component';
 import { Observable } from 'rxjs';
 import { Account } from '../../models/AccountRequest ';
 import { BalanceStatement } from '../../models/BalanceStatement';
@@ -13,16 +13,13 @@ import { MatDialog } from '@angular/material/dialog';
 @Component({
   selector: 'app-accounts',
   standalone: true,
-  imports: [CommonModule, SidebarComponent, AccountModalComponent],
+  imports: [CommonModule, SidebarComponent, AccountDialogComponent],
   templateUrl: './accounts.component.html',
   styleUrl: './accounts.component.scss',
 })
-export class AccountsComponent implements OnInit, AfterViewInit {
+export class AccountsComponent implements OnInit {
   $accounts!: Observable<Account[]>;
   balance!: BalanceStatement;
-
-  @ViewChild(AccountModalComponent)
-  accountModalComponent!: AccountModalComponent;
 
   constructor(
     private accountService: AccountService,
@@ -30,7 +27,7 @@ export class AccountsComponent implements OnInit, AfterViewInit {
   ) {}
 
   openAccountDialog() {
-    const dialogRef = this.dialog.open(AccountModalComponent);
+    const dialogRef = this.dialog.open(AccountDialogComponent);
     dialogRef.afterClosed().subscribe((sucess) => {
       if ((sucess as boolean) === true) {
         this.updatedAccounts();
@@ -42,10 +39,6 @@ export class AccountsComponent implements OnInit, AfterViewInit {
     this.updatedAccounts();
 
     this.accountService.getBalance().subscribe((b) => (this.balance = b));
-  }
-
-  ngAfterViewInit(): void {
-    initFlowbite();
   }
 
   updatedAccounts() {

@@ -1,7 +1,7 @@
-import { AccountService } from './../../services/account.service';
+import { AccountService } from '../../../services/account.service';
 import { Component, OnInit } from '@angular/core';
-import { ModalComponent } from '../modal/modal.component';
-import { AccountTypeEnum } from '../../enums/AccountTypeEnum ';
+import { ModalComponent } from '../../modal/modal.component';
+import { AccountTypeEnum } from '../../../enums/AccountTypeEnum ';
 import { CommonModule } from '@angular/common';
 import {
   FormControl,
@@ -9,7 +9,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Account } from '../../models/AccountRequest ';
+import { Account } from '../../../models/AccountRequest ';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import {
@@ -33,7 +33,7 @@ interface IAccountForm {
 }
 
 @Component({
-  selector: 'app-account-modal',
+  selector: 'app-account-dialog',
   standalone: true,
   imports: [
     ModalComponent,
@@ -45,7 +45,7 @@ interface IAccountForm {
   templateUrl: './account-modal.component.html',
   styleUrl: './account-modal.component.scss',
 })
-export class AccountModalComponent implements OnInit {
+export class AccountDialogComponent implements OnInit {
   accountForm!: FormGroup<IAccountForm>;
 
   defaultColors: Color[] = [
@@ -71,7 +71,7 @@ export class AccountModalComponent implements OnInit {
 
   constructor(
     private accountService: AccountService,
-    public dialogRef: MatDialogRef<AccountModalComponent>,
+    public dialogRef: MatDialogRef<AccountDialogComponent>,
     private snackBar: MatSnackBar
   ) {}
 

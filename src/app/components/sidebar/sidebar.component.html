@@ -2,13 +2,27 @@
   class="w-20 h-screen absolute top-0 left-0 bg-white flex flex-col gap-6 pt-12 items-center"
 >
   <button
-    data-modal-target="transactions-types"
-    data-modal-toggle="transactions-types"
+    [matMenuTriggerFor]="menu"
     type="button"
     class="size-12 bg-emerald-400 rounded-full flex justify-center items-center transition-transform transform hover:rotate-90 duration-300"
   >
     <span class="material-icons-outlined"> add </span>
   </button>
+  <mat-menu class="!mt-2" #menu="matMenu">
+    <button (click)="openExpenseDialog()" class="!text-red-700 !py-0 !text-sm" mat-menu-item>
+      <span class="!text-sm pr-2 material-icons-outlined"> shopping_cart </span> <span class="!text-sm">Gasto</span>
+    </button>
+    <button (click)="openIncomeDialog()" class="!text-green-600 !py-0 !text-sm" mat-menu-item>
+      <span class="!text-sm pr-2 material-icons-outlined"> savings </span> <span class="!text-sm">Receita</span>
+    </button>
+    <button (click)="openCreditExpenseDialog()" class="!text-yellow-400 !py-0 !text-sm" mat-menu-item>
+      <span class="!text-sm pr-2 material-icons-outlined"> credit_card </span> <span class="!text-sm"> Cartão de
+        Crédito</span>
+    </button>
+    <button class="!text-blue-600 !py-0 !text-sm" mat-menu-item>
+      <span class="!text-sm pr-2 material-icons-outlined"> sync_alt </span> <span class="!text-sm">Transferência</span>
+    </button>
+  </mat-menu>
 
   <a
     [class.active-route-sidebar]="isCurrentRoute('/home')"
@@ -76,4 +90,3 @@
   </a>
 </nav>
 
-<app-create-tansactions-types></app-create-tansactions-types>

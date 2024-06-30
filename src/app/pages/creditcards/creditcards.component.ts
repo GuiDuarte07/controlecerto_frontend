@@ -15,7 +15,7 @@ import { CreateCreditCardDialogComponent } from '../../components/dialogs/create
   templateUrl: './creditcards.component.html',
   styleUrl: './creditcards.component.scss',
 })
-export class CreditcardsComponent implements OnInit, AfterViewInit {
+export class CreditcardsComponent implements OnInit {
   $creditCards!: Observable<CreditCardInfo[]>;
 
   constructor(
@@ -38,10 +38,6 @@ export class CreditcardsComponent implements OnInit, AfterViewInit {
         this.updatedCreditCards();
       }
     });
-  }
-
-  ngAfterViewInit(): void {
-    initFlowbite();
   }
 
   formatDateString(dateString: string | Date): string {

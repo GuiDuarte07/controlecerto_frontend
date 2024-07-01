@@ -7,6 +7,7 @@ import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 import { initFlowbite } from 'flowbite';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateCreditCardDialogComponent } from '../../components/dialogs/create-credit-card-dialog/create-credit-card-dialog.component';
+import { InvoicesDialogComponent } from '../../components/dialogs/invoices-dialog/invoices-dialog.component';
 
 @Component({
   selector: 'app-creditcards',
@@ -48,6 +49,14 @@ export class CreditcardsComponent implements OnInit {
       if ((sucess as boolean) === true) {
         this.updatedCreditCards();
       }
+    });
+  }
+
+  openInvoicesDialog(accountId: number) {
+    this.dialog.open(InvoicesDialogComponent, {
+      data: {
+        accountId,
+      },
     });
   }
 

@@ -1,0 +1,46 @@
+<mat-dialog-content class="w-[600px]">
+  @if ((invoices$ | async)?.length === 0) {
+    <p class="">Sinto muito, não foi encontrada nenhuma fatura de nenhum mês para esse cartão =(</p>
+  }
+  @for(invoice of invoices$ | async; track invoice) {
+  <button
+    [ngClass]="{
+      'border-amber-400 !border-2': isActualMonth(invoice.closingDate) === 'present',
+      'border-green-400': isActualMonth(invoice.closingDate) === 'future',
+      'border-pink-400': isActualMonth(invoice.closingDate) === 'past'
+    }"
+    class="bg-slate-50 border border-solid w-full shadow rounded px-4 py-2 my-4 flex flex-col"
+  >
+    <h3 class="text-sm font-semibold">
+      {{ getMonthYearString(invoice.dueDate) }}
+    </h3>
+
+    <div class="text-sm">
+      <p class="text-lime-600">
+        Total:
+        <span class="font-semibold">{{
+          invoice.totalAmount | currency : "BRL" : "symbol"
+        }}</span>
+      </p>
+    </div>
+    @if(invoice.totalAmount - invoice.totalPaid != 0 ) {
+    <!-- || invoice.isPaid -->
+    <div class="text-sm">
+      <p class="text-red-600">
+        Pago:
+        <span class="font-semibold">{{
+          invoice.totalPaid | currency : "BRL" : "symbol"
+        }}</span>
+      </p>
+    </div>
+    }@else {
+    <div class="text-sm text-blue-600">
+      <p class="">Fatura paga</p>
+    </div>
+    }
+  </button>
+  }
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="closeDialog()">Fechar</button>
+</mat-dialog-actions>

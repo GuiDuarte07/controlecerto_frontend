@@ -55,8 +55,8 @@ export class CreditCardService {
                 item.totalAmount,
                 item.totalAmount,
                 item.isPaid,
-                item.closingDate,
-                item.dueDate
+                new Date(item.closingDate),
+                new Date(item.dueDate)
               )
           )
         )

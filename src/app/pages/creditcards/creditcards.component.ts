@@ -18,7 +18,7 @@ import { InvoicesDialogComponent } from '../../components/dialogs/invoices-dialo
 })
 export class CreditcardsComponent implements OnInit {
   $creditCards!: Observable<CreditCardInfo[]>;
-  day = new Date(21, 1, 1).getDate();
+  day = new Date().getDate();
 
   constructor(
     private creditCardService: CreditCardService,

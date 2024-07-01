@@ -5,6 +5,7 @@ import { CreditCardInfo } from '../models/CreditCardInfo';
 import { CreateCreditPurchaseRequest } from '../models/CreateCreditPurchaseRequest ';
 import { CreateCreditCardRequest } from '../models/CreateCreditCardRequest';
 import { InfoInvoiceResponse } from '../models/InfoInvoiceResponse';
+import { InfoCreditExpense } from '../models/InfoCreditExpense';
 
 @Injectable({
   providedIn: 'root',
@@ -74,5 +75,29 @@ export class CreditCardService {
     const suffix = 'CreateCreditCard';
     console.log('enviando', creditCard);
     return this.http.post<any>(`${this.hostAddress}/${suffix}`, creditCard);
+  }
+
+  getCreditExpensesFromInvoice(
+    invoiceId: number
+  ): Observable<InfoCreditExpense[]> {
+    const suffix = 'GetCreditExpensesFromInvoice';
+    return this.http
+      .get<InfoCreditExpense[]>(`${this.hostAddress}/${suffix}/${invoiceId}`)
+      .pipe(
+        map((data) =>
+          data.map(
+            (item) =>
+              new InfoCreditExpense(
+                item.id,
+                item.amount,
+                item.description ?? '',
+                new Date(item.purchaseDate),
+                item.installmentNumber,
+                item.destination,
+                item.creditPurchaseId
+              )
+          )
+        )
+      );
   }
 }

@@ -40,7 +40,7 @@
           > {{ transaction.amount | currency:'BRL':'symbol'}}
         </p>
         <p class="text-xs font-medium text-gray-700">
-          {{formatDateString(transaction.purchaseDate)}}
+          {{formaterService.formatDateString(transaction.purchaseDate)}}
         </p>
       </div>
     </div>

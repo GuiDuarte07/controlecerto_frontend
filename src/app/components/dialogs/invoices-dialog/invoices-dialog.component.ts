@@ -4,11 +4,13 @@ import { CommonModule } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
 import {
   MAT_DIALOG_DATA,
+  MatDialog,
   MatDialogActions,
   MatDialogContent,
   MatDialogRef,
 } from '@angular/material/dialog';
 import { InfoInvoiceResponse } from '../../../models/InfoInvoiceResponse';
+import { InvoiceDetailsDialogComponent } from '../invoice-details-dialog/invoice-details-dialog.component';
 
 @Component({
   selector: 'app-invoices-dialog',
@@ -23,7 +25,8 @@ export class InvoicesDialogComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public data: { accountId: number },
-    public dialogRef: MatDialogRef<InvoicesDialogComponent>,
+    public myDialogRef: MatDialogRef<InvoicesDialogComponent>,
+    public dialogRef: MatDialog,
     private readonly creditCardService: CreditCardService
   ) {}
 
@@ -32,7 +35,16 @@ export class InvoicesDialogComponent implements OnInit {
   }
 
   closeDialog() {
-    this.dialogRef.close();
+    this.myDialogRef.close();
+  }
+
+  openInvoiceDetailsDialog(title: string, invoiceId: number) {
+    this.dialogRef.open(InvoiceDetailsDialogComponent, {
+      data: {
+        title,
+        invoiceId,
+      },
+    });
   }
 
   getMonthYearString(date: Date): string {

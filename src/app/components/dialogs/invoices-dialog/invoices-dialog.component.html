@@ -4,6 +4,7 @@
   }
   @for(invoice of invoices$ | async; track invoice) {
   <button
+    (click)="openInvoiceDetailsDialog(getMonthYearString(invoice.dueDate), invoice.id)"
     [ngClass]="{
       'border-amber-400 !border-2': isActualMonth(invoice.closingDate) === 'present',
       'border-green-400': isActualMonth(invoice.closingDate) === 'future',

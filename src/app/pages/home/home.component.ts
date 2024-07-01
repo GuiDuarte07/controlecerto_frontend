@@ -1,8 +1,5 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ModalComponent } from '../../components/modal/modal.component';
-import { AccountModalComponent } from '../../components/dialogs/account-dialog/account-modal.component';
-import { CreateExpenseModalComponent } from '../../components/create-expense-modal/create-expense-modal.component';
-import { CreateTansactionsTypesComponent } from '../../components/create-transactions-types/create-transactions-types.component';
 import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 import { AccountService } from '../../services/account.service';
 import { BalanceStatement } from '../../models/BalanceStatement';
@@ -12,14 +9,7 @@ import { initFlowbite } from 'flowbite';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [
-    CommonModule,
-    ModalComponent,
-    AccountModalComponent,
-    CreateExpenseModalComponent,
-    CreateTansactionsTypesComponent,
-    SidebarComponent,
-  ],
+  imports: [CommonModule, SidebarComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
@@ -30,8 +20,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
     incomes: 0,
     invoices: 0,
   };
-
-  accountModalComponent!: AccountModalComponent;
 
   constructor(private accountService: AccountService) {}
 

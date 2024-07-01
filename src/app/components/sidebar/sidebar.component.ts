@@ -1,4 +1,3 @@
-import { CreateTansactionsTypesComponent } from './../create-transactions-types/create-transactions-types.component';
 import { Component } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -10,12 +9,7 @@ import { TransactionTypeEnum } from '../../enums/TransactionTypeEnum';
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [
-    CreateTansactionsTypesComponent,
-    RouterLink,
-    MatButtonModule,
-    MatMenuModule,
-  ],
+  imports: [RouterLink, MatButtonModule, MatMenuModule],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss',
 })

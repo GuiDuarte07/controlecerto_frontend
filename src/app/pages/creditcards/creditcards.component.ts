@@ -17,6 +17,7 @@ import { CreateCreditCardDialogComponent } from '../../components/dialogs/create
 })
 export class CreditcardsComponent implements OnInit {
   $creditCards!: Observable<CreditCardInfo[]>;
+  day = new Date(21, 1, 1).getDate();
 
   constructor(
     private creditCardService: CreditCardService,
@@ -25,6 +26,16 @@ export class CreditcardsComponent implements OnInit {
 
   ngOnInit(): void {
     this.updatedCreditCards();
+
+    let accountId: number;
+    this.$creditCards.subscribe((d) => {
+      accountId = d[0].account.id;
+      this.creditCardService.getInvoices(accountId).subscribe({
+        next: (v) => {
+          console.log(v);
+        },
+      });
+    });
   }
 
   updatedCreditCards() {

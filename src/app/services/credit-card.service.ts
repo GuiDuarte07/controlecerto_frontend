@@ -4,6 +4,7 @@ import { Observable, map } from 'rxjs';
 import { CreditCardInfo } from '../models/CreditCardInfo';
 import { CreateCreditPurchaseRequest } from '../models/CreateCreditPurchaseRequest ';
 import { CreateCreditCardRequest } from '../models/CreateCreditCardRequest';
+import { InfoInvoiceResponse } from '../models/InfoInvoiceResponse';
 
 @Injectable({
   providedIn: 'root',
@@ -30,6 +31,32 @@ export class CreditCardService {
                 item.dueDay,
                 item.closeDay,
                 item.account
+              )
+          )
+        )
+      );
+  }
+
+  getInvoices(accountId: number): Observable<InfoInvoiceResponse[]> {
+    const suffix = 'GetInvoicesWithPagination';
+    return this.http
+      .get<InfoInvoiceResponse[]>(`${this.hostAddress}/${suffix}`, {
+        params: {
+          pageNumber: 0,
+          accountId: accountId,
+        },
+      })
+      .pipe(
+        map((data) =>
+          data.map(
+            (item) =>
+              new InfoInvoiceResponse(
+                item.id,
+                item.totalAmount,
+                item.totalAmount,
+                item.isPaid,
+                item.closingDate,
+                item.dueDate
               )
           )
         )

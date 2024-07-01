@@ -6,8 +6,8 @@ export class CreditCardInfo {
   usedLimit: number;
   description: string;
   cardBrand: string;
-  dueDay: Date;
-  closeDay: Date;
+  dueDay: number;
+  closeDay: number;
   account: AccountInfo;
 
   constructor(
@@ -16,8 +16,8 @@ export class CreditCardInfo {
     usedLimit: number,
     description: string,
     cardBrand: string,
-    dueDay: Date,
-    closeDay: Date,
+    dueDay: number,
+    closeDay: number,
     account: AccountInfo
   ) {
     this.id = id;

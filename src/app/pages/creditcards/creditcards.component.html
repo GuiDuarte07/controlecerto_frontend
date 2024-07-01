@@ -36,13 +36,33 @@
       <div class="flex w-full justify-between text-low">
         <p class="">Fechamento:</p>
         <p class="font-bold text-sm text-slate-600">
-          {{ formatDateString(creditcard.closeDay) }}
+          dia {{creditcard.closeDay}}
+        </p>
+      </div>
+      <div class="flex w-full justify-between text-low">
+        <p class="">Vencimento:</p>
+        <p class="font-bold text-sm text-slate-600">
+          dia {{creditcard.dueDay}}
         </p>
       </div>
 
-      <button type="button" class="btn btn-principal w-6/12 self-end mt-2">
-        Ver Datalhes
-      </button>
+      <div class="flex justify-between items-center">
+        @if(day < creditcard.closeDay) {
+          <p class="text-xs font-light text-blue-600">
+            Fatura <br> desse mês
+          </p>
+        }
+        @else {
+          <!-- day >= creditcard.closeDay && day <= creditcard.dueDay -->
+          <p class="text-xs font-light text-green-500">
+            Fatura do <br> próximo mês
+          </p>
+
+        }
+        <button type="button" class="btn btn-principal w-6/12 self-end mt-2">
+          Ver Datalhes
+        </button>
+      </div>
     </div>
     }
   </div>

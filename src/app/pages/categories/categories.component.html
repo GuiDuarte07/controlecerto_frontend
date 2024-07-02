@@ -5,8 +5,7 @@
     <h2 class="text-2xl font-bold text-slate-700 tracking-wide">Categorias</h2>
 
     <button
-      data-modal-target="category-modal"
-      data-modal-toggle="category-modal"
+      (click)="openAccountDialog()"
       class="flex items-center gap-2 bg-teal-200 rounded-lg px-2 py-1"
     >
       <span
@@ -22,7 +21,7 @@
     <mat-tab-group>
       <mat-tab label="Despesas">
         <ul class="flex flex-col gap-3 mt-2">
-          @for(category of $categories | async; track category) {
+          @for(category of expenseCategories; track category) {
           <li class="px-2 py-2 w-full border-b border-solid border-slate-200">
             <div class="flex items-center gap-4">
               <div
@@ -46,7 +45,7 @@
       </mat-tab>
       <mat-tab label="Receitas">
         <ul class="flex flex-col gap-3 mt-2">
-          @for(category of $categories | async; track category) {
+          @for(category of incomeCategories; track category) {
           <li class="px-2 py-2 w-full border-b border-solid border-slate-200">
             <div class="flex items-center gap-4">
               <div
@@ -71,5 +70,3 @@
     </mat-tab-group>
   </div>
 </section>
-
-<app-category-modal></app-category-modal>

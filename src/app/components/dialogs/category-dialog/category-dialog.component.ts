@@ -1,5 +1,3 @@
-import { CategoryService } from './../../services/category.service';
-import { Category } from './../../models/Category';
 import { Component, OnInit } from '@angular/core';
 import {
   FormControl,
@@ -7,11 +5,14 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { BillTypeEnum } from '../../enums/BillTypeEnum';
-import { ModalComponent } from '../modal/modal.component';
+import { BillTypeEnum } from '../../../enums/BillTypeEnum';
+import { iconsOptions } from '../../../utils/material_options_icons';
+import { CategoryService } from '../../../services/category.service';
+import { Category } from '../../../models/Category';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
-import { initFlowbite } from 'flowbite';
-import { iconsOptions } from '../../utils/material_options_icons';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatButton } from '@angular/material/button';
 
 type Color = { code: string; selected: boolean };
 
@@ -23,13 +24,13 @@ interface ICateogryForm {
 }
 
 @Component({
-  selector: 'app-category-modal',
+  selector: 'app-category-dialog',
   standalone: true,
-  imports: [ModalComponent, ReactiveFormsModule, CommonModule],
-  templateUrl: './category-modal.component.html',
-  styleUrl: './category-modal.component.scss',
+  imports: [CommonModule, ReactiveFormsModule, MatDialogModule, MatButton],
+  templateUrl: './category-dialog.component.html',
+  styleUrl: './category-dialog.component.scss',
 })
-export class CategoryModalComponent implements OnInit {
+export class CategoryDialogComponent implements OnInit {
   categoryForm!: FormGroup<ICateogryForm>;
   defaultColors: Color[] = [
     { code: '#FF5733', selected: false },
@@ -49,7 +50,24 @@ export class CategoryModalComponent implements OnInit {
   icons: string[] = iconsOptions;
   selectedIcon = this.icons[0];
 
-  constructor(private categoryService: CategoryService) {}
+  constructor(
+    private categoryService: CategoryService,
+    public dialogRef: MatDialogRef<CategoryDialogComponent>,
+    private snackBar: MatSnackBar
+  ) {}
+
+  closeDialog(sucess: boolean) {
+    this.dialogRef.close(sucess);
+  }
+
+  openSnackBar(message: string) {
+    this.snackBar.open(message, undefined, {
+      duration: 3000,
+      horizontalPosition: 'start',
+      verticalPosition: 'top',
+      panelClass: ['.snackbar-error'],
+    });
+  }
 
   ngOnInit(): void {
     this.categoryForm = new FormGroup({
@@ -90,9 +108,10 @@ export class CategoryModalComponent implements OnInit {
       next: (value) => {
         console.log(value);
         this.cleanForm();
+        this.closeDialog(true);
       },
-      error(err) {
-        console.error(err);
+      error: (err) => {
+        this.openSnackBar('Houve um erro na criação da conta: ' + err.message);
       },
     });
   }

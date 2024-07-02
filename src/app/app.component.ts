@@ -15,12 +15,5 @@ export class AppComponent {
 
   constructor(private router: Router) {}
 
-  ngOnInit(): void {
-    initFlowbite();
-    /* this.router.events.subscribe((event) => {
-      if (event instanceof NavigationEnd) {
-        initFlowbite();
-      }
-    }); */
-  }
+  ngOnInit(): void {}
 }

@@ -17,7 +17,7 @@ export class SidebarComponent {
   constructor(private router: Router, private dialog: MatDialog) {}
 
   isCurrentRoute(route: string): boolean {
-    return this.router.url === route;
+    return this.router.url.includes(route);
   }
 
   openIncomeDialog() {

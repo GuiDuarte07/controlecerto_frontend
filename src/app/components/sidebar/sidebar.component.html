@@ -1,92 +1,70 @@
 <nav
-  class="w-20 h-screen absolute top-0 left-0 bg-white flex flex-col gap-6 pt-12 items-center"
+  class="bg-blue-600 h-12 w-screen flex items-center mb-12 justify-center"
 >
+<div class="max-w-[800px] flex items-center h-full">
   <button
-    [matMenuTriggerFor]="menu"
-    type="button"
-    class="size-12 bg-emerald-400 rounded-full flex justify-center items-center transition-transform transform hover:rotate-90 duration-300"
+  [matMenuTriggerFor]="menu"
+  type="button"
+  class="flex items-center h-full pointer mx-4 text-white font-light"
   >
-    <span class="material-icons-outlined"> add </span>
+  <!-- class="size-5 bg-emerald-400 rounded-full flex justify-center items-center transition-transform transform hover:rotate-90 duration-300" -->
+  <!-- <span class="material-icons-outlined text-xs"> add </span> -->
+   novo registro
+</button>
+<mat-menu class="!mt-2" #menu="matMenu">
+  <button
+    (click)="openExpenseDialog()"
+    class="!text-red-700 !py-0 !text-sm"
+    mat-menu-item
+  >
+    <span class="!text-sm pr-2 material-icons-outlined"> shopping_cart </span>
+    <span class="!text-sm">Gasto</span>
   </button>
-  <mat-menu class="!mt-2" #menu="matMenu">
-    <button (click)="openExpenseDialog()" class="!text-red-700 !py-0 !text-sm" mat-menu-item>
-      <span class="!text-sm pr-2 material-icons-outlined"> shopping_cart </span> <span class="!text-sm">Gasto</span>
-    </button>
-    <button (click)="openIncomeDialog()" class="!text-green-600 !py-0 !text-sm" mat-menu-item>
-      <span class="!text-sm pr-2 material-icons-outlined"> savings </span> <span class="!text-sm">Receita</span>
-    </button>
-    <button (click)="openCreditExpenseDialog()" class="!text-yellow-400 !py-0 !text-sm" mat-menu-item>
-      <span class="!text-sm pr-2 material-icons-outlined"> credit_card </span> <span class="!text-sm"> Cartão de
-        Crédito</span>
-    </button>
-    <button class="!text-blue-600 !py-0 !text-sm" mat-menu-item>
-      <span class="!text-sm pr-2 material-icons-outlined"> sync_alt </span> <span class="!text-sm">Transferência</span>
-    </button>
-  </mat-menu>
-
-  <a
-    [class.active-route-sidebar]="isCurrentRoute('/home')"
-    routerLink="/home"
-    class="pointer flex justify-center items-center w-full py-2 rounded-tl-lg rounded-bl-lg"
+  <button
+    (click)="openIncomeDialog()"
+    class="!text-green-600 !py-0 !text-sm"
+    mat-menu-item
   >
-    <span
-      style="font-size: 1.5rem"
-      class="text-gray-500 material-icons-outlined"
-    >
-      home
-    </span>
-  </a>
-
-  <a
-    [class.active-route-sidebar]="isCurrentRoute('/accounts')"
-    routerLink="/accounts"
-    class="flex justify-center items-center w-full py-2 rounded-tl-lg rounded-bl-lg"
+    <span class="!text-sm pr-2 material-icons-outlined"> savings </span>
+    <span class="!text-sm">Receita</span>
+  </button>
+  <button
+    (click)="openCreditExpenseDialog()"
+    class="!text-yellow-400 !py-0 !text-sm"
+    mat-menu-item
   >
-    <span
-      style="font-size: 1.5rem"
-      class="text-gray-500 material-icons-outlined"
-    >
-      account_balance
-    </span>
-  </a>
+    <span class="!text-sm pr-2 material-icons-outlined"> credit_card </span>
+    <span class="!text-sm"> Cartão de Crédito</span>
+  </button>
+  <button class="!text-blue-600 !py-0 !text-sm" mat-menu-item>
+    <span class="!text-sm pr-2 material-icons-outlined"> sync_alt </span>
+    <span class="!text-sm">Transferência</span>
+  </button>
+</mat-menu>
 
-  <a
-    [class.active-route-sidebar]="isCurrentRoute('/transactions')"
-    routerLink="/transactions"
-    class="flex justify-center items-center w-full py-2 rounded-tl-lg rounded-bl-lg"
-  >
-    <span
-      style="font-size: 1.5rem"
-      class="text-gray-500 material-icons-outlined"
-    >
-      analytics
-    </span>
-  </a>
+<a
+  [class.active-route-sidebar]="isCurrentRoute('/home')"
+  routerLink="/home"
+  class="flex items-center h-full pointer mx-4 text-white font-light"
+>
+  home
+</a>
 
-  <a
-    [class.active-route-sidebar]="isCurrentRoute('/credit-cards')"
-    routerLink="/creditcards"
-    class="flex justify-center items-center w-full py-2 rounded-tl-lg rounded-bl-lg"
-  >
-    <span
-      style="font-size: 1.5rem"
-      class="text-gray-500 material-icons-outlined"
-    >
-      credit_card
-    </span>
-  </a>
+<a
+  [class.active-route-sidebar]="isCurrentRoute('/registrations')"
+  routerLink="/registrations/accounts"
+  class="flex items-center h-full pointer mx-4 text-white font-light"
+>
+  cadastros
+</a>
 
-  <a
-    [class.active-route-sidebar]="isCurrentRoute('/categories')"
-    routerLink="/categories"
-    class="flex justify-center items-center w-full py-2 rounded-tl-lg rounded-bl-lg"
-  >
-    <span
-      style="font-size: 1.5rem"
-      class="text-gray-500 material-icons-outlined"
-    >
-      category
-    </span>
-  </a>
+<a
+  [class.active-route-sidebar]="isCurrentRoute('/transactions')"
+  routerLink="/transactions"
+  class="flex items-center h-full pointer mx-4 text-white font-light"
+>
+  lançamentos
+</a>
+
+</div>
 </nav>
-

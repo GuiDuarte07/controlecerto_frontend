@@ -56,7 +56,7 @@ body {
 }
 
 .active-route-sidebar {
-  @apply bg-slate-200
+  @apply font-bold border-solid border-b-2 border-white
 }
 
 .snackbar-error {

@@ -1,7 +1,12 @@
 
-<main class="pl-24 pr-8">
-  <div class="mt-8 flex w-full gap-8 flex-wrap">
-    <div class="w-56 rounded bg-white flex justify-center items-center">
+<section
+  class="flex flex-wrap flex-col flex-1 w-10/12 gap-1 bg-white rounded-lg p-4"
+>
+<div class="">
+  <h2 class="text-lg font-bold mb-2">Categorias</h2>
+</div>
+  <div class="flex flex-col w-full gap-2">
+    <!-- <div class="w-56 rounded bg-white flex justify-center items-center">
       <button
         data-modal-target="category-modal"
         data-modal-toggle="category-modal"
@@ -10,30 +15,32 @@
         <p class="">Criar nova categoria</p>
         <span class="material-icons-outlined"> add </span>
       </button>
-    </div>
+    </div> -->
 
-    @for(category of $categories | async; track category) {
-    <div
-      [ngStyle]="{ 'border-color': category.color }"
-      class="border-b-8 px-2 py-4 w-56 rounded-md bg-white"
-    >
-      <div class="flex items-center gap-3">
-        <div [ngStyle]="{ 'background-color': category.color }" class="text-white rounded-full w-8 h-8 flex items-center justify-center">
-          <span class="material-icons-outlined">
-            {{ category.icon }}
-          </span>
-        </div>
+    <ul class="flex flex-col gap-3">
+      @for(category of $categories | async; track category) {
+        <li
+          class="px-2 py-2 w-full border-b border-solid border-slate-200"
+        >
+          <div class="flex items-center gap-4">
+            <div [ngStyle]="{ 'background-color': category.color }" class="text-white rounded-full w-8 h-8 flex items-center justify-center">
+              <span class="material-icons-outlined !text-base">
+                {{ category.icon }}
+              </span>
+            </div>
 
-        <h3 class="pl-4">{{ category.name }}</h3>
-      </div>
-      <!-- <div class="w-full flex justify-between py-2">
-        <p class="text-sm font-medium">Saldo atual</p>
-        <p class="text-sm font-medium text-green-500">R$ {{ category. }}</p>
-      </div> -->
-    </div>
-    }
+            <p class="text-sm text-slate-800">{{ category.name }}</p>
+          </div>
+          <!-- <div class="w-full flex justify-between py-2">
+            <p class="text-sm font-medium">Saldo atual</p>
+            <p class="text-sm font-medium text-green-500">R$ {{ category. }}</p>
+          </div> -->
+        </li>
+        }
+    </ul>
+
 
   </div>
-</main>
+</section>
 
 <app-category-modal></app-category-modal>

@@ -9,6 +9,7 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { TransactionsComponent } from './pages/transactions/transactions.component';
 import { CreditcardsComponent } from './pages/creditcards/creditcards.component';
 import { MasterComponent } from './layouts/master/master.component';
+import { RegistrationsComponent } from './layouts/registrations/registrations.component';
 
 export const routes: Routes = [
   {
@@ -17,10 +18,17 @@ export const routes: Routes = [
     component: MasterComponent,
     children: [
       { path: 'home', component: HomeComponent },
-      { path: 'accounts', component: AccountsComponent },
-      { path: 'categories', component: CategoriesComponent },
       { path: 'transactions', component: TransactionsComponent },
-      { path: 'creditcards', component: CreditcardsComponent },
+      {
+        path: 'registrations',
+        canActivate: [AuthGuard],
+        component: RegistrationsComponent,
+        children: [
+          { path: 'accounts', component: AccountsComponent },
+          { path: 'categories', component: CategoriesComponent },
+          { path: 'creditcards', component: CreditcardsComponent },
+        ],
+      },
       { path: '', redirectTo: '/home', pathMatch: 'full' },
     ],
   },

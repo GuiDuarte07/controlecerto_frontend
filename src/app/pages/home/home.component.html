@@ -1,56 +1,56 @@
 
-<section class="w-full mt-10 pl-20">
+<section class="w-full max-w-[900px]">
   <div class="flex w-full px-6 gap-6">
     <!-- SALDO -->
     <div
-      class="bg-slate-50 w-72 shadow h-24 rounded-lg flex justify-between items-center px-4"
+      class="bg-slate-50 w-72 shadow h-20 rounded-lg flex justify-between items-center px-4"
     >
       <div class="h-full flex flex-col justify-between">
-        <p class="pt-4 text-slate-600">Saldo atual</p>
-        <p class="py-4 font-bold">
+        <p class="pt-4 text-slate-600 text-sm">Saldo atual</p>
+        <p class="py-4 font-bold text-sm">
           {{ balance.balance | currency : "BRL" : "symbol" }}
         </p>
       </div>
-      <div class="rounded-full w-14 h-14 bg-blue-600"></div>
+      <div class="rounded-full w-8 h-8 bg-blue-600"></div>
     </div>
 
     <!-- RECEITA -->
     <div
-      class="bg-slate-50 w-72 shadow h-24 rounded-lg flex justify-between items-center px-4"
+      class="bg-slate-50 w-72 shadow h-20 rounded-lg flex justify-between items-center px-4"
     >
       <div class="h-full flex flex-col justify-between">
-        <p class="pt-4 text-slate-600">Receitas do mês</p>
-        <p class="py-4 font-bold">
+        <p class="pt-4 text-slate-600 text-sm">Receitas do mês</p>
+        <p class="py-4 font-bold text-sm">
           {{ balance.incomes | currency : "BRL" : "symbol" }}
         </p>
       </div>
-      <div class="rounded-full w-14 h-14 bg-green-700"></div>
+      <div class="rounded-full w-8 h-8 bg-green-700"></div>
     </div>
 
     <!-- DESPESAS -->
     <div
-      class="bg-slate-50 w-72 shadow h-24 rounded-lg flex justify-between items-center px-4"
+      class="bg-slate-50 w-72 shadow h-20 rounded-lg flex justify-between items-center px-4"
     >
       <div class="h-full flex flex-col justify-between">
-        <p class="pt-4 text-slate-600">Despesas do mês</p>
-        <p class="py-4 font-bold">
+        <p class="pt-4 text-slate-600 text-sm">Despesas do mês</p>
+        <p class="py-4 font-bold text-sm">
           {{ balance.expenses | currency : "BRL" : "symbol" }}
         </p>
       </div>
-      <div class="rounded-full w-14 h-14 bg-red-600"></div>
+      <div class="rounded-full w-8 h-8 bg-red-600"></div>
     </div>
 
     <!-- CARTÃO DE CRÉDITO -->
     <div
-      class="bg-slate-50 w-72 shadow h-24 rounded-lg flex justify-between items-center px-4"
+      class="bg-slate-50 w-72 shadow h-20 rounded-lg flex justify-between items-center px-4"
     >
       <div class="h-full flex flex-col justify-between">
-        <p class="pt-4 text-slate-600">Fatura do mês</p>
-        <p class="py-4 font-bold">
+        <p class="pt-4 text-slate-600 text-sm">Fatura do mês</p>
+        <p class="py-4 font-bold text-sm">
           {{ balance.invoices | currency : "BRL" : "symbol" }}
         </p>
       </div>
-      <div class="rounded-full w-14 h-14 bg-yellow-400"></div>
+      <div class="rounded-full w-8 h-8 bg-yellow-400"></div>
     </div>
   </div>
 

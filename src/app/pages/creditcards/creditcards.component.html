@@ -1,6 +1,8 @@
-<main class="pl-24">
-  <div class="mt-8 flex w-full gap-8 flex-wrap">
-    <div
+<section
+  class="flex flex-wrap flex-col flex-1 w-full gap-1 bg-white rounded-lg p-4"
+>
+  <div class="flex flex-col w-full gap-2">
+    <!-- <div
       class="w-64 min-h-36 gap-2 flex flex-col justify-between bg-slate-50 p-4 box-content rounded-lg"
     >
       <button (click)="openCreditCardDialog()" type="button" class="w-full h-full flex justify-center items-center font-bold">
@@ -9,61 +11,66 @@
         </span>
         <p class="">Criar Novo Cartão de Crédito</p>
       </button>
+    </div>  -->
+    <div class="">
+      <h2 class="text-lg font-bold">Cartões de Crédito</h2>
     </div>
 
-    @for(creditcard of $creditCards | async; track creditcard) {
-    <div
-      class="w-64 min-h-36 gap-2 flex flex-col justify-between bg-slate-50 p-4 box-content rounded-lg"
-    >
-      <h3 class="font-bold">
-        {{ creditcard.cardBrand }} - {{ creditcard.account.bank }}
-      </h3>
-      <div class="flex w-full justify-between text-low">
-        <p class="">Fatura Usada:</p>
-        <p class="font-bold text-sm text-slate-600">
-          {{ creditcard.usedLimit | currency : "BRL" : "symbol" }}
-        </p>
-      </div>
-      <div class="flex w-full justify-between text-low">
-        <p class="">Fatura Disponível:</p>
-        <p class="font-bold text-sm text-slate-600">
-          {{
-            creditcard.totalLimit - creditcard.usedLimit
-              | currency : "BRL" : "symbol"
-          }}
-        </p>
-      </div>
-      <div class="flex w-full justify-between text-low">
-        <p class="">Fechamento:</p>
-        <p class="font-bold text-sm text-slate-600">
-          dia {{creditcard.closeDay}}
-        </p>
-      </div>
-      <div class="flex w-full justify-between text-low">
-        <p class="">Vencimento:</p>
-        <p class="font-bold text-sm text-slate-600">
-          dia {{creditcard.dueDay}}
-        </p>
-      </div>
 
-      <div class="flex justify-between items-center">
-        @if(day < creditcard.closeDay) {
-          <p class="text-xs font-light text-blue-600">
-            Fatura <br> desse mês
-          </p>
-        }
-        @else {
-          <!-- day >= creditcard.closeDay && day <= creditcard.dueDay -->
-          <p class="text-xs font-light text-green-500">
-            Fatura do <br> próximo mês
-          </p>
+    <ul class="flex flex-col gap-2">
+      @for(creditcard of $creditCards | async; track creditcard) {
+        <li
+          class="w-full py-4 gap-2 flex justify-between items-center rounded-lg"
+        >
+          <h3 class="font-semibold text-sm w-4/12">
+            {{ creditcard.cardBrand }} - {{ creditcard.account.bank }}
+          </h3>
+          <div class="flex items-center justify-center gap-2 text-low flex-col text-xs">
+            <p class="">Fatura Usada:</p>
+            <p class="font-medium text-red-600">
+              {{ creditcard.usedLimit | currency : "BRL" : "symbol" }}
+            </p>
+          </div>
+          <div class="flex items-center justify-center gap-2 text-low flex-col text-xs">
+            <p class="">Fatura Disponível:</p>
+            <p class="font-medium text-green-600">
+              {{
+                creditcard.totalLimit - creditcard.usedLimit
+                  | currency : "BRL" : "symbol"
+              }}
+            </p>
+          </div>
+          <!-- <div class="flex items-center justify-center gap-2 text-low flex-col text-xs">
+            <p class="">Fechamento:</p>
+            <p class="font-medium text-slate-600">
+              dia {{creditcard.closeDay}}
+            </p>
+          </div>
+          <div class="flex items-center justify-center gap-2 text-low flex-col text-xs">
+            <p class="">Vencimento:</p>
+            <p class="font-medium text-slate-600">
+              dia {{creditcard.dueDay}}
+            </p>
+          </div> -->
 
+          <div class="flex justify-between items-center gap-2">
+            <!-- @if(day < creditcard.closeDay) {
+              <p class="text-xs font-light text-blue-600">
+                desse mês
+              </p>
+            }
+            @else {
+              <p class="text-xs font-light text-green-500">
+                próximo mês
+              </p>
+            } -->
+            <button (click)="openInvoicesDialog(creditcard.account.id)" type="button" class="self-end mt-2 text-blue-600 text-sm">
+              detalhes
+            </button>
+          </div>
+        </li>
         }
-        <button (click)="openInvoicesDialog(creditcard.account.id)" type="button" class="btn btn-principal w-6/12 self-end mt-2">
-          Ver Datalhes
-        </button>
-      </div>
-    </div>
-    }
+    </ul>
+
   </div>
-</main>
+</section>

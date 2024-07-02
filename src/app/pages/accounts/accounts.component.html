@@ -1,44 +1,74 @@
-<main class="pl-24">
-  <div class="mt-8 flex w-full gap-8  flex-wrap">
-    <div class="w-56 rounded bg-white flex justify-center items-center ">
+<section
+  class="flex flex-wrap flex-col flex-1 w-full gap-1 bg-white rounded-lg p-4"
+>
+  <div class="">
+    <h2 class="text-lg font-bold">Contas</h2>
+  </div>
+  <!-- <div class="w-56 rounded bg-white flex justify-center items-center ">
       <button (click)="openAccountDialog()" class="flex gap-3 px-2 py-4 ">
         <p class="">Criar nova conta</p>
         <span class="material-icons-outlined">
           add
         </span>
       </button>
-    </div>
+    </div> -->
 
+  <ul class="w-full">
     @for(account of $accounts | async; track account) {
-    <div [ngStyle]="{'border-color': account.color}" class="border-b-8 px-2 py-4 w-56 rounded-md bg-white">
-      <div class="flex gap-3 py-1">
-        <span *ngIf="account.accountType === 0" class="material-icons-outlined">
-          account_balance
-        </span>
-        <span *ngIf="account.accountType === 1" class="material-icons-outlined">
-          savings
-        </span>
-        <span *ngIf="account.accountType === 2" class="material-icons-outlined">
-          shopping_bag
-        </span>
-        <span *ngIf="account.accountType === 3" class="material-icons-outlined">
-          trending_up
-        </span>
-        <span *ngIf="account.accountType === 4" class="material-icons-outlined">
-          account_balance_wallet
-        </span>
-        <span *ngIf="account.accountType === 5" class="material-icons-outlined">
-          star
-        </span>
+    <li
+      class="my-4 py-4 flex justify-between w-full items-center border-b border-solid border-slate-200"
+    >
+      <div class="flex items-center gap-3">
+        <div
+          class="bg-violet-900 rounded-full size-9 flex items-center justify-center"
+        >
+          <span
+            *ngIf="account.accountType === 0"
+            class="material-icons-outlined text-white"
+          >
+            account_balance
+          </span>
+          <span
+            *ngIf="account.accountType === 1"
+            class="material-icons-outlined text-white"
+          >
+            savings
+          </span>
+          <span
+            *ngIf="account.accountType === 2"
+            class="material-icons-outlined text-white"
+          >
+            shopping_bag
+          </span>
+          <span
+            *ngIf="account.accountType === 3"
+            class="material-icons-outlined text-white"
+          >
+            trending_up
+          </span>
+          <span
+            *ngIf="account.accountType === 4"
+            class="material-icons-outlined text-white"
+          >
+            account_balance_wallet
+          </span>
+          <span
+            *ngIf="account.accountType === 5"
+            class="material-icons-outlined text-white"
+          >
+            star
+          </span>
+        </div>
 
-        <h3 class="">{{ account.bank }}</h3>
+        <p class="text-sm font-medium">{{ account.bank }}</p>
       </div>
-      <div class="w-full flex justify-between py-2">
-        <p class="text-sm font-medium">Saldo atual</p>
-        <p class="text-sm font-medium text-green-500">{{ account.balance | currency:'BRL':'symbol'}}</p>
+      <div class="flex gap-2">
+        <p class="text-sm font-medium">saldo atual:</p>
+        <p class="text-sm font-medium text-green-500">
+          {{ account.balance | currency : "BRL" : "symbol" }}
+        </p>
       </div>
-    </div>
+    </li>
     }
-
-  </div>
-</main>
+  </ul>
+</section>

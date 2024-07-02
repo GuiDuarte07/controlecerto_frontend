@@ -18,7 +18,7 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrl: './accounts.component.scss',
 })
 export class AccountsComponent implements OnInit {
-  $accounts!: Observable<Account[]>;
+  accounts$!: Observable<Account[]>;
   balance!: BalanceStatement;
 
   constructor(
@@ -42,7 +42,7 @@ export class AccountsComponent implements OnInit {
   }
 
   updatedAccounts() {
-    this.$accounts = this.accountService.getAccounts();
+    this.accounts$ = this.accountService.getAccounts();
   }
 }
 

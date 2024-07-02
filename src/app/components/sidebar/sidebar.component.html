@@ -1,11 +1,11 @@
 <nav
-  class="bg-blue-600 h-12 w-screen flex items-center mb-12 justify-center"
+  class="bg-teal-600 h-12 w-screen flex items-center mb-12 justify-center"
 >
 <div class="max-w-[800px] flex items-center h-full">
   <button
   [matMenuTriggerFor]="menu"
   type="button"
-  class="flex items-center h-full pointer mx-4 text-white font-light"
+  class="flex items-center h-full pointer mx-4 text-slate-200 font-light text-base"
   >
   <!-- class="size-5 bg-emerald-400 rounded-full flex justify-center items-center transition-transform transform hover:rotate-90 duration-300" -->
   <!-- <span class="material-icons-outlined text-xs"> add </span> -->
@@ -45,25 +45,25 @@
 <a
   [class.active-route-sidebar]="isCurrentRoute('/home')"
   routerLink="/home"
-  class="flex items-center h-full pointer mx-4 text-white font-light"
+  class="flex items-center h-full pointer mx-4 text-slate-200 font-light text-base"
 >
-  home
+  Visão Geral
 </a>
 
 <a
   [class.active-route-sidebar]="isCurrentRoute('/registrations')"
   routerLink="/registrations/accounts"
-  class="flex items-center h-full pointer mx-4 text-white font-light"
+  class="flex items-center h-full pointer mx-4 text-slate-200 font-light text-base"
 >
-  cadastros
+  Cadastros
 </a>
 
 <a
   [class.active-route-sidebar]="isCurrentRoute('/transactions')"
   routerLink="/transactions"
-  class="flex items-center h-full pointer mx-4 text-white font-light"
+  class="flex items-center h-full pointer mx-4 text-slate-200 font-light text-base"
 >
-  lançamentos
+  Lançamentos
 </a>
 
 </div>

@@ -1,27 +1,27 @@
 <main class="w-[900px] flex justify-between mb-6">
   <section class="max-w-[140px] flex flex-col gap-2 mr-6 ">
     <ul class="">
-      <li class="text-base text-gray-700 py-2">
+      <li class="text-base text-gray-700 py-2 tracking-wide">
         <a
-          [ngClass]="{ 'font-bold': isCurrentRoute('/accounts') }"
+          [ngClass]="{ 'text-teal-700': isCurrentRoute('/accounts') }"
           routerLink="/registrations/accounts"
           class=""
         >
           Contas
         </a>
       </li>
-      <li class="text-base text-gray-700 py-2">
+      <li class="text-base text-gray-700 py-2 tracking-wide">
         <a
-          [ngClass]="{ 'font-bold': isCurrentRoute('/creditcards') }"
+          [ngClass]="{ 'text-teal-700': isCurrentRoute('/creditcards') }"
           routerLink="/registrations/creditcards"
           class=""
         >
           Cartões
         </a>
       </li>
-      <li class="text-base text-gray-700 py-2">
+      <li class="text-base text-gray-700 py-2 tracking-wide">
         <a
-          [ngClass]="{ 'font-bold': isCurrentRoute('/categories') }"
+          [ngClass]="{ 'text-teal-700': isCurrentRoute('/categories') }"
           routerLink="/registrations/categories"
           class=""
         >

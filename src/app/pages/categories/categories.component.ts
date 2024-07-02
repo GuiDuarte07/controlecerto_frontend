@@ -6,11 +6,19 @@ import { CommonModule } from '@angular/common';
 import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 import { CategoryModalComponent } from '../../components/category-modal/category-modal.component';
 import { initFlowbite } from 'flowbite';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @Component({
   selector: 'app-categories',
   standalone: true,
-  imports: [CommonModule, SidebarComponent, CategoryModalComponent],
+  imports: [
+    CommonModule,
+    SidebarComponent,
+    CategoryModalComponent,
+    MatIconModule,
+    MatTabsModule,
+  ],
   templateUrl: './categories.component.html',
   styleUrl: './categories.component.scss',
 })

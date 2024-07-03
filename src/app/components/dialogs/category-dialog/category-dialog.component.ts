@@ -63,8 +63,8 @@ export class CategoryDialogComponent implements OnInit {
   openSnackBar(message: string) {
     this.snackBar.open(message, undefined, {
       duration: 3000,
-      horizontalPosition: 'start',
-      verticalPosition: 'top',
+      horizontalPosition: 'end',
+      verticalPosition: 'bottom',
       panelClass: ['.snackbar-error'],
     });
   }

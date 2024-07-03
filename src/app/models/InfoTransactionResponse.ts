@@ -1,4 +1,5 @@
 import { TransactionTypeEnum } from '../enums/TransactionTypeEnum';
+import { Account } from './AccountRequest ';
 import { Category } from './Category';
 
 export class InfoTransactionResponse {
@@ -9,7 +10,7 @@ export class InfoTransactionResponse {
   source: string; // Origin or Destination
   category: Category;
   transactionType: TransactionTypeEnum;
-  accountId: number;
+  account: Account;
 
   constructor(
     id: number,
@@ -19,7 +20,7 @@ export class InfoTransactionResponse {
     source: string,
     category: Category,
     transactionType: TransactionTypeEnum,
-    accountId: number
+    account: Account
   ) {
     this.id = id;
     this.amount = amount;
@@ -28,6 +29,6 @@ export class InfoTransactionResponse {
     this.source = source;
     this.category = category;
     this.transactionType = transactionType;
-    this.accountId = accountId;
+    this.account = account;
   }
 }

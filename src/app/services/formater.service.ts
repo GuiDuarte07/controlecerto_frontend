@@ -31,4 +31,33 @@ export class FormaterService {
       return date.toLocaleDateString('pt-BR', options);
     }
   }
+
+  getMonthYearString(date: Date): string {
+    const monthYear = date.toLocaleDateString('pt-BR', {
+      month: 'long',
+      year: 'numeric',
+    });
+    return monthYear.charAt(0).toUpperCase() + monthYear.slice(1);
+  }
+
+  formatCurrency(value: number): string {
+    return value.toLocaleString('pt-BR', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  }
+
+  formatCurrencySymbol(value: number): string {
+    return value.toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    });
+  }
+
+  formatDateToHourMinutes(date: Date): string {
+    return new Date(date).toLocaleTimeString('pt-BR', {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  }
 }

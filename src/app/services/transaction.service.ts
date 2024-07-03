@@ -14,14 +14,12 @@ export class TransactionService {
 
   createExpense(expense: CreateExpense) {
     const suffix = 'CreateExpense';
-    console.log('enviando', expense);
     //retorna InfoExpenseResponse, porém como não terá uso ainda, não irei implementar
     return this.http.post<any>(`${this.hostAddress}/${suffix}`, expense);
   }
 
   createIncome(income: CreateIncome) {
     const suffix = 'CreateIncome';
-    console.log('enviando', income);
     //retorna InfoIncomeResponse, porém como não terá uso ainda, não irei implementar
     return this.http.post<any>(`${this.hostAddress}/${suffix}`, income);
   }

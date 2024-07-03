@@ -1,49 +1,211 @@
-
-<main class="pl-24 pr-8 mt-4">
-  <section class="w-full mx-8 flex gap-4 flex-col">
-    @for(transaction of transactions; track transaction) {
-    <div class="flex w-8/12 items-center py-3 px-3 bg-white rounded-md">
-      <div
-        [ngStyle]="{ 'background-color': transaction.category.color }"
-        class="text-white rounded-full w-8 h-8 flex items-center justify-center ml-3 p-2"
-      >
-        <span class="material-icons-outlined">
-          {{ transaction.category.icon }}
-        </span>
-      </div>
-
-      <div class="p-2 flex flex-col justify-between h-full ">
-        <h3 class="pl-4 text-sm font-medium text-gray-700">
-          {{ transaction.category.name }}
-        </h3>
-        <p class="pl-4 text-xs font-medium text-gray-700">Nubank</p>
-      </div>
-
-      <div class="p-2 flex flex-col flex-1 justify-between overflow-hidden">
-        <p class="text-sm font-medium text-gray-700">
-          {{ transaction.description }}
+<main class="mt-8 w-full">
+  <section class="registration-container !w-[800px]">
+    <div class="flex w-full justify-between items-center mb-4">
+      <h2 class="text-lg text-slate-700 tracking-wide w-4/12">Lançamentos</h2>
+      <div class="flex gap-4 justify-center w-4/12">
+        <button>
+          <span class="text-slate-700 material-symbols-outlined">
+            chevron_left
+          </span>
+        </button>
+        <p class="text-base tracking-wide text-slate-700">
+          {{ formaterService.getMonthYearString(filterDate) }}
         </p>
-        <p class="text-xs font-medium text-gray-700">
-          {{ transaction.source }}
-        </p>
+        <button>
+          <span class="text-slate-700 material-symbols-outlined">
+            chevron_right
+          </span>
+        </button>
       </div>
-
-      <div class="p-2 flex items-end flex-col flex-1 justify-between">
-        <p
-          class="font-bold"
-          [ngClass]="{
-            'text-green-500': transaction.transactionType === 1,
-            'text-red-600': transaction.transactionType !== 1
-          }"
-        >
-          <span>{{ transaction.transactionType === 1 ? "+" : "-" }}</span
-          > {{ transaction.amount | currency:'BRL':'symbol'}}
-        </p>
-        <p class="text-xs font-medium text-gray-700">
-          {{formaterService.formatDateString(transaction.purchaseDate)}}
-        </p>
-      </div>
+      <div class="w-4/12"></div>
     </div>
+
+    @for(transaction of transactions; track transaction) {
+    <mat-expansion-panel
+      class="!shadow-none !bg-none flex w-full items-center rounded-sm"
+      (opened)="panelOpenState.set(true)"
+      (closed)="panelOpenState.set(false)"
+    >
+      <mat-expansion-panel-header class="!p-0 w-full">
+        <div class="w-4/12 flex gap-2 items-center">
+          <div
+            [ngStyle]="{ 'background-color': transaction.category.color }"
+            class="text-white rounded-full w-8 h-8 flex items-center justify-center p-2"
+          >
+            <span class="material-symbols-outlined text-xl">
+              {{ transaction.category.icon }}
+            </span>
+          </div>
+
+          <h3 class="text-sm text-slate-900 font-medium">
+            {{ transaction.description }}
+          </h3>
+        </div>
+
+        <div class="w-4/12 flex items-center justify-center overflow-hidden">
+          <p class="text-base text-slate-500">
+            {{ transaction.account.bank }}
+          </p>
+        </div>
+
+        <div class="w-3/12 flex items-center justify-between">
+          <p class="text-sm tracking-wide text-slate-500">
+            {{
+              formaterService.formatDateToHourMinutes(transaction.purchaseDate)
+            }}
+          </p>
+          <p class="text-sm tracking-wide text-black">
+            <span class=" ">{{
+              transaction.transactionType === 1 ? "+" : "-"
+            }}</span>
+            {{ formaterService.formatCurrency(transaction.amount) }}
+          </p>
+        </div>
+      </mat-expansion-panel-header>
+
+      <!-- MAT EXPANSION PANEL INVISIBLE -->
+      <div class="flex w-full px-16 gap-4">
+        <!-- Primeira parte (icone, botoes, etc) -->
+        <div class="w-6/12 flex gap-6">
+          <!-- ícone, descrição e quantia -->
+          <div class="flex flex-col gap-2 items-center">
+            <div
+              [ngStyle]="{ 'background-color': transaction.category.color }"
+              class="text-white rounded-full w-14 h-14 flex items-center justify-center p-2"
+            >
+              <span class="material-symbols-outlined text-3xl">
+                {{ transaction.category.icon }}
+              </span>
+            </div>
+
+            <h3 class="text-sm text-slate-900 font-medium">
+              {{ transaction.description }}
+            </h3>
+
+            <p
+              [ngClass]="{
+              'text-green-600': transaction.transactionType === 1,
+              'text-red-600': transaction.transactionType !== 1,
+            }"
+              class="text-sm tracking-wide text-black"
+            >
+              {{ formaterService.formatCurrencySymbol(transaction.amount) }}
+            </p>
+          </div>
+
+          <!-- Botões de Editar e Excluir -->
+          <div class="flex flex-col gap-4 items-center justify-evenly">
+            <button
+              aria-label="Editar lançamento"
+              [matTooltipPosition]="'right'"
+              mat-raised-button
+              matTooltip="Editar Lançamento"
+              type="button"
+              class="flex items-center justify-center size-8 bg-slate-400 rounded-full"
+            >
+              <span class="material-symbols-outlined text-base text-white">
+                edit_square
+              </span>
+            </button>
+
+            <button
+              (click)="openAlertDialog(transaction)"
+              aria-label="Excluir lançamento"
+              [matTooltipPosition]="'right'"
+              mat-raised-button
+              matTooltip="Excluir lançamento"
+              type="button"
+              class="flex items-center justify-center size-8 bg-slate-400 rounded-full"
+            >
+              <span class="material-symbols-outlined text-base text-white">
+                delete
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Segunda parte (conta, categoria, etc) -->
+        <div class="w-6/12 flex flex-col items-center justify-center gap-2">
+          <div class="w-full flex items-center">
+            <div class="flex flex-col gap-1 w-4/12 justify-center">
+              <p class="text-sm text-slate-400">Conta</p>
+              <p class="text-sm text-slate-800">
+                {{ transaction.account.bank }}
+              </p>
+            </div>
+
+            <div class="flex flex-col gap-1 w-4/12 justify-center">
+              <p class="text-sm text-slate-400">Categoria</p>
+              <p class="text-sm text-slate-800">
+                {{ transaction.category.name }}
+              </p>
+            </div>
+          </div>
+
+          <div class="w-full flex items-center">
+            <div class="flex flex-col gap-1 w-4/12 justify-center">
+              <p class="text-sm text-slate-400">Data</p>
+              <p class="text-sm tracking-wide text-slate-800">
+                {{ formaterService.formatDateString(transaction.purchaseDate) }}
+              </p>
+            </div>
+
+            <div class="flex flex-col gap-1 w-4/12 justify-center">
+              <p class="text-sm text-slate-400">Hora</p>
+              <p class="text-sm tracking-wide text-slate-800">
+                {{
+                    transaction.purchaseDate | date: 'dd/MM/yyyy'
+                }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel>
+
+    <!-- <button
+      class="flex w-full items-center py-3 px-3 hover:bg-teal-200 rounded-sm transition-colors duration-300"
+    >
+      <div class="w-5/12 flex gap-2 items-center">
+        <div
+          [ngStyle]="{ 'background-color': transaction.category.color }"
+          class="text-white rounded-full w-8 h-8 flex items-center justify-center p-2"
+        >
+          <span class="material-symbols-outlined text-xl">
+            {{ transaction.category.icon }}
+          </span>
+        </div>
+
+        <h3 class="text-sm text-slate-900 font-medium">
+          {{ transaction.description }}
+        </h3>
+      </div>
+
+      <div class="w-4/12 flex items-center justify-center overflow-hidden">
+        <p class="text-base text-slate-500">
+          {{ transaction.account.bank }}
+        </p>
+      </div>
+
+      <div class="w-3/12 flex items-center justify-between">
+        <p class="text-sm tracking-wide text-slate-500">
+          {{
+            formaterService.formatDateToHourMinutes(transaction.purchaseDate)
+          }}
+        </p>
+        <p class="text-sm tracking-wide text-black">
+          <span class=" ">{{
+            transaction.transactionType === 1 ? "+" : "-"
+          }}</span>
+          {{ formaterService.formatCurrency(transaction.amount) }}
+        </p>
+      </div>
+    </button> -->
+
     }
   </section>
 </main>
+<!-- [ngClass]="{
+  'text-green-800': transaction.transactionType === 1,
+  'text-red-800': transaction.transactionType !== 1
+}" -->

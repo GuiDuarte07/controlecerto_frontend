@@ -9,7 +9,7 @@ import { TransactionTypeEnum } from '../../enums/TransactionTypeEnum';
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [RouterLink, MatButtonModule, MatMenuModule],
+  imports: [RouterLink, MatButtonModule],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss',
 })
@@ -18,29 +18,5 @@ export class SidebarComponent {
 
   isCurrentRoute(route: string): boolean {
     return this.router.url.includes(route);
-  }
-
-  openIncomeDialog() {
-    this.dialog.open(CreateTransactionDialogComponent, {
-      data: {
-        transactionType: TransactionTypeEnum.INCOME,
-      },
-    });
-  }
-
-  openExpenseDialog() {
-    this.dialog.open(CreateTransactionDialogComponent, {
-      data: {
-        transactionType: TransactionTypeEnum.EXPENSE,
-      },
-    });
-  }
-
-  openCreditExpenseDialog() {
-    this.dialog.open(CreateTransactionDialogComponent, {
-      data: {
-        transactionType: TransactionTypeEnum.CREDITEXPENSE,
-      },
-    });
   }
 }

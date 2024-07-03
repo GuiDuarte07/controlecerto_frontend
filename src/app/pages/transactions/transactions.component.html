@@ -1,9 +1,65 @@
-<main class="mt-8 w-full mb-6">
+<main class="w-full mb-6">
   <section class="registration-container !w-[800px]">
     <div class="flex w-full justify-between items-center mb-4">
-      <h2 class="text-xl text-slate-700 tracking-wide w-4/12">Lançamentos</h2>
-      <div class="flex gap-4 justify-center w-4/12">
-        <button (click)="prevMonthFilter()" type="button" aria-label="Mês anterior">
+      <!-- Título + menu -->
+      <div class="w-4/12 flex gap-2 items-center">
+        <h2 class="text-xl text-slate-700 tracking-wide">Lançamentos</h2>
+
+        <button
+          [matMenuTriggerFor]="menu"
+          type="button"
+          class="size-6 bg-emerald-400 rounded-full flex justify-center items-center transition-transform transform hover:rotate-90 duration-300"
+        >
+        <span class="material-symbols-outlined text-xl">
+          add
+          </span>
+        </button>
+        <mat-menu class="!mt-2" #menu="matMenu">
+          <button
+            (click)="openExpenseDialog()"
+            class="!text-red-700 !py-0 !text-sm"
+            mat-menu-item
+          >
+            <span class="!text-sm pr-2 material-icons-outlined">
+              shopping_cart
+            </span>
+            <span class="!text-sm">Gasto</span>
+          </button>
+          <button
+            (click)="openIncomeDialog()"
+            class="!text-green-600 !py-0 !text-sm"
+            mat-menu-item
+          >
+            <span class="!text-sm pr-2 material-icons-outlined"> savings </span>
+            <span class="!text-sm">Receita</span>
+          </button>
+          <button
+            (click)="openCreditExpenseDialog()"
+            class="!text-yellow-400 !py-0 !text-sm"
+            mat-menu-item
+          >
+            <span class="!text-sm pr-2 material-icons-outlined">
+              credit_card
+            </span>
+            <span class="!text-sm"> Cartão de Crédito</span>
+          </button>
+          <button class="!text-blue-600 !py-0 !text-sm" mat-menu-item>
+            <span class="!text-sm pr-2 material-icons-outlined">
+              sync_alt
+            </span>
+            <span class="!text-sm">Transferência</span>
+          </button>
+        </mat-menu>
+      </div>
+
+      <!-- Filtro de Mês -->
+      <div class="flex gap-4 justify-center w-4/12 items-center">
+        <button
+          (click)="prevMonthFilter()"
+          type="button"
+          aria-label="Mês anterior"
+          class="flex items-center"
+        >
           <span class="text-slate-700 material-symbols-outlined">
             chevron_left
           </span>
@@ -11,7 +67,12 @@
         <p class="text-base tracking-wide text-slate-700">
           {{ formaterService.getMonthYearString(filterDate) }}
         </p>
-        <button (click)="nexMonthFilter()" type="button" aria-label="Próximo mês">
+        <button
+          (click)="nexMonthFilter()"
+          type="button"
+          aria-label="Próximo mês"
+          class="flex items-center"
+        >
           <span class="text-slate-700 material-symbols-outlined">
             chevron_right
           </span>
@@ -163,13 +224,12 @@
       </div>
     </mat-expansion-panel>
 
-
-    }
-
-    @if(transactions.length === 0) {
-      <div class="flex w-full items-center min-h-32">
-        <p class="text-center w-full text-slate-700">Não foi encontrado nenhum lançamento para esse mês.</p>
-      </div>
+    } @if(transactions.length === 0) {
+    <div class="flex w-full items-center min-h-32">
+      <p class="text-center w-full text-slate-700">
+        Não foi encontrado nenhum lançamento para esse mês.
+      </p>
+    </div>
     }
   </section>
 </main>

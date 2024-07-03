@@ -8,6 +8,9 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog } from '@angular/material/dialog';
 import { AlertDialogComponent } from '../../components/dialogs/alert-dialog/alert-dialog.component';
+import { MatMenuModule } from '@angular/material/menu';
+import { CreateTransactionDialogComponent } from '../../components/dialogs/create-transaction-dialog/create-transaction-dialog.component';
+import { TransactionTypeEnum } from '../../enums/TransactionTypeEnum';
 
 @Component({
   selector: 'app-transactions',
@@ -17,6 +20,7 @@ import { AlertDialogComponent } from '../../components/dialogs/alert-dialog/aler
     CommonModule,
     MatExpansionModule,
     MatTooltipModule,
+    MatMenuModule,
   ],
   templateUrl: './transactions.component.html',
   styleUrl: './transactions.component.scss',
@@ -101,6 +105,30 @@ export class TransactionsComponent implements OnInit {
       if ((sucess as boolean) === true) {
         console.error('ainda nao implementado');
       }
+    });
+  }
+
+  openIncomeDialog() {
+    this.dialog.open(CreateTransactionDialogComponent, {
+      data: {
+        transactionType: TransactionTypeEnum.INCOME,
+      },
+    });
+  }
+
+  openExpenseDialog() {
+    this.dialog.open(CreateTransactionDialogComponent, {
+      data: {
+        transactionType: TransactionTypeEnum.EXPENSE,
+      },
+    });
+  }
+
+  openCreditExpenseDialog() {
+    this.dialog.open(CreateTransactionDialogComponent, {
+      data: {
+        transactionType: TransactionTypeEnum.CREDITEXPENSE,
+      },
     });
   }
 }

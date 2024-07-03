@@ -25,17 +25,16 @@ export class TransactionService {
   }
 
   getTransactionsWithPagination(
-    pageNumber: number,
-    accountId?: number,
     startDate?: Date,
-    endDate?: Date
+    endDate?: Date,
+    accountId?: number
   ) {
     const suffix = 'GetTransactionsWithPagination';
 
-    let params: any = { pageNumber: pageNumber };
-    if (accountId) params.accountId = accountId;
+    let params: any = { pageNumber: 1 };
     if (startDate) params.startDate = startDate.toISOString();
     if (endDate) params.endDate = endDate.toISOString();
+    if (accountId) params.accountId = accountId;
 
     return this.http.get<InfoTransactionResponse[]>(
       `${this.hostAddress}/${suffix}`,

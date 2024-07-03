@@ -26,8 +26,10 @@ export class AccountsComponent implements OnInit {
     public dialog: MatDialog
   ) {}
 
-  openAccountDialog() {
-    const dialogRef = this.dialog.open(AccountDialogComponent);
+  openAccountDialog(account?: Account) {
+    const dialogRef = this.dialog.open(AccountDialogComponent, {
+      data: account ? { newAccount: false, account } : { newAccount: true }, //error
+    });
     dialogRef.afterClosed().subscribe((sucess) => {
       if ((sucess as boolean) === true) {
         this.updatedAccounts();

@@ -1,5 +1,5 @@
 import { AccountService } from '../../../services/account.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { ModalComponent } from '../../modal/modal.component';
 import { AccountTypeEnum } from '../../../enums/AccountTypeEnum ';
 import { CommonModule } from '@angular/common';
@@ -11,7 +11,11 @@ import {
 } from '@angular/forms';
 import { Account } from '../../../models/AccountRequest ';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogModule,
+  MatDialogRef,
+} from '@angular/material/dialog';
 import {
   MatSnackBar,
   MatSnackBarAction,
@@ -20,6 +24,7 @@ import {
   MatSnackBarRef,
 } from '@angular/material/snack-bar';
 import { HttpErrorResponse } from '@angular/common/http';
+import { UpdateAccountRequest } from '../../../models/UpdateAccountRequest';
 
 type Color = { code: string; selected: boolean };
 type AccountType = { name: string; code: AccountTypeEnum; selected: boolean };
@@ -70,54 +75,67 @@ export class AccountDialogComponent implements OnInit {
   ];
 
   constructor(
+    @Inject(MAT_DIALOG_DATA)
+    public data:
+      | {
+          newAccount: true;
+        }
+      | {
+          newAccount: false;
+          account: Account;
+        },
     private accountService: AccountService,
     public dialogRef: MatDialogRef<AccountDialogComponent>,
     private snackBar: MatSnackBar
   ) {}
 
-  closeDialog(sucess: boolean) {
-    this.dialogRef.close(sucess);
-  }
-
-  openSnackBar(message: string) {
-    this.snackBar.open(message, undefined, {
-      duration: 3000,
-      horizontalPosition: 'end',
-      verticalPosition: 'bottom',
-      panelClass: ['.snackbar-error'],
-    });
-  }
-
   ngOnInit(): void {
     this.accountForm = new FormGroup({
-      balance: new FormControl<number>(0, {
-        nonNullable: true,
-        validators: [Validators.required, Validators.min(0)],
-      }),
-      description: new FormControl<string>('', {
-        nonNullable: true,
-        validators: [
-          Validators.required,
-          Validators.minLength(3),
-          Validators.maxLength(100),
-        ],
-      }),
-      bank: new FormControl<string>('', {
-        nonNullable: true,
-        validators: [
-          Validators.required,
-          Validators.minLength(3),
-          Validators.maxLength(100),
-        ],
-      }),
-      accountType: new FormControl<AccountTypeEnum>(AccountTypeEnum.CHECKING, {
-        nonNullable: true,
-        validators: [Validators.required],
-      }),
-      color: new FormControl<string>('', {
-        nonNullable: true,
-        validators: [Validators.required],
-      }),
+      balance: new FormControl<number>(
+        this.data.newAccount ? 0 : this.data.account.balance,
+        {
+          nonNullable: true,
+          validators: [Validators.required, Validators.min(0)],
+        }
+      ),
+      description: new FormControl<string>(
+        this.data.newAccount ? '' : this.data.account.description,
+        {
+          nonNullable: true,
+          validators: [
+            Validators.required,
+            Validators.minLength(3),
+            Validators.maxLength(100),
+          ],
+        }
+      ),
+      bank: new FormControl<string>(
+        this.data.newAccount ? '' : this.data.account.bank,
+        {
+          nonNullable: true,
+          validators: [
+            Validators.required,
+            Validators.minLength(3),
+            Validators.maxLength(100),
+          ],
+        }
+      ),
+      accountType: new FormControl<AccountTypeEnum>(
+        this.data.newAccount
+          ? AccountTypeEnum.CHECKING
+          : this.data.account.accountType,
+        {
+          nonNullable: true,
+          validators: [Validators.required],
+        }
+      ),
+      color: new FormControl<string>(
+        this.data.newAccount ? '' : this.data.account.color,
+        {
+          nonNullable: true,
+          validators: [Validators.required],
+        }
+      ),
     });
 
     this.setRandomDefaultColor();
@@ -138,6 +156,28 @@ export class AccountDialogComponent implements OnInit {
     });
   }
 
+  updateAccount() {
+    if (this.data.newAccount) throw new Error();
+    let updateAccountRequest = new UpdateAccountRequest(
+      this.data.account.id!,
+      this.accountForm.value.description,
+      this.accountForm.value.bank,
+      this.accountForm.value.accountType,
+      this.accountForm.value.color
+    );
+    console.log(updateAccountRequest);
+    /* this.accountService.updateAccount(updateAccountRequest).subscribe({
+      next: () => {
+        this.openSnackBar('Conta criada com sucesso!');
+        this.accountForm.reset();
+        this.closeDialog(true);
+      },
+      error: (err: HttpErrorResponse) => {
+        this.openSnackBar('Houve um erro na criação da conta: ' + err.message);
+      },
+    }); */
+  }
+
   cleanForm() {
     this.accountForm.reset();
   }
@@ -153,10 +193,6 @@ export class AccountDialogComponent implements OnInit {
     this.accountForm.patchValue({ color: color.code });
   }
 
-  resetSelectedColor() {
-    this.defaultColors.forEach((c) => (c.selected = true));
-  }
-
   setAccountType(acctype: AccountType) {
     this.accountTypes.forEach((at) => {
       at.selected = false;
@@ -169,13 +205,38 @@ export class AccountDialogComponent implements OnInit {
   }
 
   setRandomDefaultColor() {
-    const indiceAleatorio = Math.floor(
-      Math.random() * this.defaultColors.length
-    );
+    if (this.data.newAccount) {
+      const indiceAleatorio = Math.floor(
+        Math.random() * this.defaultColors.length
+      );
 
-    this.defaultColors[indiceAleatorio].selected = true;
-    this.accountForm.patchValue({
-      color: this.defaultColors[indiceAleatorio].code,
+      this.defaultColors[indiceAleatorio].selected = true;
+      this.accountForm.patchValue({
+        color: this.defaultColors[indiceAleatorio].code,
+      });
+    } else {
+      for (let i = 0; i < this.defaultColors.length; i++) {
+        if (this.defaultColors[i].code === this.data.account.color) {
+          this.defaultColors[i].selected = true;
+          this.accountForm.patchValue({
+            color: this.defaultColors[i].code,
+          });
+          break;
+        }
+      }
+    }
+  }
+
+  closeDialog(sucess: boolean) {
+    this.dialogRef.close(sucess);
+  }
+
+  openSnackBar(message: string) {
+    this.snackBar.open(message, undefined, {
+      duration: 3000,
+      horizontalPosition: 'end',
+      verticalPosition: 'bottom',
+      panelClass: ['.snackbar-error'],
     });
   }
 }

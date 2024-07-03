@@ -1,10 +1,11 @@
-<h2 mat-dialog-title>Criar Conta</h2>
+<h2 mat-dialog-title>{{ data.newAccount ? "Criar Conta" : "Editar Conta" }}</h2>
 <mat-dialog-content>
   <form
     [formGroup]="accountForm"
     (ngSubmit)="createNewAccount()"
     class="m-4 flex flex-col gap-6"
   >
+    @if(data.newAccount) {
     <div
       class="flex gap-2 items-center justify-center border-b-2 border-violet-900"
     >
@@ -17,11 +18,12 @@
         formControlName="balance"
         type="number"
         id="visitors"
-        class="text-2xl text-violet-900 border-none focus:border-none block w-full"
+        class="text-2xl block w-full text-violet-900 !border-none focus:!border-none !outline-none focus:!outline-none"
         placeholder=""
         required
       />
     </div>
+    }
 
     <div>
       <label
@@ -90,11 +92,6 @@
           </button>
           }
 
-          <!-- <label
-            class="flex justify-center items-center w-10 border-none overflow-hidden"
-          >
-            <input type="color" class="" (click)="(resetSelectedColor)" />
-          </label> -->
         </div>
       </div>
     </div>
@@ -102,5 +99,11 @@
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button mat-button (click)="closeDialog(false)">Cancelar</button>
-  <button [disabled]="!accountForm.valid" mat-button (click)="createNewAccount()">Criar</button>
+  <button
+    [disabled]="!accountForm.valid"
+    mat-button
+    (click)="createNewAccount()"
+  >
+    Criar
+  </button>
 </mat-dialog-actions>

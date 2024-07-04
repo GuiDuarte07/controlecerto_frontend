@@ -9,11 +9,20 @@ import { Account } from '../../models/AccountRequest ';
 import { BalanceStatement } from '../../models/BalanceStatement';
 import { initFlowbite } from 'flowbite';
 import { MatDialog } from '@angular/material/dialog';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
+import { AlertDialogComponent } from '../../components/dialogs/alert-dialog/alert-dialog.component';
 
 @Component({
   selector: 'app-accounts',
   standalone: true,
-  imports: [CommonModule, SidebarComponent, AccountDialogComponent],
+  imports: [
+    CommonModule,
+    SidebarComponent,
+    AccountDialogComponent,
+    MatButtonModule,
+    MatMenuModule,
+  ],
   templateUrl: './accounts.component.html',
   styleUrl: './accounts.component.scss',
 })
@@ -46,32 +55,21 @@ export class AccountsComponent implements OnInit {
   updatedAccounts() {
     this.accounts$ = this.accountService.getAccounts();
   }
-}
 
-/*
-accounts = [
-    new Account({
-      balance: 120,
-      description: 'Minha cartera',
-      bank: 'carteira',
-      accountType: AccountTypeEnum.WALLET,
-      color: '#EEE9C0',
-      id: 12,
-    }),
-    new Account({
-      balance: 5645.97,
-      description: 'Conta Salário',
-      bank: 'santander',
-      accountType: AccountTypeEnum.SAVINGS,
-      color: '#89C9AE',
-      id: 12,
-    }),
-    new Account({
-      balance: 532534.56,
-      description: 'Saldo de investimento',
-      bank: 'xp investiments',
-      accountType: AccountTypeEnum.INVESTMENT,
-      color: '#196CA5',
-      id: 54,
-    }),
-  ]; */
+  openDeleteAlertDialog(account: Account) {
+    const dialogRef = this.dialog.open(AlertDialogComponent, {
+      data: {
+        title: 'Deletar lançamento',
+        message: `Você tem certeza que deseja deletar esse conta?  ${account.bank}          
+        `,
+        successMessage: 'cancelamento deletado com sucesso!',
+        actionButtonMessage: 'Deletar',
+      },
+    });
+    dialogRef.afterClosed().subscribe((sucess) => {
+      if ((sucess as boolean) === true) {
+        alert('ainda nao implementado');
+      }
+    });
+  }
+}

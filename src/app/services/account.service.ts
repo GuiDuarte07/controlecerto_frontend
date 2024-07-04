@@ -38,6 +38,7 @@ export class AccountService {
       account
     );
   }
+
   updateAccount(updateAccount: UpdateAccountRequest): Observable<Account> {
     const suffix = 'UpdateAccount';
     return this.httpClient.patch<Account>(

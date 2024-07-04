@@ -142,40 +142,38 @@ export class AccountDialogComponent implements OnInit {
   }
 
   createNewAccount() {
-    let accountToCreate = new Account(this.accountForm.getRawValue());
-    console.log(accountToCreate);
-    this.accountService.createAccount(accountToCreate).subscribe({
-      next: () => {
-        this.openSnackBar('Conta criada com sucesso!');
-        this.accountForm.reset();
-        this.closeDialog(true);
-      },
-      error: (err: HttpErrorResponse) => {
-        this.openSnackBar('Houve um erro na criação da conta: ' + err.message);
-      },
-    });
-  }
-
-  updateAccount() {
-    if (this.data.newAccount) throw new Error();
-    let updateAccountRequest = new UpdateAccountRequest(
-      this.data.account.id!,
-      this.accountForm.value.description,
-      this.accountForm.value.bank,
-      this.accountForm.value.accountType,
-      this.accountForm.value.color
-    );
-    console.log(updateAccountRequest);
-    /* this.accountService.updateAccount(updateAccountRequest).subscribe({
-      next: () => {
-        this.openSnackBar('Conta criada com sucesso!');
-        this.accountForm.reset();
-        this.closeDialog(true);
-      },
-      error: (err: HttpErrorResponse) => {
-        this.openSnackBar('Houve um erro na criação da conta: ' + err.message);
-      },
-    }); */
+    if (this.data.newAccount) {
+      let accountToCreate = new Account(this.accountForm.getRawValue());
+      console.log(accountToCreate);
+      this.accountService.createAccount(accountToCreate).subscribe({
+        next: () => {
+          this.openSnackBar('Conta criada com sucesso!');
+          this.accountForm.reset();
+          this.closeDialog(true);
+        },
+        error: (err: HttpErrorResponse) => {
+          this.openSnackBar(
+            'Houve um erro na criação da conta: ' + err.message
+          );
+        },
+      });
+    } else {
+      let accountToUpdate = new UpdateAccountRequest({
+        id: this.data.account.id!,
+        ...this.accountForm.getRawValue(),
+      });
+      console.log(accountToUpdate);
+      this.accountService.updateAccount(accountToUpdate).subscribe({
+        next: () => {
+          this.openSnackBar('Conta editada com sucesso!');
+          this.accountForm.reset();
+          this.closeDialog(true);
+        },
+        error: (err: HttpErrorResponse) => {
+          this.openSnackBar('Houve um erro na edição da conta: ' + err.message);
+        },
+      });
+    }
   }
 
   cleanForm() {

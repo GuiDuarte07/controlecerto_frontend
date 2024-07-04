@@ -104,6 +104,6 @@
     mat-button
     (click)="createNewAccount()"
   >
-    Criar
+  {{ data.newAccount ? "Criar" : "Editar" }}
   </button>
 </mat-dialog-actions>

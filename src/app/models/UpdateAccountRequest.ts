@@ -7,13 +7,19 @@ export class UpdateAccountRequest {
   accountType?: AccountTypeEnum;
   color?: string;
 
-  constructor(
-    id: number,
-    description?: string,
-    bank?: string,
-    accountType?: AccountTypeEnum,
-    color?: string
-  ) {
+  constructor({
+    id,
+    description,
+    bank,
+    accountType,
+    color,
+  }: {
+    id: number;
+    description?: string;
+    bank?: string;
+    accountType?: AccountTypeEnum;
+    color?: string;
+  }) {
     if (!id) {
       throw new Error("Campo 'Id' não informado.");
     }

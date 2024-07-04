@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { Account } from '../models/AccountRequest ';
 import { BalanceStatement } from '../models/BalanceStatement';
+import { UpdateAccountRequest } from '../models/UpdateAccountRequest';
 
 @Injectable({
   providedIn: 'root',
@@ -35,6 +36,13 @@ export class AccountService {
     return this.httpClient.post<Account>(
       `${this.hostAddress}/${suffix}`,
       account
+    );
+  }
+  updateAccount(updateAccount: UpdateAccountRequest): Observable<Account> {
+    const suffix = 'UpdateAccount';
+    return this.httpClient.patch<Account>(
+      `${this.hostAddress}/${suffix}`,
+      updateAccount
     );
   }
 

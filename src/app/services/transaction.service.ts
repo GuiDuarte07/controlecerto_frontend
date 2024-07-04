@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CreateExpense } from '../models/CreateExpense';
-import { CreateIncome } from '../models/CreateIncome';
 import { InfoTransactionResponse } from '../models/InfoTransactionResponse';
+import { CreateTransactionRequest } from '../models/CreateTransaction';
+import { TransactionList } from '../models/TransactionList';
 
 @Injectable({
   providedIn: 'root',
@@ -12,35 +12,21 @@ export class TransactionService {
 
   constructor(private http: HttpClient) {}
 
-  createExpense(expense: CreateExpense) {
-    const suffix = 'CreateExpense';
-    //retorna InfoExpenseResponse, porém como não terá uso ainda, não irei implementar
-    return this.http.post<any>(`${this.hostAddress}/${suffix}`, expense);
+  createTransaction(transaction: CreateTransactionRequest) {
+    const suffix = 'CreateTransaction';
+    return this.http.post<any>(`${this.hostAddress}/${suffix}`, transaction);
   }
 
-  createIncome(income: CreateIncome) {
-    const suffix = 'CreateIncome';
-    //retorna InfoIncomeResponse, porém como não terá uso ainda, não irei implementar
-    return this.http.post<any>(`${this.hostAddress}/${suffix}`, income);
-  }
+  getTransactions(startDate?: Date, endDate?: Date, accountId?: number) {
+    const suffix = 'GetTransactions';
 
-  getTransactionsWithPagination(
-    startDate?: Date,
-    endDate?: Date,
-    accountId?: number
-  ) {
-    const suffix = 'GetTransactionsWithPagination';
-
-    let params: any = { pageNumber: 1 };
+    let params: any = {};
     if (startDate) params.startDate = startDate.toISOString();
     if (endDate) params.endDate = endDate.toISOString();
     if (accountId) params.accountId = accountId;
 
-    return this.http.get<InfoTransactionResponse[]>(
-      `${this.hostAddress}/${suffix}`,
-      {
-        params: params,
-      }
-    );
+    return this.http.get<TransactionList>(`${this.hostAddress}/${suffix}`, {
+      params: params,
+    });
   }
 }

@@ -47,16 +47,8 @@ export class TransactionsComponent implements OnInit {
   }
 
   updateTransactions() {
-    console.log(this.filterDate.toLocaleDateString());
-    console.log(
-      new Date(
-        this.filterDate.getFullYear(),
-        this.filterDate.getMonth() + 1,
-        1
-      ).toLocaleDateString()
-    );
     this.transactionService
-      .getTransactionsWithPagination(
+      .getTransactions(
         this.filterDate,
         new Date(
           this.filterDate.getFullYear(),
@@ -65,8 +57,8 @@ export class TransactionsComponent implements OnInit {
         )
       )
       .subscribe((result) => {
-        this.transactions = result;
-        console.log(this.transactions);
+        this.transactions = result.transactions;
+        console.log(result);
       });
   }
 

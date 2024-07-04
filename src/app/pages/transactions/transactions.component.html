@@ -115,7 +115,7 @@
           </p>
           <p class="text-sm tracking-wide text-black">
             <span class=" ">{{
-              transaction.transactionType === 1 ? "+" : "-"
+              transaction.type === 1 ? "+" : "-"
             }}</span>
             {{ formaterService.formatCurrency(transaction.amount) }}
           </p>
@@ -143,8 +143,8 @@
 
             <p
               [ngClass]="{
-              'text-green-600': transaction.transactionType === 1,
-              'text-red-600': transaction.transactionType !== 1,
+              'text-green-600': transaction.type === 1,
+              'text-red-600': transaction.type !== 1,
             }"
               class="text-sm tracking-wide text-black"
             >

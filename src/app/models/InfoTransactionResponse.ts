@@ -1,34 +1,57 @@
 import { TransactionTypeEnum } from '../enums/TransactionTypeEnum';
-import { Account } from './AccountRequest ';
+import { AccountInfo } from './AccountInfo';
 import { Category } from './Category';
 
 export class InfoTransactionResponse {
   id: number;
+  type: TransactionTypeEnum;
   amount: number;
-  description?: string;
   purchaseDate: Date;
-  source: string; // Origin or Destination
+  description: string;
+  observations?: string;
+  destination?: string;
+  justForRecord: boolean;
+  account: AccountInfo;
   category: Category;
-  transactionType: TransactionTypeEnum;
-  account: Account;
 
-  constructor(
-    id: number,
-    amount: number,
-    description: string | undefined,
-    purchaseDate: Date,
-    source: string,
-    category: Category,
-    transactionType: TransactionTypeEnum,
-    account: Account
-  ) {
+  // Credit Card Transaction info:
+  installmentNumber?: number;
+
+  constructor({
+    id,
+    type,
+    amount,
+    purchaseDate,
+    description,
+    destination,
+    justForRecord,
+    account,
+    category,
+    installmentNumber,
+    observations,
+  }: {
+    id: number;
+    type: TransactionTypeEnum;
+    amount: number;
+    purchaseDate: Date;
+    description: string;
+    observations: string | undefined;
+    destination: string | undefined;
+    justForRecord: boolean;
+    account: AccountInfo;
+    category: Category;
+    installmentNumber: number | undefined;
+  }) {
     this.id = id;
+    this.type = type;
     this.amount = amount;
-    this.description = description;
     this.purchaseDate = purchaseDate;
-    this.source = source;
-    this.category = category;
-    this.transactionType = transactionType;
+    this.description = description;
+    this.observations = observations;
+    this.destination = destination;
+    this.justForRecord = justForRecord;
     this.account = account;
+    this.category = category;
+    this.installmentNumber = installmentNumber;
   }
 }

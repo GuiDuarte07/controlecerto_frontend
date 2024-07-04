@@ -20,14 +20,12 @@ import {
   Validators,
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { CreateExpense } from '../../../models/CreateExpense';
 import { Account } from '../../../models/AccountRequest ';
 import { Category } from '../../../models/Category';
 import { CategoryService } from '../../../services/category.service';
 import { forkJoin } from 'rxjs';
 import { TransactionTypeEnum } from '../../../enums/TransactionTypeEnum';
 import { IncomeTypeEnum } from '../../../enums/IncomeTypeEnum';
-import { CreateIncome } from '../../../models/CreateIncome';
 import { CreateCreditPurchaseRequest } from '../../../models/CreateCreditPurchaseRequest ';
 import { CreditCardInfo } from '../../../models/CreditCardInfo';
 import {
@@ -43,21 +41,19 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpErrorResponse } from '@angular/common/http';
+import { CreateTransactionRequest } from '../../../models/CreateTransaction';
 
 interface ITransactionForm {
   amount: FormControl<number>;
-  expenseType: FormControl<number>;
+  observations: FormControl<string | null>;
   purchaseDate: FormControl<Date>;
   destination: FormControl<string>;
   description: FormControl<string>;
-  accountId: FormControl<number | null>;
-  creditCardId: FormControl<number | null>;
+  accountId: FormControl<number>;
+  creditCardId: FormControl<number>;
   categoryId: FormControl<number>;
   justForRecord: FormControl<boolean>;
 }
-
-type ExpenseType = { name: string; code: ExpenseTypeEnum; selected: boolean };
-type IncomeType = { name: string; code: IncomeTypeEnum; selected: boolean };
 
 @Component({
   selector: 'app-create-transaction-dialog',
@@ -106,50 +102,10 @@ export class CreateTransactionDialogComponent implements OnInit {
     otherdate: false,
   };
 
-  expenseTypes: ExpenseType[] = [
-    { name: 'PIX', code: ExpenseTypeEnum.PIX, selected: true },
-    { name: 'Dinheiro', code: ExpenseTypeEnum.CASH, selected: false },
-    { name: 'Cheque', code: ExpenseTypeEnum.CHECK, selected: false },
-    {
-      name: 'Cartão de débito',
-      code: ExpenseTypeEnum.DEBIT_CARD,
-      selected: false,
-    },
-    { name: 'Outro', code: ExpenseTypeEnum.OTHER, selected: false },
-  ];
-
-  incomeTypes: IncomeType[] = [
-    { name: 'PIX', code: IncomeTypeEnum.PIX, selected: true },
-    { name: 'Dinheiro', code: IncomeTypeEnum.CASH, selected: false },
-    { name: 'Cheque', code: IncomeTypeEnum.CHECK, selected: false },
-    {
-      name: 'Cartão de débito',
-      code: IncomeTypeEnum.DEBIT_CARD,
-      selected: false,
-    },
-    { name: 'Depósito', code: IncomeTypeEnum.DEPOSIT, selected: false },
-    { name: 'Juros', code: IncomeTypeEnum.INTEREST, selected: false },
-    { name: 'Dividendo', code: IncomeTypeEnum.DIVIDEND, selected: false },
-    { name: 'Reembolso', code: IncomeTypeEnum.REFUND, selected: false },
-    { name: 'Outro', code: IncomeTypeEnum.OTHER, selected: false },
-  ];
-
-  getTypes(): IncomeType[] | ExpenseType[] {
-    if (this.data.transactionType === TransactionTypeEnum.INCOME) {
-      return this.incomeTypes;
-    }
-    return this.expenseTypes;
-  }
-
   ngOnInit(): void {
     let inicialValueType = 0;
-    if (this.data.transactionType === TransactionTypeEnum.INCOME) {
-      inicialValueType = IncomeTypeEnum.PIX;
-    } else {
-      inicialValueType = ExpenseTypeEnum.PIX;
-    }
 
-    this.transactionForm = new FormGroup({
+    this.transactionForm = new FormGroup<ITransactionForm>({
       amount: new FormControl<number>(0, {
         nonNullable: true,
         validators: [Validators.required, Validators.min(0)],
@@ -170,17 +126,11 @@ export class CreateTransactionDialogComponent implements OnInit {
           Validators.maxLength(100),
         ],
       }),
-      accountId: new FormControl<number>(0, {
+      observations: new FormControl<string | null>(null, {
         nonNullable: false,
+        validators: [Validators.maxLength(300)],
       }),
-      creditCardId: new FormControl<number>(0, {
-        nonNullable: false,
-      }),
-      categoryId: new FormControl<number>(0, {
-        nonNullable: true,
-        validators: [Validators.required],
-      }),
-      expenseType: new FormControl<number>(inicialValueType, {
+      purchaseDate: new FormControl<Date>(new Date(), {
         nonNullable: true,
         validators: [Validators.required],
       }),
@@ -188,7 +138,13 @@ export class CreateTransactionDialogComponent implements OnInit {
         nonNullable: true,
         validators: [Validators.required],
       }),
-      purchaseDate: new FormControl<Date>(new Date(), {
+      accountId: new FormControl<number>(0, {
+        nonNullable: true,
+      }),
+      creditCardId: new FormControl<number>(0, {
+        nonNullable: true,
+      }),
+      categoryId: new FormControl<number>(0, {
         nonNullable: true,
         validators: [Validators.required],
       }),
@@ -227,9 +183,6 @@ export class CreateTransactionDialogComponent implements OnInit {
   }
 
   changeSelectedItem(item: Category | Account | CreditCardInfo) {
-    const date = this.transactionForm.value.purchaseDate!;
-    console.log(date);
-
     if (item instanceof Category) {
       this.selectedCategory = item;
       this.transactionForm.patchValue({ categoryId: item.id });
@@ -244,54 +197,6 @@ export class CreateTransactionDialogComponent implements OnInit {
 
   createTransaction() {
     if (this.transactionForm.invalid) return;
-
-    if (this.data.transactionType === TransactionTypeEnum.INCOME) {
-      let data = this.transactionForm.getRawValue();
-      const incomeToCreate = new CreateIncome({
-        accountId: data.accountId!,
-        amount: data.amount,
-        categoryId: data.categoryId,
-        description: data.description,
-        incomeType: data.expenseType as IncomeTypeEnum,
-        justForRecord: data.justForRecord,
-        origin: data.description,
-        purchaseDate: data.purchaseDate,
-      });
-      console.log(incomeToCreate);
-      this.transactionService.createIncome(incomeToCreate).subscribe({
-        next: () => {
-          this.openSnackBar('Receita gerada com sucesso!');
-          this.transactionForm.reset();
-          this.closeDialog(true);
-        },
-        error: (err: HttpErrorResponse) => {
-          this.openSnackBar(
-            'Houve um erro na criação dessa receita: ' + err.error
-          );
-          console.log(err.error);
-        },
-      });
-    }
-
-    if (this.data.transactionType === TransactionTypeEnum.EXPENSE) {
-      const expenseToCreate = new CreateExpense({
-        ...this.transactionForm.getRawValue(),
-        accountId: this.transactionForm.value.accountId!,
-      });
-      this.transactionService.createExpense(expenseToCreate).subscribe({
-        next: () => {
-          this.openSnackBar('Despesa gerada com sucesso!');
-          this.transactionForm.reset();
-          this.closeDialog(true);
-        },
-        error: (err: HttpErrorResponse) => {
-          this.openSnackBar(
-            'Houve um erro na criação dessa despesa: ' + err.error
-          );
-          console.log(err.error);
-        },
-      });
-    }
 
     if (this.data.transactionType === TransactionTypeEnum.CREDITEXPENSE) {
       const {
@@ -313,6 +218,7 @@ export class CreateTransactionDialogComponent implements OnInit {
         creditCardId!,
         categoryId!
       );
+
       this.creditCardService
         .createCreditPurchase(creditPurchaseToCreate)
         .subscribe({
@@ -328,35 +234,28 @@ export class CreateTransactionDialogComponent implements OnInit {
             console.log(err.error);
           },
         });
+    } else {
+      const transactionToCreate = new CreateTransactionRequest({
+        ...this.transactionForm.getRawValue(),
+        observations: this.transactionForm.value.observations ?? undefined,
+        type: this.data.transactionType,
+      });
+
+      this.transactionService.createTransaction(transactionToCreate).subscribe({
+        next: () => {
+          this.openSnackBar('Transação gerada com sucesso!');
+          this.transactionForm.reset();
+          this.closeDialog(true);
+        },
+        error: (err: HttpErrorResponse) => {
+          this.openSnackBar('Erro: ' + err.error);
+        },
+      });
     }
   }
 
   cleanForm() {
     this.transactionForm.reset();
-  }
-
-  setExpenseType(exptype: ExpenseType | IncomeType) {
-    if (this.data.transactionType === TransactionTypeEnum.INCOME) {
-      this.incomeTypes.forEach((inc) => {
-        inc.selected = false;
-        if (inc.code === exptype.code) {
-          inc.selected = true;
-        }
-      });
-
-      this.transactionForm.patchValue({ expenseType: exptype.code });
-    }
-
-    if (this.data.transactionType === TransactionTypeEnum.EXPENSE) {
-      this.expenseTypes.forEach((ep) => {
-        ep.selected = false;
-        if (ep.code === exptype.code) {
-          ep.selected = true;
-        }
-      });
-
-      this.transactionForm.patchValue({ expenseType: exptype.code });
-    }
   }
 
   setDateOption(opt: number) {

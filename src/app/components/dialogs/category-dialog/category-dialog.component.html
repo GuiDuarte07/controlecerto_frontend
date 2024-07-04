@@ -1,125 +1,143 @@
-<h2 class="mt-2 mb-5" mat-dialog-title>Criar Categoria</h2>
+<h2 class="mt-2 mb-5" mat-dialog-title>
+  {{ data.newCategory ? "Criar Categoria" : "Editar Categoria" }}
+</h2>
 <mat-dialog-content class="w-[600px]">
-  <form
-  [formGroup]="categoryForm"
-  class="m-4 flex flex-col gap-6"
->
-  <div class="">
-    <label
-      for="name"
-      class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-      >Nome da Categoria</label
-    >
-    <input
-      formControlName="name"
-      type="text"
-      id="name"
-      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-      placeholder="Digite o nome da categoria."
-      required
-    />
-  </div>
-
-  <div class="">
-    <p class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-      Tipo da Categoria
-    </p>
-    <div class="flex w-full gap-2">
-      <button
-        type="button"
-        (click)="changeBillType(0)"
-        [ngClass]="{
-          'border-2 border-gray-600': categoryForm.value.billType === 0
-        }"
-        class="rounded-xl bg-gray-200 text-sm py-1 px-2 text-gray-900"
+  <form [formGroup]="categoryForm" class="m-4 flex flex-col gap-6">
+    <!-- NOVO DA CATEGORIA -->
+    <div class="">
+      <label
+        for="name"
+        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+        >Nome da Categoria</label
       >
-        Gasto
-      </button>
-
-      <button
-        type="button"
-        (click)="changeBillType(1)"
-        [ngClass]="{
-          'border-2 border-gray-600': categoryForm.value.billType === 1
-        }"
-        class="rounded-xl bg-gray-200 text-sm py-1 px-2 text-gray-900"
-      >
-        Receita
-      </button>
+      <input
+        formControlName="name"
+        type="text"
+        id="name"
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        placeholder="Digite o nome da categoria."
+        required
+      />
     </div>
-  </div>
 
-  <div class="relative">
-    <p class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-      Icone da Categoria
-    </p>
-
-    <ul [ngClass]="{'max-h-20 overflow-y-hidden': collapsedIcons}" class="w-full flex-wrap flex gap-2">
-      @for (icon of icons; track icon) {
-      <li class="">
-        <button class="flex justify-center items-center p-1" [ngClass]="{'rounded-md bg-slate-900 text-white': icon === selectedIcon}" (click)="changeSelectedIcon(icon)" type="button">
-          <span class="material-icons-outlined">
-            {{ icon }}
-          </span>
-        </button>
-      </li>
-      }
-    </ul>
-    @if(collapsedIcons) {
-    <button
-      (click)="changeCollapseIcons()"
-      type="button"
-      class="inset-x-0 bottom-0 flex justify-center bg-gradient-to-t from-white/100 to-white/0 pt-16 pb-2 dark:from-slate-900 dark:to-slate-900/0 absolute"
-    >
-      <span
-        style="transform: rotate(270deg); font-size: 2rem"
-        class="material-icons-outlined"
-      >
-        keyboard_double_arrow_left
-      </span>
-    </button>
-    } @else {
-    <button
-      type="button"
-      (click)="changeCollapseIcons()"
-      class="w-full shadow-lg"
-    >
-      <span
-        style="transform: rotate(90deg); font-size: 1.2rem"
-        class="material-icons-outlined"
-      >
-        keyboard_double_arrow_left
-      </span>
-    </button>
-    }
-  </div>
-
-  <div class="">
+    <!-- TIPO DA CATEGORIA (APENAS PARA CRIAÇÃO) -->
+    @if(data.newCategory) {
     <div class="">
       <p class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-        Cor da Catagoria
+        Tipo da Categoria
       </p>
       <div class="flex w-full gap-2">
-        @for(color of defaultColors; track color) {
         <button
           type="button"
-          (click)="setDefaultColor(color)"
-          [style.background-color]="color.code"
-          class="size-8 rounded-full"
-          [ngClass]="{ 'border-[3px] border-gray-700': color.selected }"
+          (click)="changeBillType(0)"
+          [ngClass]="{
+            'border-2 border-gray-600': categoryForm.value.billType === 0
+          }"
+          class="rounded-xl bg-gray-200 text-sm py-1 px-2 text-gray-900"
         >
-          @if(color.selected) { }
+          Gasto
         </button>
-        }
+
+        <button
+          type="button"
+          (click)="changeBillType(1)"
+          [ngClass]="{
+            'border-2 border-gray-600': categoryForm.value.billType === 1
+          }"
+          class="rounded-xl bg-gray-200 text-sm py-1 px-2 text-gray-900"
+        >
+          Receita
+        </button>
       </div>
     </div>
-  </div>
-</form>
+    }
 
+    <!-- ICONE DA CATEGORIA -->
+    <div class="relative">
+      <p class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+        Icone da Categoria
+      </p>
+
+      <ul
+        [ngClass]="{ 'max-h-20 overflow-y-hidden': collapsedIcons }"
+        class="w-full flex-wrap flex gap-2"
+      >
+        @for (icon of icons; track icon) {
+        <li class="">
+          <button
+            class="flex justify-center items-center p-1"
+            [ngClass]="{
+              'rounded-md bg-slate-900 text-white': icon === selectedIcon
+            }"
+            (click)="changeSelectedIcon(icon)"
+            type="button"
+          >
+            <span class="material-icons-outlined">
+              {{ icon }}
+            </span>
+          </button>
+        </li>
+        }
+      </ul>
+      @if(collapsedIcons) {
+      <button
+        (click)="changeCollapseIcons()"
+        type="button"
+        class="inset-x-0 bottom-0 flex justify-center bg-gradient-to-t from-white/100 to-white/0 pt-16 pb-2 dark:from-slate-900 dark:to-slate-900/0 absolute"
+      >
+        <span
+          style="transform: rotate(270deg); font-size: 2rem"
+          class="material-icons-outlined"
+        >
+          keyboard_double_arrow_left
+        </span>
+      </button>
+      } @else {
+      <button
+        type="button"
+        (click)="changeCollapseIcons()"
+        class="w-full shadow-lg"
+      >
+        <span
+          style="transform: rotate(90deg); font-size: 1.2rem"
+          class="material-icons-outlined"
+        >
+          keyboard_double_arrow_left
+        </span>
+      </button>
+      }
+    </div>
+
+    <!-- COR DA CATEGORIA -->
+    <div class="">
+      <div class="">
+        <p class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+          Cor da Catagoria
+        </p>
+        <div class="flex w-full gap-2">
+          @for(color of defaultColors; track color) {
+          <button
+            type="button"
+            (click)="setDefaultColor(color)"
+            [style.background-color]="color.code"
+            class="size-8 rounded-full"
+            [ngClass]="{ 'border-[3px] border-gray-700': color.selected }"
+          >
+            @if(color.selected) { }
+          </button>
+          }
+        </div>
+      </div>
+    </div>
+  </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button mat-button (click)="closeDialog(false)">Cancelar</button>
-  <button [disabled]="!categoryForm.valid" mat-button (click)="createNewCategory()">Criar</button>
+  <button
+    [disabled]="!categoryForm.valid"
+    mat-button
+    (click)="createNewCategory()"
+  >
+    {{data.newCategory ? 'Criar' : 'Editar'}}
+  </button>
 </mat-dialog-actions>
-
-

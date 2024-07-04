@@ -30,8 +30,26 @@ export class CategoriesComponent implements OnInit {
     this.updateCategories();
   }
 
-  openAccountDialog() {
-    const dialogRef = this.dialog.open(CategoryDialogComponent);
+  openCreateCategoryDialog() {
+    const dialogRef = this.dialog.open(CategoryDialogComponent, {
+      data: {
+        newCategory: true,
+      },
+    });
+    dialogRef.afterClosed().subscribe((sucess) => {
+      if ((sucess as boolean) === true) {
+        this.updateCategories();
+      }
+    });
+  }
+
+  openEditCategoryDialog(category: Category) {
+    const dialogRef = this.dialog.open(CategoryDialogComponent, {
+      data: {
+        newCategory: false,
+        category,
+      },
+    });
     dialogRef.afterClosed().subscribe((sucess) => {
       if ((sucess as boolean) === true) {
         this.updateCategories();

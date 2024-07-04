@@ -1,11 +1,9 @@
-<section
-  class="registration-container"
->
+<section class="registration-container">
   <div class="flex w-full justify-between items-center mb-4">
     <h2 class="text-2xl font-bold text-slate-700 tracking-wide">Categorias</h2>
 
     <button
-      (click)="openAccountDialog()"
+      (click)="openCreateCategoryDialog()"
       class="flex items-center gap-2 bg-teal-200 rounded-lg px-2 py-1"
     >
       <span
@@ -23,22 +21,25 @@
         <ul class="flex flex-col gap-3 mt-2">
           @for(category of expenseCategories; track category) {
           <li class="px-2 py-2 w-full border-b border-solid border-slate-200">
-            <div class="flex items-center gap-4">
+            <button (click)="openEditCategoryDialog(category)" class="flex items-center gap-4 group">
               <div
                 [ngStyle]="{ 'background-color': category.color }"
-                class="text-white rounded-full w-8 h-8 flex items-center justify-center"
+                class="text-white rounded-full w-8 h-8 flex items-center justify-center relative group-hover:!bg-slate-400 transition duration-100"
               >
-                <span class="material-icons-outlined !text-base">
+                <!-- HOVER EDIT ICON -->
+                <span
+                  aria-label="Editar conta"
+                  class="material-symbols-outlined hidden group-hover:block text-xl text-slate-800 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                >
+                  edit_square
+                </span>
+                <span class="material-icons-outlined !text-base group-hover:hidden">
                   {{ category.icon }}
                 </span>
               </div>
 
-              <p class="text-sm text-slate-800">{{ category.name }}</p>
-            </div>
-            <!-- <div class="w-full flex justify-between py-2">
-              <p class="text-sm font-medium">Saldo atual</p>
-              <p class="text-sm font-medium text-green-500">R$ {{ category. }}</p>
-            </div> -->
+              <p class="text-sm text-slate-800 group-hover:font-medium">{{ category.name }}</p>
+            </button>
           </li>
           }
         </ul>

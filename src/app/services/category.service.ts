@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Category } from '../models/Category';
 import { map } from 'rxjs';
+import { UpdateCategoryRequest } from '../models/UpdateCategoryRequest';
 
 @Injectable({
   providedIn: 'root',
@@ -33,5 +34,17 @@ export class CategoryService {
   createCategory(category: Category) {
     const suffix = 'CreateCategory';
     return this.http.post<Category>(`${this.hostAddress}/${suffix}`, category);
+  }
+
+  updateCategory(category: UpdateCategoryRequest) {
+    const suffix = 'UpdateCategory';
+    return this.http.patch<Category>(`${this.hostAddress}/${suffix}`, category);
+  }
+
+  deleteCategory(categoryId: number) {
+    const suffix = 'DeleteCategory';
+    return this.http.delete<void>(
+      `${this.hostAddress}/${suffix}/${categoryId}`
+    );
   }
 }

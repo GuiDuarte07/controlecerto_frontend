@@ -111,7 +111,7 @@ export class CategoryDialogComponent implements OnInit {
         this.closeDialog(true);
       },
       error: (err) => {
-        this.openSnackBar('Houve um erro na criação da conta: ' + err.message);
+        this.openSnackBar('Houve um erro na criação da conta: ' + err.e);
       },
     });
   }

@@ -152,9 +152,7 @@ export class AccountDialogComponent implements OnInit {
           this.closeDialog(true);
         },
         error: (err: HttpErrorResponse) => {
-          this.openSnackBar(
-            'Houve um erro na criação da conta: ' + err.message
-          );
+          this.openSnackBar('Houve um erro na criação da conta: ' + err.error);
         },
       });
     } else {
@@ -170,7 +168,7 @@ export class AccountDialogComponent implements OnInit {
           this.closeDialog(true);
         },
         error: (err: HttpErrorResponse) => {
-          this.openSnackBar('Houve um erro na edição da conta: ' + err.message);
+          this.openSnackBar('Houve um erro na edição da conta: ' + err.error);
         },
       });
     }

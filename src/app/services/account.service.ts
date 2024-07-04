@@ -39,6 +39,13 @@ export class AccountService {
     );
   }
 
+  deleteAccount(accountId: number): Observable<void> {
+    const suffix = 'DeleteAccount';
+    return this.httpClient.delete<void>(
+      `${this.hostAddress}/${suffix}/${accountId}`
+    );
+  }
+
   updateAccount(updateAccount: UpdateAccountRequest): Observable<Account> {
     const suffix = 'UpdateAccount';
     return this.httpClient.patch<Account>(

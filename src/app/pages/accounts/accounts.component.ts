@@ -62,13 +62,14 @@ export class AccountsComponent implements OnInit {
         title: 'Deletar lançamento',
         message: `Você tem certeza que deseja deletar esse conta?  ${account.bank}          
         `,
-        successMessage: 'cancelamento deletado com sucesso!',
+        successMessage: 'Conta deletada ou arquivada com sucesso!',
         actionButtonMessage: 'Deletar',
+        confirmObservable: this.accountService.deleteAccount(account.id!),
       },
     });
     dialogRef.afterClosed().subscribe((sucess) => {
       if ((sucess as boolean) === true) {
-        alert('ainda nao implementado');
+        this.updatedAccounts();
       }
     });
   }

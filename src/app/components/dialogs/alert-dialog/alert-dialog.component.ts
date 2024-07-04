@@ -29,7 +29,7 @@ export class AlertDialogComponent {
     public dialogRef: MatDialogRef<AlertDialogComponent>,
     private snackBar: MatSnackBar
   ) {}
-
+  /* R$ 4.286,10 */
   openSnackBar(message: string) {
     this.snackBar.open(message, undefined, {
       duration: 3000,
@@ -47,7 +47,8 @@ export class AlertDialogComponent {
           this.dialogRef.close(sucess);
         },
         error: (err: HttpErrorResponse) => {
-          this.openSnackBar(`Erro: ${err.message}`);
+          console.log(err);
+          this.openSnackBar(`Erro: ${err.error}`);
         },
       });
     } else {

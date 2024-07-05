@@ -16,24 +16,18 @@ import {
   MatDialogModule,
   MatDialogRef,
 } from '@angular/material/dialog';
-import {
-  MatSnackBar,
-  MatSnackBarAction,
-  MatSnackBarActions,
-  MatSnackBarLabel,
-  MatSnackBarRef,
-} from '@angular/material/snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpErrorResponse } from '@angular/common/http';
 import { UpdateAccountRequest } from '../../../models/UpdateAccountRequest';
+import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
+import { CurrencyMaskDirective } from '../../../directive/currency-mask.directive';
 
 type Color = { code: string; selected: boolean };
-type AccountType = { name: string; code: AccountTypeEnum; selected: boolean };
 
 interface IAccountForm {
-  balance: FormControl<number>;
+  balance: FormControl<string>;
   description: FormControl<string>;
   bank: FormControl<string>;
-  accountType: FormControl<AccountTypeEnum>;
   color: FormControl<string>;
 }
 
@@ -46,7 +40,9 @@ interface IAccountForm {
     ReactiveFormsModule,
     MatButtonModule,
     MatDialogModule,
+    CurrencyMaskDirective,
   ],
+  providers: [],
   templateUrl: './account-modal.component.html',
   styleUrl: './account-modal.component.scss',
 })
@@ -66,14 +62,6 @@ export class AccountDialogComponent implements OnInit {
     { code: '#7FFFD4', selected: false },
   ];
 
-  accountTypes: AccountType[] = [
-    { name: 'Corrente', code: AccountTypeEnum.CHECKING, selected: true },
-    { name: 'Poupança', code: AccountTypeEnum.SAVINGS, selected: false },
-    { name: 'Crédito', code: AccountTypeEnum.CREDIT, selected: false },
-    { name: 'Investimento', code: AccountTypeEnum.INVESTMENT, selected: false },
-    { name: 'Outro', code: AccountTypeEnum.OTHER, selected: false },
-  ];
-
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public data:
@@ -91,11 +79,11 @@ export class AccountDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.accountForm = new FormGroup({
-      balance: new FormControl<number>(
-        this.data.newAccount ? 0 : this.data.account.balance,
+      balance: new FormControl<string>(
+        this.data.newAccount ? '0' : this.data.account.balance.toString(),
         {
           nonNullable: true,
-          validators: [Validators.required, Validators.min(0)],
+          validators: [Validators.required],
         }
       ),
       description: new FormControl<string>(
@@ -120,15 +108,6 @@ export class AccountDialogComponent implements OnInit {
           ],
         }
       ),
-      accountType: new FormControl<AccountTypeEnum>(
-        this.data.newAccount
-          ? AccountTypeEnum.CHECKING
-          : this.data.account.accountType,
-        {
-          nonNullable: true,
-          validators: [Validators.required],
-        }
-      ),
       color: new FormControl<string>(
         this.data.newAccount ? '' : this.data.account.color,
         {
@@ -143,7 +122,10 @@ export class AccountDialogComponent implements OnInit {
 
   createNewAccount() {
     if (this.data.newAccount) {
-      let accountToCreate = new Account(this.accountForm.getRawValue());
+      let accountToCreate = new Account({
+        ...this.accountForm.getRawValue(),
+        balance: parseFloat(this.accountForm.value.balance!),
+      });
       console.log(accountToCreate);
       this.accountService.createAccount(accountToCreate).subscribe({
         next: () => {
@@ -174,6 +156,18 @@ export class AccountDialogComponent implements OnInit {
     }
   }
 
+  formatAmount(event: any): void {
+    let value: string = event.target.value.replace(/\D/g, '');
+    const length = value.length;
+
+    if (length <= 2) {
+      value = value.padStart(3, '0');
+    }
+
+    const formattedValue = `${value.slice(0, -2)},${value.slice(-2)}`;
+    this.accountForm.patchValue({ balance: formattedValue });
+  }
+
   cleanForm() {
     this.accountForm.reset();
   }
@@ -187,17 +181,6 @@ export class AccountDialogComponent implements OnInit {
     });
 
     this.accountForm.patchValue({ color: color.code });
-  }
-
-  setAccountType(acctype: AccountType) {
-    this.accountTypes.forEach((at) => {
-      at.selected = false;
-      if (at.code === acctype.code) {
-        at.selected = true;
-      }
-    });
-
-    this.accountForm.patchValue({ accountType: acctype.code });
   }
 
   setRandomDefaultColor() {

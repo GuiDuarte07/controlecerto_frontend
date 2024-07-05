@@ -23,7 +23,6 @@ export class AccountService {
               balance: item.balance,
               description: item.description,
               bank: item.bank,
-              accountType: item.accountType,
               color: item.color,
             })
         )

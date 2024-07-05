@@ -20,19 +20,10 @@
       }"
       class="flex gap-2 items-center justify-center border-b-2"
     >
-      <label
-        [ngClass]="{
-          'text-red-700': data.transactionType === 0,
-          'text-green-600': data.transactionType === 1,
-          'text-yellow-400': data.transactionType === 2
-        }"
-        for="visitors"
-        class="h-full text-2xl dark:text-white"
-        >R$
-      </label>
       <input
         formControlName="amount"
-        type="number"
+        appCurrencyMask
+        prefix="R$ "
         id="visitors"
         [ngClass]="{
           'text-red-700': data.transactionType === 0,

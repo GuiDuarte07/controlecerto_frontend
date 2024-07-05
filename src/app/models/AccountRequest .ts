@@ -5,14 +5,12 @@ export class Account {
   balance: number;
   description: string;
   bank: string;
-  accountType: AccountTypeEnum;
   color: string;
 
   constructor(data: {
     balance: number;
     description: string;
     bank: string;
-    accountType: AccountTypeEnum;
     color: string;
     id?: number;
   }) {
@@ -20,7 +18,6 @@ export class Account {
     this.balance = data.balance;
     this.description = data.description;
     this.bank = data.bank;
-    this.accountType = data.accountType;
     this.color = data.color;
   }
 }

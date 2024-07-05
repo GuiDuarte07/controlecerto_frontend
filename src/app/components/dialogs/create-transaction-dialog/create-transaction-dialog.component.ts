@@ -42,6 +42,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CreateTransactionRequest } from '../../../models/CreateTransaction';
+import { CurrencyMaskDirective } from '../../../directive/currency-mask.directive';
 
 interface ITransactionForm {
   amount: FormControl<number>;
@@ -69,6 +70,7 @@ interface ITransactionForm {
     MatFormFieldModule,
     MatSelectModule,
     MatInputModule,
+    CurrencyMaskDirective,
   ],
   templateUrl: './create-transaction-dialog.component.html',
   styleUrl: './create-transaction-dialog.component.scss',

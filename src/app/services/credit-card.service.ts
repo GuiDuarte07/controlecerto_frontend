@@ -28,7 +28,6 @@ export class CreditCardService {
                 item.totalLimit,
                 item.usedLimit,
                 item.description,
-                item.cardBrand,
                 item.dueDay,
                 item.closeDay,
                 item.account
@@ -58,6 +57,7 @@ export class CreditCardService {
                 item.isPaid,
                 new Date(item.closingDate),
                 new Date(item.dueDate),
+                item.creditCard,
                 undefined
               )
           )

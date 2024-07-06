@@ -2,7 +2,6 @@ export class CreateCreditCardRequest {
   totalLimit: number;
   usedLimit: number;
   description: string;
-  cardBrand: string;
   dueDay: number;
   closeDay: number;
   accountId: number;
@@ -11,7 +10,6 @@ export class CreateCreditCardRequest {
     totalLimit,
     usedLimit,
     description,
-    cardBrand,
     dueDay,
     closeDay,
     accountId,
@@ -27,7 +25,6 @@ export class CreateCreditCardRequest {
     this.totalLimit = totalLimit;
     this.usedLimit = usedLimit;
     this.description = description;
-    this.cardBrand = cardBrand;
     this.dueDay = dueDay;
     this.closeDay = closeDay;
     this.accountId = accountId;

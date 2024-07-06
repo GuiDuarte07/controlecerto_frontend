@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Category } from '../models/Category';
 import { map } from 'rxjs';
 import { UpdateCategoryRequest } from '../models/UpdateCategoryRequest';
+import { BillTypeEnum } from '../enums/BillTypeEnum';
 
 @Injectable({
   providedIn: 'root',
@@ -11,10 +12,10 @@ export class CategoryService {
   private hostAddress = 'http://localhost:5037/api/Category';
   constructor(private http: HttpClient) {}
 
-  GetCategories() {
+  GetCategories(type?: BillTypeEnum) {
     let suffix = 'GetAllCategories';
     return this.http
-      .get<Category[]>(`${this.hostAddress}/${suffix}`)
+      .get<Category[]>(`${this.hostAddress}/${suffix}${type ? '/' + type : ''}`)
       .pipe(
         map((data) =>
           data.map(

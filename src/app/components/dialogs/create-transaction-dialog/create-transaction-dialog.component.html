@@ -1,4 +1,7 @@
-<h2 class="!ml-6 !mb-4 !mt-4 !text-xl !font-normal !tracking-wide" mat-dialog-title>
+<h2
+  class="!ml-6 !mb-4 !mt-4 !text-xl !font-normal !tracking-wide !text-slate-700"
+  mat-dialog-title
+>
   {{
     data.transactionType === 0
       ? "Nova Despesa"
@@ -23,6 +26,7 @@
           formControlName="amount"
           appCurrencyMask
           prefix="R$ "
+          (change)="changeAmountPerInstallment()"
           id="amount"
           [ngClass]="{
             'text-red-700': data.transactionType === 0,
@@ -59,11 +63,54 @@
       </div>
     </div>
 
-    <!-- SECOND COLUMN - SELECTIONS -->
+    <!-- SECOND COLUMN (CREDIT CARD) INSTALLMENT INPUT TO CREDIT -->
+    @if(data.transactionType === 2){
+    <div class="flex items-center gap-4">
+      <div class="w-6/12">
+        <label
+          for="installment"
+          class="block mb-1 text-sm font-medium text-slate-600 dark:text-white"
+          >Parcelas</label
+        >
+        <input
+          [(ngModel)]="installments"
+          [ngModelOptions]="{ standalone: true }"
+          (change)="changeAmountPerInstallment()"
+          type="number"
+          id="installment"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-700 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          required
+        />
+      </div>
+      <div class="w-6/12">
+        <label
+          for="installmentValue"
+          class="block mb-1 text-sm font-medium text-slate-500 dark:text-white"
+          >Valor por Fatura</label
+        >
+        <input
+          readonly
+          [(ngModel)]="amountPerInstallment"
+          [ngModelOptions]="{ standalone: true }"
+          appCurrencyMask
+          prefix="R$ "
+          type="string"
+          id="installment"
+          class="cursor-not-allowed bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-lg w-full p-2.5 dark:text-white"
+          required
+        />
+      </div>
+    </div>
+    }
+
+    <!-- SECOND COLUMN -->
+    <!-- SELECTIONS -->
     <div class="flex gap-4">
       <!-- CATEGORY SELECTION -->
       <div class="w-full">
-        <p class="block mb-1 text-sm font-medium text-slate-600 dark:text-white">
+        <p
+          class="block mb-1 text-sm font-medium text-slate-600 dark:text-white"
+        >
           Categoria
         </p>
 
@@ -128,9 +175,11 @@
       </div>
 
       <!-- ACCOUNT/CREDIT CARD SELECTION -->
-      <div class="w-full">
-        <p class="block mb-1 text-sm font-medium text-slate-600 dark:text-white">
-          Conta
+      <div class="w-full relative">
+        <p
+          class="block mb-1 text-sm font-medium text-slate-600 dark:text-white"
+        >
+          {{ data.transactionType === 2 ? "Cartão" : "Conta" }}
         </p>
 
         <div
@@ -140,10 +189,12 @@
           class="relative bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-700 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
         >
           <div class="w-full flex items-center">
-            @if (selectedAccount) {
+            @if (selectedAccount || selectedCreditCard) {
             <div class="gap-2 flex items-center w-full overflow-hidden">
               <div
-                [ngStyle]="{ 'background-color': selectedAccount.color }"
+                [ngStyle]="{
+                  'background-color': selectedCreditCard?.account?.color || selectedAccount?.color
+                }"
                 class="h-6 w-7 rounded-lg flex justify-center items-center"
               >
                 <span class="material-symbols-outlined text-base text-white">
@@ -151,14 +202,18 @@
                 </span>
               </div>
               <p class="overflow-hidden text-xs text-slate-800 font-semibold">
-                {{ selectedAccount.bank }}
+                {{ selectedAccount?.bank || selectedCreditCard?.description }}
               </p>
             </div>
             } @else {
             <p
               class="text-sm text-slate-500 w-11/12 overflow-x-hidden text-ellipsis whitespace-nowrap"
             >
-              Selecione uma conta
+              {{
+                data.transactionType === 2
+                  ? "Selecione um cartão"
+                  : "Selecione uma conta"
+              }}
             </p>
             }
 
@@ -171,7 +226,25 @@
             *ngIf="accountSelection()"
             class="w-52 max-h-52 z-50 bg-white absolute top-full left-0 overflow-y-scroll rounded shadow"
           >
-            @for (account of accounts; track account) {
+            @if(data.transactionType === 2) { @for (creditCard of creditCards;
+            track creditCard) {
+            <button
+              (click)="changeSelectedItem(creditCard)"
+              class="py-2 px-3 gap-2 flex items-center hover:bg-slate-200 transition-all duration-150 w-full"
+            >
+              <div
+                [ngStyle]="{ 'background-color': creditCard?.account?.color }"
+                class="h-6 w-7 rounded-lg flex justify-center items-center"
+              >
+                <span class="material-symbols-outlined text-base text-white">
+                  account_balance
+                </span>
+              </div>
+              <p class="overflow-hidden text-xs text-slate-800 font-semibold">
+                {{ creditCard.description }}
+              </p>
+            </button>
+            } } @else { @for (account of accounts; track account) {
             <button
               (click)="changeSelectedItem(account)"
               class="py-2 px-3 gap-2 flex items-center hover:bg-slate-200 transition-all duration-150 w-full"
@@ -188,31 +261,21 @@
                 {{ account.bank }}
               </p>
             </button>
-            }
+            } }
           </div>
         </div>
+
+        @if (selectedCreditCard) {
+          <p 
+          [ngClass]="{'!text-red-500': (transactionForm.value.amount! > (selectedCreditCard!.totalLimit - selectedCreditCard!.usedLimit))}"
+          class="text-green-500 absolute top-full left-0 mt-1 text-xs font-medium">
+            Limite: {{(selectedCreditCard!.totalLimit - selectedCreditCard!.usedLimit) | currency : "BRL" : "symbol"}}
+          </p>
+        }
       </div>
     </div>
 
-    <!-- INSTALLMENT INPUT TO CREDIT -->
-    @if(data.transactionType === 2){
-    <div class="">
-      <label
-        for="installment"
-        class="block mb-1 text-sm font-medium text-slate-600 dark:text-white"
-        >Parcelas</label
-      >
-      <input
-        [(ngModel)]="installments"
-        [ngModelOptions]="{ standalone: true }"
-        type="number"
-        id="installment"
-        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-700 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-        required
-      />
-    </div>
-    }
-
+    <!-- THIRD COLUMN -->
     <!-- DESTINATION INPUT -->
     <div>
       <label
@@ -232,6 +295,7 @@
       />
     </div>
 
+    <!-- FOUR COLUMN -->
     <!-- DESCRIPTION TEXTAREA -->
     <div class="">
       <label
@@ -247,7 +311,6 @@
         placeholder="Insira uma descrição para esse registro..."
       ></textarea>
     </div>
-    
   </form>
 </mat-dialog-content>
 

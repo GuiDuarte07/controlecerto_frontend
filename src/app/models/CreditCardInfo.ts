@@ -5,7 +5,6 @@ export class CreditCardInfo {
   totalLimit: number;
   usedLimit: number;
   description: string;
-  cardBrand: string;
   dueDay: number;
   closeDay: number;
   account: AccountInfo;
@@ -15,7 +14,6 @@ export class CreditCardInfo {
     totalLimit: number,
     usedLimit: number,
     description: string,
-    cardBrand: string,
     dueDay: number,
     closeDay: number,
     account: AccountInfo
@@ -24,7 +22,6 @@ export class CreditCardInfo {
     this.totalLimit = totalLimit;
     this.usedLimit = usedLimit;
     this.description = description;
-    this.cardBrand = cardBrand;
     this.dueDay = dueDay;
     this.closeDay = closeDay;
     this.account = account;

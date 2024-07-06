@@ -1,3 +1,4 @@
+import { CreditCardInfo } from './CreditCardInfo';
 import { InfoTransactionResponse } from './InfoTransactionResponse';
 
 export class InfoInvoiceResponse {
@@ -8,6 +9,7 @@ export class InfoInvoiceResponse {
   closingDate: Date;
   dueDate: Date;
   transactions?: InfoTransactionResponse[];
+  creditCard: CreditCardInfo;
 
   constructor(
     id: number,
@@ -16,6 +18,7 @@ export class InfoInvoiceResponse {
     isPaid: boolean,
     closingDate: Date,
     dueDate: Date,
+    creditCard: CreditCardInfo,
     transactions?: InfoTransactionResponse[]
   ) {
     this.id = id;
@@ -24,6 +27,7 @@ export class InfoInvoiceResponse {
     this.isPaid = isPaid;
     this.closingDate = closingDate;
     this.dueDate = dueDate;
+    this.creditCard = creditCard;
     this.transactions = transactions;
   }
 }

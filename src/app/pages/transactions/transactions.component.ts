@@ -101,26 +101,44 @@ export class TransactionsComponent implements OnInit {
   }
 
   openIncomeDialog() {
-    this.dialog.open(CreateTransactionDialogComponent, {
+    const dialogRef = this.dialog.open(CreateTransactionDialogComponent, {
       data: {
         transactionType: TransactionTypeEnum.INCOME,
       },
     });
+
+    dialogRef.afterClosed().subscribe((sucess) => {
+      if ((sucess as boolean) === true) {
+        this.updateTransactions();
+      }
+    });
   }
 
   openExpenseDialog() {
-    this.dialog.open(CreateTransactionDialogComponent, {
+    const dialogRef = this.dialog.open(CreateTransactionDialogComponent, {
       data: {
         transactionType: TransactionTypeEnum.EXPENSE,
       },
     });
+
+    dialogRef.afterClosed().subscribe((sucess) => {
+      if ((sucess as boolean) === true) {
+        this.updateTransactions();
+      }
+    });
   }
 
   openCreditExpenseDialog() {
-    this.dialog.open(CreateTransactionDialogComponent, {
+    const dialogRef = this.dialog.open(CreateTransactionDialogComponent, {
       data: {
         transactionType: TransactionTypeEnum.CREDITEXPENSE,
       },
+    });
+
+    dialogRef.afterClosed().subscribe((sucess) => {
+      if ((sucess as boolean) === true) {
+        this.updateTransactions();
+      }
     });
   }
 }

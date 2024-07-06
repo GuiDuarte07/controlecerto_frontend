@@ -6,7 +6,7 @@ export class CreateTransactionRequest {
   purchaseDate: Date;
   destination: string;
   description?: string;
-  observations?: string;
+  observations?: string | undefined;
   accountId: number;
   categoryId: number;
   justForRecord: boolean;

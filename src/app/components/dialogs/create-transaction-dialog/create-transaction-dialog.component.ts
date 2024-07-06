@@ -40,10 +40,11 @@ import { CreateTransactionRequest } from '../../../models/CreateTransaction';
 import { CurrencyMaskDirective } from '../../../directive/currency-mask.directive';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
+import { BillTypeEnum } from '../../../enums/BillTypeEnum';
 
 interface ITransactionForm {
   amount: FormControl<number>;
-  observations: FormControl<string | null>;
+  observations: FormControl<string | undefined>;
   purchaseDate: FormControl<Date>;
   destination: FormControl<string>;
   description: FormControl<string>;
@@ -70,11 +71,14 @@ interface ITransactionForm {
     CurrencyMaskDirective,
     MatDatepickerModule,
   ],
-  providers: [provideNativeDateAdapter()],
+  providers: [provideNativeDateAdapter(), CurrencyMaskDirective],
   templateUrl: './create-transaction-dialog.component.html',
   styleUrl: './create-transaction-dialog.component.scss',
 })
 export class CreateTransactionDialogComponent implements OnInit {
+  @ViewChild(CurrencyMaskDirective)
+  currencyMaskDirective!: CurrencyMaskDirective;
+
   transactionForm!: FormGroup<ITransactionForm>;
   categorySelection = signal(false);
   accountSelection = signal(false);
@@ -88,6 +92,7 @@ export class CreateTransactionDialogComponent implements OnInit {
   selectedCreditCard?: CreditCardInfo;
 
   installments = 1;
+  amountPerInstallment = '0,00';
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
@@ -128,8 +133,8 @@ export class CreateTransactionDialogComponent implements OnInit {
           Validators.maxLength(100),
         ],
       }),
-      observations: new FormControl<string | null>(null, {
-        nonNullable: false,
+      observations: new FormControl<string | undefined>(undefined, {
+        nonNullable: true,
         validators: [Validators.maxLength(300)],
       }),
       purchaseDate: new FormControl<Date>(new Date(), {
@@ -156,17 +161,67 @@ export class CreateTransactionDialogComponent implements OnInit {
       this.accounts = data;
     });
 
-    this.categoryService.GetCategories().subscribe((data) => {
+    const type =
+      this.data.transactionType === TransactionTypeEnum.INCOME
+        ? BillTypeEnum.INCOME
+        : BillTypeEnum.EXPENSE;
+    this.categoryService.GetCategories(type).subscribe((data) => {
       this.categories = data;
     });
 
     this.creditCardService.getCreditCards().subscribe((data) => {
       this.creditCards = data;
+      console.log(this.creditCards);
     });
   }
 
   closeDialog(sucess: boolean) {
     this.dialogRef.close(sucess);
+  }
+
+  changeAmountPerInstallment() {
+    function getRoundedTwoDigits(number: number): number {
+      // Passo 1: Converter o número para uma string
+      console.log(number);
+      const numberStr = number.toString();
+      console.log(numberStr);
+
+      // Passo 2: Pegar os dois primeiros dígitos ou completar com 0 se for um único dígito
+      const firstTwoDigits =
+        numberStr.length > 1
+          ? parseInt(numberStr.substring(0, 2))
+          : parseInt(numberStr + '0');
+
+      console.log(firstTwoDigits);
+
+      // Passo 3: Calcular o divisor (10 elevado ao número de dígitos - 2)
+      const divisor = Math.pow(10, numberStr.length - 2);
+
+      // Passo 4: Dividir o número pelos dígitos restantes e arredondar
+      const rounded =
+        numberStr.length > 1 ? Math.round(number / divisor) : firstTwoDigits;
+
+      console.log(rounded);
+
+      return rounded;
+    }
+
+    let formatedInput = (
+      this.transactionForm.value.amount! / this.installments
+    ).toString();
+
+    console.log('antes', formatedInput);
+    let num = parseInt(formatedInput.split('.')[1]);
+
+    if (formatedInput.includes('.')) {
+      formatedInput = formatedInput.split('.')[0];
+      formatedInput += '.' + getRoundedTwoDigits(num);
+    } else {
+      formatedInput = formatedInput + '.00';
+    }
+
+    this.amountPerInstallment = formatedInput;
+    console.log('depois', formatedInput);
   }
 
   toggleSelection(event: MouseEvent, selection: 'account' | 'category') {
@@ -233,6 +288,7 @@ export class CreateTransactionDialogComponent implements OnInit {
         purchaseDate,
       } = this.transactionForm.value;
       const creditPurchaseToCreate = new CreateCreditPurchaseRequest(
+        /* this.currencyMaskDirective.parseInput(amount!), */
         amount!,
         this.installments,
         undefined,
@@ -242,6 +298,8 @@ export class CreateTransactionDialogComponent implements OnInit {
         creditCardId!,
         categoryId!
       );
+
+      console.log(creditPurchaseToCreate);
 
       this.creditCardService
         .createCreditPurchase(creditPurchaseToCreate)
@@ -261,7 +319,6 @@ export class CreateTransactionDialogComponent implements OnInit {
     } else {
       const transactionToCreate = new CreateTransactionRequest({
         ...this.transactionForm.getRawValue(),
-        observations: this.transactionForm.value.observations ?? undefined,
         type: this.data.transactionType,
       });
 

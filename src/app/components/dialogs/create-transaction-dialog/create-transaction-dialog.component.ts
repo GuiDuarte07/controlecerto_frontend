@@ -3,15 +3,12 @@ import { AccountService } from './../../../services/account.service';
 import { TransactionService } from './../../../services/transaction.service';
 import {
   Component,
+  ElementRef,
   Inject,
-  Input,
   OnInit,
-  Renderer2,
-  input,
-  ɵɵsetComponentScope,
+  signal,
+  ViewChild,
 } from '@angular/core';
-import { ModalComponent } from '../../modal/modal.component';
-import { ExpenseTypeEnum } from '../../../enums/ExpenseTypeEnum';
 import {
   FormControl,
   FormGroup,
@@ -23,9 +20,7 @@ import { CommonModule } from '@angular/common';
 import { Account } from '../../../models/AccountRequest ';
 import { Category } from '../../../models/Category';
 import { CategoryService } from '../../../services/category.service';
-import { forkJoin } from 'rxjs';
 import { TransactionTypeEnum } from '../../../enums/TransactionTypeEnum';
-import { IncomeTypeEnum } from '../../../enums/IncomeTypeEnum';
 import { CreateCreditPurchaseRequest } from '../../../models/CreateCreditPurchaseRequest ';
 import { CreditCardInfo } from '../../../models/CreditCardInfo';
 import {
@@ -43,6 +38,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CreateTransactionRequest } from '../../../models/CreateTransaction';
 import { CurrencyMaskDirective } from '../../../directive/currency-mask.directive';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { provideNativeDateAdapter } from '@angular/material/core';
 
 interface ITransactionForm {
   amount: FormControl<number>;
@@ -71,12 +68,17 @@ interface ITransactionForm {
     MatSelectModule,
     MatInputModule,
     CurrencyMaskDirective,
+    MatDatepickerModule,
   ],
+  providers: [provideNativeDateAdapter()],
   templateUrl: './create-transaction-dialog.component.html',
   styleUrl: './create-transaction-dialog.component.scss',
 })
 export class CreateTransactionDialogComponent implements OnInit {
   transactionForm!: FormGroup<ITransactionForm>;
+  categorySelection = signal(false);
+  accountSelection = signal(false);
+  datepicker = new Date();
 
   accounts: Account[] = [];
   categories: Category[] = [];
@@ -105,8 +107,6 @@ export class CreateTransactionDialogComponent implements OnInit {
   };
 
   ngOnInit(): void {
-    let inicialValueType = 0;
-
     this.transactionForm = new FormGroup<ITransactionForm>({
       amount: new FormControl<number>(0, {
         nonNullable: true,
@@ -154,25 +154,47 @@ export class CreateTransactionDialogComponent implements OnInit {
 
     this.accountService.getAccounts().subscribe((data) => {
       this.accounts = data;
-      this.transactionForm.patchValue({ accountId: this.accounts[0].id });
-      this.selectedAccount = this.accounts[0];
     });
 
     this.categoryService.GetCategories().subscribe((data) => {
       this.categories = data;
-      this.transactionForm.patchValue({ categoryId: this.categories[0].id });
-      this.selectedCategory = this.categories[0];
     });
 
     this.creditCardService.getCreditCards().subscribe((data) => {
       this.creditCards = data;
-      this.transactionForm.patchValue({ creditCardId: this.creditCards[0].id });
-      this.selectedCreditCard = this.creditCards[0];
     });
   }
 
   closeDialog(sucess: boolean) {
     this.dialogRef.close(sucess);
+  }
+
+  toggleSelection(event: MouseEvent, selection: 'account' | 'category') {
+    event.stopPropagation();
+
+    if (selection === 'account') {
+      this.accountSelection.set(!this.accountSelection());
+    }
+    if (selection === 'category') {
+      this.categorySelection.set(!this.categorySelection());
+    }
+
+    const closeSelectionOnClick = (event: MouseEvent) => {
+      console.log('click', selection);
+      if (selection === 'account') {
+        this.accountSelection.set(false);
+      }
+
+      if (selection === 'category') {
+        this.categorySelection.set(false);
+      }
+
+      window.removeEventListener('click', closeSelectionOnClick);
+    };
+
+    if (this.accountSelection() || this.categorySelection()) {
+      window.addEventListener('click', closeSelectionOnClick);
+    }
   }
 
   openSnackBar(message: string) {

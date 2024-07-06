@@ -1,9 +1,9 @@
-<h2 mat-dialog-title>{{ data.newAccount ? "Criar Conta" : "Editar Conta" }}</h2>
+<h2 class="!ml-6 !mb-4 !mt-4 !text-xl !font-normal !tracking-wide"  mat-dialog-title>{{ data.newAccount ? "Criar Conta" : "Editar Conta" }}</h2>
 <mat-dialog-content>
   <form
     [formGroup]="accountForm"
     (ngSubmit)="createNewAccount()"
-    class="m-4 flex flex-col gap-6"
+    class="m-8 flex flex-col gap-6"
   >
     @if(data.newAccount) {
     <div>

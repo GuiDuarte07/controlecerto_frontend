@@ -1,39 +1,197 @@
-<h2 mat-dialog-title>
+<h2 class="!ml-6 !mb-4 !mt-4 !text-xl !font-normal !tracking-wide" mat-dialog-title>
   {{
     data.transactionType === 0
-      ? "Registar Gasto"
+      ? "Nova Despesa"
       : data.transactionType === 1
-      ? "Registar Receita"
-      : "Registrar Compra no Cartão"
+      ? "Nova Receita"
+      : "Nova Despesa Cartão"
   }}
 </h2>
 
-<mat-dialog-content class="min-w-[700px]">
-  <form [formGroup]="transactionForm" class="m-4 flex flex-col gap-6">
+<mat-dialog-content class="min-w-[500px]">
+  <form [formGroup]="transactionForm" class="m-8 flex flex-col gap-4">
+    <!-- FIRST COLUMN -->
+    <div class="flex items-center gap-4">
+      <!-- AMOUNT INPUT -->
+      <div class="w-6/12">
+        <label
+          for="amount"
+          class="block mb-1 text-sm font-medium text-slate-600 dark:text-white"
+          >Valor</label
+        >
+        <input
+          formControlName="amount"
+          appCurrencyMask
+          prefix="R$ "
+          id="amount"
+          [ngClass]="{
+            'text-red-700': data.transactionType === 0,
+            'text-green-600': data.transactionType === 1,
+            'text-yellow-400': data.transactionType === 2
+          }"
+          class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:!ring-blue-500 focus:!border-blue-500 block w-full p-2.5"
+          required
+        />
+      </div>
 
-    <!-- AMOUNT INPUT -->
-    <div
-      [ngClass]="{
-        'border-red-700': data.transactionType === 0,
-        'border-green-600': data.transactionType === 1,
-        'border-yellow-400': data.transactionType === 2,
-      }"
-      class="flex gap-2 items-center justify-center border-b-2"
-    >
-      <input
-        formControlName="amount"
-        appCurrencyMask
-        prefix="R$ "
-        id="visitors"
-        [ngClass]="{
-          'text-red-700': data.transactionType === 0,
-          'text-green-600': data.transactionType === 1,
-          'text-yellow-400': data.transactionType === 2
-        }"
-        class="text-2xl border-none focus:border-none block w-full"
-        placeholder=""
-        required
-      />
+      <!-- DATEPICKER -->
+      <div class="w-6/12">
+        <label
+          for="purchaseDatePicker"
+          class="block mb-1 text-sm font-medium text-slate-600 dark:text-white"
+          >Data</label
+        >
+        <div class="relative">
+          <mat-datepicker-toggle
+            class="absolute top-1/2 transform -translate-y-1/2"
+            matIconSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
+          <input
+            id="purchaseDatePicker"
+            formControlName="purchaseDate"
+            (click)="picker.open()"
+            class="pl-10 w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-700 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            [matDatepicker]="picker"
+          />
+          <mat-datepicker #picker></mat-datepicker>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECOND COLUMN - SELECTIONS -->
+    <div class="flex gap-4">
+      <!-- CATEGORY SELECTION -->
+      <div class="w-full">
+        <p class="block mb-1 text-sm font-medium text-slate-600 dark:text-white">
+          Categoria
+        </p>
+
+        <div
+          role="button"
+          tabindex="0"
+          (click)="toggleSelection($event, 'category')"
+          class="relative bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-700 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        >
+          <div class="w-full flex items-center">
+            @if (selectedCategory) {
+            <div class="gap-2 flex items-center w-full overflow-hidden">
+              <div
+                [ngStyle]="{ 'background-color': selectedCategory.color }"
+                class="h-6 w-7 rounded-lg flex justify-center items-center"
+              >
+                <span class="material-symbols-outlined text-base text-white">
+                  {{ selectedCategory.icon }}
+                </span>
+              </div>
+              <p class="overflow-hidden text-xs text-slate-800 font-semibold">
+                {{ selectedCategory.name }}
+              </p>
+            </div>
+            } @else {
+            <p
+              class="text-sm text-slate-500 w-11/12 overflow-x-hidden text-ellipsis whitespace-nowrap"
+            >
+              Selecione uma categoria
+            </p>
+            }
+
+            <span class="ml-2 material-symbols-outlined text-slate-500">
+              arrow_drop_down
+            </span>
+          </div>
+
+          <div
+            *ngIf="categorySelection()"
+            class="w-52 max-h-52 z-50 bg-white absolute top-full left-0 overflow-y-scroll rounded shadow"
+          >
+            @for (category of categories; track category) {
+            <button
+              (click)="changeSelectedItem(category)"
+              class="py-2 px-3 gap-2 flex items-center hover:bg-slate-200 transition-all duration-150 w-full"
+            >
+              <div
+                [ngStyle]="{ 'background-color': category.color }"
+                class="h-6 w-7 rounded-lg flex justify-center items-center"
+              >
+                <span class="material-symbols-outlined text-base text-white">
+                  {{ category.icon }}
+                </span>
+              </div>
+              <p class="overflow-hidden text-xs text-slate-800 font-semibold">
+                {{ category.name }}
+              </p>
+            </button>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- ACCOUNT/CREDIT CARD SELECTION -->
+      <div class="w-full">
+        <p class="block mb-1 text-sm font-medium text-slate-600 dark:text-white">
+          Conta
+        </p>
+
+        <div
+          role="button"
+          tabindex="0"
+          (click)="toggleSelection($event, 'account')"
+          class="relative bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-700 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        >
+          <div class="w-full flex items-center">
+            @if (selectedAccount) {
+            <div class="gap-2 flex items-center w-full overflow-hidden">
+              <div
+                [ngStyle]="{ 'background-color': selectedAccount.color }"
+                class="h-6 w-7 rounded-lg flex justify-center items-center"
+              >
+                <span class="material-symbols-outlined text-base text-white">
+                  account_balance
+                </span>
+              </div>
+              <p class="overflow-hidden text-xs text-slate-800 font-semibold">
+                {{ selectedAccount.bank }}
+              </p>
+            </div>
+            } @else {
+            <p
+              class="text-sm text-slate-500 w-11/12 overflow-x-hidden text-ellipsis whitespace-nowrap"
+            >
+              Selecione uma conta
+            </p>
+            }
+
+            <span class="ml-2 material-symbols-outlined text-slate-500">
+              arrow_drop_down
+            </span>
+          </div>
+
+          <div
+            *ngIf="accountSelection()"
+            class="w-52 max-h-52 z-50 bg-white absolute top-full left-0 overflow-y-scroll rounded shadow"
+          >
+            @for (account of accounts; track account) {
+            <button
+              (click)="changeSelectedItem(account)"
+              class="py-2 px-3 gap-2 flex items-center hover:bg-slate-200 transition-all duration-150 w-full"
+            >
+              <div
+                [ngStyle]="{ 'background-color': account.color }"
+                class="h-6 w-7 rounded-lg flex justify-center items-center"
+              >
+                <span class="material-symbols-outlined text-base text-white">
+                  account_balance
+                </span>
+              </div>
+              <p class="overflow-hidden text-xs text-slate-800 font-semibold">
+                {{ account.bank }}
+              </p>
+            </button>
+            }
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- INSTALLMENT INPUT TO CREDIT -->
@@ -41,7 +199,7 @@
     <div class="">
       <label
         for="installment"
-        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+        class="block mb-1 text-sm font-medium text-slate-600 dark:text-white"
         >Parcelas</label
       >
       <input
@@ -49,40 +207,24 @@
         [ngModelOptions]="{ standalone: true }"
         type="number"
         id="installment"
-        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-700 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
         required
       />
     </div>
     }
 
-    <!-- DESCRIPTION TEXTAREA -->
-    <div class="">
-      <label
-        for="description"
-        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-        >Descrição</label
-      >
-      <textarea
-        formControlName="description"
-        id="description"
-        rows="4"
-        class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-        placeholder="Insira uma descrição para esse registro..."
-      ></textarea>
-    </div>
-
     <!-- DESTINATION INPUT -->
     <div>
       <label
         for="destination"
-        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+        class="block mb-1 text-sm font-medium text-slate-600 dark:text-white"
         >Destino</label
       >
       <input
         formControlName="destination"
         type="text"
         id="destination"
-        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-700 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
         [placeholder]="
           data.transactionType === 1 ? 'Origem da Receita' : 'Destino do Gasto'
         "
@@ -90,149 +232,22 @@
       />
     </div>
 
-    <!-- CATEGORY SELECTION -->
-    <div class="w-full">
-      <p class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-        Categoria
-      </p>
-      <mat-form-field class="!p-0 !m-0">
-        <mat-label class="!m-0">Conta do registro</mat-label>
-        <mat-select  id="cardAccount" class="!min-h-7 !m-0">
-          @for (category of categories; track category) {
-          <mat-option
-            (click)="changeSelectedItem(category)"
-            class="!min-h-7"
-            [value]="category.id"
-            ><span class="material-icons-outlined">
-              {{ category.icon }} </span
-            >{{ category.name }}
-          </mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
-
-      <!-- <button
-        [attr.data-dropdown-toggle]="'category'"
-        class="w-full py-2 border-b-2 border-solid border-gray-500"
-        type="button"
-      >
-        <p
-          [ngStyle]="{ 'border-color': selectedCategory?.color }"
-          class="flex items-center gap-2 rounded-2xl border-2 border-solid bg-gray-200 text-sm py-1 px-4 text-gray-900 w-fit"
-        >
-          <span class="material-icons-outlined">
-            {{ selectedCategory?.icon }} </span
-          >{{ selectedCategory?.name }}
-        </p>
-      </button>
-
-      <div
-        [id]="'category'"
-        class="z-10 hidden bg-slate-50 divide-y divide-gray-100 rounded-lg shadow w-full dark:bg-gray-700"
-      >
-        <ul
-          class="h-44 overflow-y-auto py-2 text-sm text-gray-700 dark:text-gray-200"
-          [attr.aria-labelledby]="'category'"
-        >
-          @for(category of categories; track category) {
-          <li>
-            <button
-              (click)="changeSelectedItem(category)"
-              type="button"
-              class="flex items-center gap-2 w-full text-start px-4 py-2 hover:bg-white dark:hover:bg-gray-600 dark:hover:text-white"
-            >
-              <span class="material-icons-outlined"> {{ category.icon }} </span>
-              {{ category.name }}
-            </button>
-          </li>
-          }
-        </ul>
-      </div>-->
-    </div>
-
-    <!-- ACCOUNT/CREDIT CARD SELECTION -->
-    <div class="w-full">
-      @if(data.transactionType === 0 || data.transactionType === 1) {
-      <p class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-        Conta
-      </p>
-      <mat-form-field class="!p-0 !m-0">
-        <mat-label class="!m-0">Conta do registro</mat-label>
-        <mat-select id="cardAccount" class="!min-h-7 !m-0">
-          @for (account of accounts; track account) {
-          <mat-option
-            (click)="changeSelectedItem(account)"
-            class="!min-h-7"
-            [value]="account.id"
-            >{{ account.bank }}</mat-option
-          >
-          }
-        </mat-select>
-      </mat-form-field>
-
-      } @else {
-      <p class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-        Cartão de Crédito
-      </p>
-      <mat-form-field class="!p-0 !m-0">
-        <mat-label class="!m-0">Cartão do gasto</mat-label>
-        <mat-select id="cardAccount" class="!min-h-7 !m-0">
-          @for (creditCard of creditCards; track creditCard) {
-          <mat-option
-            (click)="changeSelectedItem(creditCard)"
-            class="!min-h-7"
-            [value]="creditCard.id"
-            >{{ creditCard.cardBrand }}</mat-option
-          >
-          }
-        </mat-select>
-      </mat-form-field>
-
-      }
-    </div>
-
-    <!-- RECORD DATE/DATEPICKER -->
+    <!-- DESCRIPTION TEXTAREA -->
     <div class="">
-      <p class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-        Data do registro
-      </p>
-      <div class="flex w-full gap-2">
-        <button
-          type="button"
-          class="rounded-2xl bg-gray-200 text-sm py-1 px-4 text-gray-900"
-          [ngClass]="{
-            'bg-neutral-800 font-normal text-white':
-              dateOptions.today
-          }"
-          (click)="setDateOption(0)"
-        >
-          Hoje
-        </button>
-        <button
-          type="button"
-          class="rounded-2xl bg-gray-200 text-sm py-1 px-4 text-gray-900"
-          [ngClass]="{
-            'bg-neutral-800 font-normal text-white':
-              dateOptions.yesterday
-          }"
-          (click)="setDateOption(1)"
-        >
-          Ontem
-        </button>
-
-        <button
-          type="button"
-          [ngClass]="{
-            'bg-neutral-800 font-normal text-white':
-              dateOptions.otherdate
-          }"
-          class="rounded-2xl bg-gray-200 text-sm py-1 px-4 text-gray-900"
-          (click)="setDateOption(2)"
-        >
-          {{ dateOptions.otherdate ? formatedDate() : "Outra Data" }}
-        </button>
-      </div>
+      <label
+        for="description"
+        class="block mb-1 text-sm font-medium text-slate-600 dark:text-white"
+        >Descrição</label
+      >
+      <textarea
+        formControlName="description"
+        id="description"
+        rows="2"
+        class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-700 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        placeholder="Insira uma descrição para esse registro..."
+      ></textarea>
     </div>
+    
   </form>
 </mat-dialog-content>
 

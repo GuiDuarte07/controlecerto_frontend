@@ -20,13 +20,11 @@ export class CurrencyMaskDirective implements OnInit {
 
   @HostListener('input', ['$event'])
   onInputChange(event: Event): void {
-    console.log(event);
     const input = event.target! as HTMLInputElement;
     input.value = this.formatInput(input.value);
   }
 
   ngOnInit(): void {
-    // Adiciona imediatamente o préfixo
     this.el.nativeElement.value = this.formatInput(this.el.nativeElement.value);
   }
 

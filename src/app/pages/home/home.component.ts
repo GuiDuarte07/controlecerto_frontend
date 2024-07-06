@@ -1,5 +1,4 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { ModalComponent } from '../../components/modal/modal.component';
 import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 import { AccountService } from '../../services/account.service';
 import { BalanceStatement } from '../../models/BalanceStatement';

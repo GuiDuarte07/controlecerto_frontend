@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
 import { AuthResponse } from '../models/AuthResponse';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +11,11 @@ import { AuthResponse } from '../models/AuthResponse';
 export class AuthService {
   private hostAddress = 'http://localhost:5037/api/Auth';
 
-  constructor(private http: HttpClient, private cookieService: CookieService) {}
+  constructor(
+    private http: HttpClient,
+    private cookieService: CookieService,
+    private router: Router
+  ) {}
 
   public authenticate(
     email: string,
@@ -25,5 +30,10 @@ export class AuthService {
           this.cookieService.set('BearerToken', response.token);
         })
       );
+  }
+
+  public logout() {
+    this.cookieService.delete('BearerToken');
+    this.router.navigate(['/login']);
   }
 }

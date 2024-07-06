@@ -1,6 +1,5 @@
 import { AccountService } from '../../../services/account.service';
 import { Component, OnInit, Inject } from '@angular/core';
-import { ModalComponent } from '../../modal/modal.component';
 import { AccountTypeEnum } from '../../../enums/AccountTypeEnum ';
 import { CommonModule } from '@angular/common';
 import {
@@ -35,7 +34,6 @@ interface IAccountForm {
   selector: 'app-account-dialog',
   standalone: true,
   imports: [
-    ModalComponent,
     CommonModule,
     ReactiveFormsModule,
     MatButtonModule,

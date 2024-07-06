@@ -1,30 +1,84 @@
-<nav
-  class="bg-teal-600 h-14 w-screen flex items-center mb-12 justify-center"
->
-<div class="max-w-[800px] flex items-center h-full">
-<a
-  [class.active-route-sidebar]="isCurrentRoute('/home')"
-  routerLink="/home"
-  class="flex items-center h-full pointer mx-4 text-slate-200 font-light text-base"
->
-  Visão Geral
-</a>
+<nav class="bg-teal-600 h-14 w-screen flex items-center mb-12 justify-center">
+  <div class="w-[800px] flex items-center h-full justify-between">
+    <div class="w-2/12"></div>
+    <div class="flex items-center h-full flex-1 justify-center">
+      <a
+        [class.active-route-sidebar]="isCurrentRoute('/home')"
+        routerLink="/home"
+        class="flex items-center h-full pointer mx-4 text-slate-200 font-light text-base"
+      >
+        Visão Geral
+      </a>
 
-<a
-  [class.active-route-sidebar]="isCurrentRoute('/registrations')"
-  routerLink="/registrations/accounts"
-  class="flex items-center h-full pointer mx-4 text-slate-200 font-light text-base"
->
-  Cadastros
-</a>
+      <a
+        [class.active-route-sidebar]="isCurrentRoute('/registrations')"
+        routerLink="/registrations/accounts"
+        class="flex items-center h-full pointer mx-4 text-slate-200 font-light text-base"
+      >
+        Cadastros
+      </a>
 
-<a
-  [class.active-route-sidebar]="isCurrentRoute('/transactions')"
-  routerLink="/transactions"
-  class="flex items-center h-full pointer mx-4 text-slate-200 font-light text-base"
->
-  Lançamentos
-</a>
+      <a
+        [class.active-route-sidebar]="isCurrentRoute('/transactions')"
+        routerLink="/transactions"
+        class="flex items-center h-full pointer mx-4 text-slate-200 font-light text-base"
+      >
+        Lançamentos
+      </a>
+    </div>
+    <div class="w-2/12 flex gap-4 flex-end items-center">
+      <button type="button" class="">
+        <span
+          class="material-symbols-outlined text-white text-xl"
+          style="font-variation-settings: 'FILL' 1"
+        >
+          settings
+        </span>
+      </button>
+      
+      
+      <!-- NOTIFICATION BUTTON -->
+      <button type="button" class="" [matMenuTriggerFor]="notificationMenu" aria-label="Menu de notificações">
+        <span
+          [matBadge]="2"
+          matBadgeOverlap="true"
+          class="material-symbols-outlined text-white text-xl font-bold"
+          style="font-variation-settings: 'FILL' 1"
+        >
+          notifications
+        </span>
+      </button>
+      <mat-menu class="!min-h-14" #notificationMenu="matMenu" xPosition="before">
+          <p class="h-full w-full text-sm text-center text-slate-700 flex justify-center items-center gap-1">
+            Nenhuma<br> notificação
+          </p>
+      </mat-menu>
 
-</div>
+
+
+      <!-- USER BUTTON -->
+      <button type="button" [matMenuTriggerFor]="userMenu"
+      aria-label="Menu do usuário" class="ml-4">
+        <span
+          class="material-symbols-outlined text-white text-4xl"
+          style="font-variation-settings: 'FILL' 1"
+        >
+          account_circle
+        </span>
+      </button>
+      <mat-menu #userMenu="matMenu" xPosition="before">
+        <button
+          (click)="logout()"
+          class="!py-1 !min-h-0"
+          mat-menu-item
+        >
+          <p class="text-sm text-red-600 flex items-center gap-1">
+            <span class="material-symbols-outlined text-lg">
+              logout
+              </span>Sair
+          </p>
+        </button>
+      </mat-menu>
+    </div>
+  </div>
 </nav>

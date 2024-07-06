@@ -24,20 +24,20 @@
         }}</span>
       </p>
     </div>
-    @if(invoice.totalAmount - invoice.totalPaid != 0 ) {
-    <!-- || invoice.isPaid -->
-    <div class="text-sm">
-      <p class="text-red-600">
-        Pago:
-        <span class="font-semibold">{{
-          invoice.totalPaid | currency : "BRL" : "symbol"
-        }}</span>
-      </p>
-    </div>
+    @if(invoice.isPaid) {
+      <div class="text-sm text-blue-600">
+        <p class="">Fatura paga</p>
+      </div>
+    
     }@else {
-    <div class="text-sm text-blue-600">
-      <p class="">Fatura paga</p>
-    </div>
+      <div class="text-sm">
+        <p class="text-red-600">
+          Pago:
+          <span class="font-semibold">{{
+            invoice.totalPaid | currency : "BRL" : "symbol"
+          }}</span>
+        </p>
+      </div>
     }
   </button>
   }

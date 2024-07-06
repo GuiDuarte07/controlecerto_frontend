@@ -11,6 +11,7 @@ import { AlertDialogComponent } from '../../components/dialogs/alert-dialog/aler
 import { MatMenuModule } from '@angular/material/menu';
 import { CreateTransactionDialogComponent } from '../../components/dialogs/create-transaction-dialog/create-transaction-dialog.component';
 import { TransactionTypeEnum } from '../../enums/TransactionTypeEnum';
+import { InfoInvoiceResponse } from '../../models/InfoInvoiceResponse';
 
 @Component({
   selector: 'app-transactions',
@@ -27,7 +28,9 @@ import { TransactionTypeEnum } from '../../enums/TransactionTypeEnum';
 })
 export class TransactionsComponent implements OnInit {
   transactions: InfoTransactionResponse[] = [];
+  invoices: InfoInvoiceResponse[] = [];
   readonly panelOpenState = signal(false);
+  readonly faturePanelState = signal(true);
 
   private readonly todayDate = new Date();
   filterDate: Date = new Date(
@@ -47,17 +50,42 @@ export class TransactionsComponent implements OnInit {
   }
 
   updateTransactions() {
-    this.transactionService
-      .getTransactions(
-        this.filterDate,
-        new Date(
-          this.filterDate.getFullYear(),
-          this.filterDate.getMonth() + 1,
-          1
-        )
+    const firstDayOfMonth = new Date(
+      this.filterDate.getFullYear(),
+      this.filterDate.getMonth(),
+      1
+    );
+    const lastDayOfMonth = new Date(
+      this.filterDate.getFullYear(),
+      this.filterDate.getMonth() + 1,
+      0
+    );
+
+    const firstDayOfMonthUTC = new Date(
+      Date.UTC(
+        firstDayOfMonth.getFullYear(),
+        firstDayOfMonth.getMonth(),
+        firstDayOfMonth.getDate()
       )
+    );
+
+    const lastDayOfMonthUTC = new Date(
+      Date.UTC(
+        lastDayOfMonth.getFullYear(),
+        lastDayOfMonth.getMonth(),
+        lastDayOfMonth.getDate(),
+        23,
+        59,
+        59
+      )
+    );
+
+    this.transactionService
+      .getTransactions(firstDayOfMonthUTC, lastDayOfMonthUTC)
       .subscribe((result) => {
         this.transactions = result.transactions;
+        this.invoices = result.invoices;
+
         console.log(result);
       });
   }

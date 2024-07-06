@@ -53,7 +53,7 @@ export class CreditCardService {
               new InfoInvoiceResponse(
                 item.id,
                 item.totalAmount,
-                item.totalAmount,
+                item.totalPaid,
                 item.isPaid,
                 new Date(item.closingDate),
                 new Date(item.dueDate),

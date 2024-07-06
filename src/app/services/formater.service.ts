@@ -32,8 +32,8 @@ export class FormaterService {
     }
   }
 
-  getMonthYearString(date: Date): string {
-    const monthYear = date.toLocaleDateString('pt-BR', {
+  getMonthYearString(date: Date | string): string {
+    const monthYear = new Date(date).toLocaleDateString('pt-BR', {
       month: 'long',
       year: 'numeric',
     });

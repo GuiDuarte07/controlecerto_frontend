@@ -59,4 +59,9 @@ export class AccountService {
       `${this.hostAddress}/${suffix}`
     );
   }
+
+  getAccountBalance(): Observable<number> {
+    const suffix = 'GetAccountBalance';
+    return this.httpClient.get<number>(`${this.hostAddress}/${suffix}`);
+  }
 }

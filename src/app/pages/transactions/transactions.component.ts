@@ -1,3 +1,4 @@
+import { AccountsComponent } from './../accounts/accounts.component';
 import { Component, OnInit, signal } from '@angular/core';
 import { TransactionService } from '../../services/transaction.service';
 import { InfoTransactionResponse } from '../../models/InfoTransactionResponse';
@@ -12,6 +13,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { CreateTransactionDialogComponent } from '../../components/dialogs/create-transaction-dialog/create-transaction-dialog.component';
 import { TransactionTypeEnum } from '../../enums/TransactionTypeEnum';
 import { InfoInvoiceResponse } from '../../models/InfoInvoiceResponse';
+import { AccountService } from '../../services/account.service';
 
 @Component({
   selector: 'app-transactions',
@@ -29,8 +31,7 @@ import { InfoInvoiceResponse } from '../../models/InfoInvoiceResponse';
 export class TransactionsComponent implements OnInit {
   transactions: InfoTransactionResponse[] = [];
   invoices: InfoInvoiceResponse[] = [];
-  readonly panelOpenState = signal(false);
-  readonly faturePanelState = signal(true);
+  accountBalance: number = 0;
 
   private readonly todayDate = new Date();
   filterDate: Date = new Date(
@@ -41,12 +42,17 @@ export class TransactionsComponent implements OnInit {
 
   constructor(
     private transactionService: TransactionService,
+    private accountService: AccountService,
     public formaterService: FormaterService,
     public dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
     this.updateTransactions();
+
+    this.accountService.getAccountBalance().subscribe((result) => {
+      this.accountBalance = result;
+    });
   }
 
   updateTransactions() {
@@ -108,6 +114,35 @@ export class TransactionsComponent implements OnInit {
     );
 
     this.updateTransactions();
+  }
+
+  expensesTotal() {
+    let expenseValue = 0;
+    this.transactions.forEach((t) => {
+      if (t.type === TransactionTypeEnum.EXPENSE) {
+        expenseValue += t.amount;
+      }
+    });
+
+    return expenseValue;
+  }
+
+  incomesTotal() {
+    let incomeValue = 0;
+    this.transactions.forEach((t) => {
+      if (t.type === TransactionTypeEnum.INCOME) {
+        incomeValue += t.amount;
+      }
+    });
+
+    return incomeValue;
+  }
+
+  invoiceTotal() {
+    return this.invoices.reduce(
+      (acc, current) => acc + (current.totalAmount - current.totalPaid),
+      0
+    );
   }
 
   openAlertDialog(transaction: InfoTransactionResponse) {

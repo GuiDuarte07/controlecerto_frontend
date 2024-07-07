@@ -39,7 +39,7 @@
             <div class="gap-2 flex items-center w-full overflow-hidden">
               <div
                 [ngStyle]="{
-                  'background-color': selectedAccount?.color
+                  'background-color': selectedAccount!.color
                 }"
                 class="h-6 w-7 rounded-lg flex justify-center items-center"
               >
@@ -48,7 +48,7 @@
                 </span>
               </div>
               <p class="overflow-hidden text-xs text-slate-800 font-semibold">
-                {{ selectedAccount?.bank || selectedAccount?.description }}
+                {{ selectedAccount!.bank || selectedAccount!.description }}
               </p>
             </div>
             } @else {

@@ -118,7 +118,6 @@ export class CreateTransactionDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.transactionForm = new FormGroup<ITransactionForm>({
-      /* ARRUMAR O VALOR INICIAL NO CURRENCY */
       amount: new FormControl<number>(
         this.data.newTransaction ? 0 : this.data.transaction.amount,
         {

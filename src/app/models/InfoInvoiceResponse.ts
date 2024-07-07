@@ -1,4 +1,5 @@
 import { CreditCardInfo } from './CreditCardInfo';
+import { InfoInvoicePaymentResponse } from './InfoInvoicePaymentResponse ';
 import { InfoTransactionResponse } from './InfoTransactionResponse';
 
 export class InfoInvoiceResponse {
@@ -8,8 +9,9 @@ export class InfoInvoiceResponse {
   isPaid: boolean;
   closingDate: Date;
   dueDate: Date;
-  transactions?: InfoTransactionResponse[];
   creditCard: CreditCardInfo;
+  transactions?: InfoTransactionResponse[];
+  invoicePayments?: InfoInvoicePaymentResponse[];
 
   constructor(
     id: number,
@@ -19,7 +21,8 @@ export class InfoInvoiceResponse {
     closingDate: Date,
     dueDate: Date,
     creditCard: CreditCardInfo,
-    transactions?: InfoTransactionResponse[]
+    transactions?: InfoTransactionResponse[],
+    invoicePayments?: InfoInvoicePaymentResponse[]
   ) {
     this.id = id;
     this.totalAmount = totalAmount;
@@ -29,5 +32,6 @@ export class InfoInvoiceResponse {
     this.dueDate = dueDate;
     this.creditCard = creditCard;
     this.transactions = transactions;
+    this.invoicePayments = invoicePayments;
   }
 }

@@ -10,6 +10,7 @@ import { TransactionsComponent } from './pages/transactions/transactions.compone
 import { CreditcardsComponent } from './pages/creditcards/creditcards.component';
 import { MasterComponent } from './layouts/master/master.component';
 import { RegistrationsComponent } from './layouts/registrations/registrations.component';
+import { InvoicesComponent } from './pages/invoices/invoices.component';
 
 export const routes: Routes = [
   {
@@ -19,6 +20,7 @@ export const routes: Routes = [
     children: [
       { path: 'home', component: HomeComponent },
       { path: 'transactions', component: TransactionsComponent },
+      { path: 'invoices/:id', component: InvoicesComponent },
       {
         path: 'registrations',
         canActivate: [AuthGuard],

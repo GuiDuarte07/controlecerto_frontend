@@ -6,6 +6,8 @@ import { CreateCreditPurchaseRequest } from '../models/CreateCreditPurchaseReque
 import { CreateCreditCardRequest } from '../models/CreateCreditCardRequest';
 import { InfoInvoiceResponse } from '../models/InfoInvoiceResponse';
 import { InfoCreditExpense } from '../models/InfoCreditExpense';
+import { InvoicePageResponse } from '../models/InvoicePageResponse';
+import { CreateInvoicePaymentRequest } from '../models/CreteInvoicePaymentRequest';
 
 @Injectable({
   providedIn: 'root',
@@ -100,5 +102,37 @@ export class CreditCardService {
           )
         )
       );
+  }
+
+  getInvoicesById(invoiceId: number): Observable<InvoicePageResponse> {
+    const suffix = 'GetInvoicesById';
+    return this.http
+      .get<InvoicePageResponse>(`${this.hostAddress}/${suffix}/${invoiceId}`)
+      .pipe(
+        map(
+          (data) =>
+            new InvoicePageResponse(
+              new InfoInvoiceResponse(
+                data.invoice.id,
+                data.invoice.totalAmount,
+                data.invoice.totalPaid,
+                data.invoice.isPaid,
+                new Date(data.invoice.closingDate),
+                new Date(data.invoice.dueDate),
+                data.invoice.creditCard,
+                data.invoice.transactions,
+                data.invoice.invoicePayments
+              ),
+              data.nextInvoiceId,
+              data.prevInvoiceId
+            )
+        )
+      );
+  }
+
+  payInvoice(invoicePayment: CreateInvoicePaymentRequest) {
+    const suffix = 'PayInvoice';
+    //retorna InfoCreditPurchaseResponse, porém como não terá uso ainda, não irei implementar
+    return this.http.post<any>(`${this.hostAddress}/${suffix}`, invoicePayment);
   }
 }

@@ -2,21 +2,12 @@
   class="!ml-6 !mb-4 !mt-4 !text-xl !font-normal !tracking-wide !text-slate-700"
   mat-dialog-title
 >
-  {{
-    data.newTransaction && data.transactionType === 0
-      ? "Nova Despesa"
-      : data.transactionType === 1
-      ? "Nova Receita"
-      : "Nova Despesa Cartão"
-  }}
-
-  {{
-    !data.newTransaction && data.transactionType === 0
-      ? "Editar Despesa"
-      : data.transactionType === 1
-      ? "Editar Receita"
-      : "Editar Despesa Cartão"
-  }}
+  
+  {{data.newTransaction && data.transactionType === 0 ? "Nova Despesa" : ""}}
+  {{data.newTransaction && data.transactionType === 1 ? "Nova Receita" : ""}}
+  {{data.newTransaction && data.transactionType === 2 ? "Nova Despesa Cartão" : ""}}
+  {{!data.newTransaction && data.transactionType === 0 ? "Editar Despesa" : ""}}
+  {{!data.newTransaction && data.transactionType === 1 ? "Editar Receita" : ""}}
 </h2>
 
 <mat-dialog-content class="min-w-[500px]">

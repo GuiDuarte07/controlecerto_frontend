@@ -17,7 +17,6 @@ export class CreateCreditCardRequest {
     totalLimit: number;
     usedLimit: number;
     description: string;
-    cardBrand: string;
     dueDay: number;
     closeDay: number;
     accountId: number;

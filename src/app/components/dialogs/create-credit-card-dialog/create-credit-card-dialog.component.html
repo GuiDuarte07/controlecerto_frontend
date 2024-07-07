@@ -1,25 +1,97 @@
 <h2 mat-dialog-title>Novo Cartão</h2>
 <mat-dialog-content class="w-[600px]">
-  <form
-    [formGroup]="creditCardForm"
-    class="m-4 flex flex-col gap-6"
-  >
-    <div>
-      <label
-        for="totalLimit"
-        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-        >Limite Total do Cartão</label
-      >
-      <input
-        formControlName="totalLimit"
-        type="number"
-        id="totalLimit"
-        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-        required
-      />
+  <form [formGroup]="creditCardForm" class="m-4 flex flex-col gap-6">
+    <div class="flex items-center gap-4">
+      <!-- TOTAL LIMITE -->
+      <div class="w-6/12">
+        <label
+          for="totalLimit"
+          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >Limite Total do Cartão</label
+        >
+        <input
+          appCurrencyMask
+          prefix="R$ "
+          formControlName="totalLimit"
+          type="text"
+          id="totalLimit"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          required
+        />
+      </div>
+
+      <!-- CONTA SELECT -->
+      <div class="w-6/12">
+        <p
+          for="cardAccount"
+          class="block text-sm font-medium text-gray-900 dark:text-white mb-2"
+        >
+          Conta do Cartão
+        </p>
+        <div
+          role="button"
+          tabindex="0"
+          (click)="toggleSelection($event)"
+          class="relative bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-700 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        >
+          <div class="w-full flex items-center">
+            @if (selectedAccount) {
+            <div class="gap-2 flex items-center w-full overflow-hidden">
+              <div
+                [ngStyle]="{
+                  'background-color': selectedAccount?.color
+                }"
+                class="h-6 w-7 rounded-lg flex justify-center items-center"
+              >
+                <span class="material-symbols-outlined text-base text-white">
+                  account_balance
+                </span>
+              </div>
+              <p class="overflow-hidden text-xs text-slate-800 font-semibold">
+                {{ selectedAccount?.bank || selectedAccount?.description }}
+              </p>
+            </div>
+            } @else {
+            <p
+              class="text-sm text-slate-500 w-11/12 overflow-x-hidden text-ellipsis whitespace-nowrap"
+            >
+              Selecione uma conta
+            </p>
+            }
+
+            <span class="ml-2 material-symbols-outlined text-slate-500">
+              arrow_drop_down
+            </span>
+          </div>
+
+          <div
+            *ngIf="accountSelection()"
+            class="w-full z-50 bg-white absolute top-full left-0 overflow-y-scroll rounded shadow"
+          >
+            @for (account of accounts; track account) {
+            <button
+              (click)="changeSelectedItem(account)"
+              class="py-2 px-3 gap-2 flex items-center hover:bg-slate-200 transition-all duration-150 w-full"
+            >
+              <div
+                [ngStyle]="{ 'background-color': account.color }"
+                class="h-6 w-7 rounded-lg flex justify-center items-center"
+              >
+                <span class="material-symbols-outlined text-base text-white">
+                  account_balance
+                </span>
+              </div>
+              <p class="overflow-hidden text-xs text-slate-800 font-semibold">
+                {{ account.bank }}
+              </p>
+            </button>
+            }
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div>
+    <!-- <div>
       <label
         for="usedLimit"
         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -32,59 +104,24 @@
         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
         required
       />
-    </div>
+    </div> -->
 
-    <div class="">
+    <!-- Nome -->
+    <div>
       <label
         for="description"
         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-        >Descrição</label
-      >
-      <textarea
-        formControlName="description"
-        id="description"
-        rows="4"
-        class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-        placeholder="Insira uma descrição para essa conta..."
-      ></textarea>
-    </div>
-
-    <!-- CARD BRAND -->
-    <div>
-      <label
-        for="cardBrand"
-        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-        >Bandeira do cartão</label
+        >Nome</label
       >
       <input
-        formControlName="cardBrand"
+        formControlName="description"
         type="text"
-        id="cardBrand"
+        id="description"
         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-        placeholder="Bandeira do cartão"
+        placeholder="Nome do cartão"
         required
       />
     </div>
-
-
-
-
-    <label
-      for="cardAccount"
-      class="block text-sm font-medium text-gray-900 dark:text-white"
-      >Conta do Cartão</label
-    >
-    <mat-form-field class="!p-0 !m-0">
-      <mat-label class="!text-sm !m-0">Conta do Cartão</mat-label>
-      <mat-select id="cardAccount" [(value)]="selectedAccountId" class="!text-sm !min-h-7 !m-0">
-        @for (account of accounts; track account) {
-          <mat-option class="!text-sm !min-h-7" [value]="account.id">{{account.bank}}</mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
-
-
-
   </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">

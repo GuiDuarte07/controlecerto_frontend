@@ -18,7 +18,6 @@ import {
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpErrorResponse } from '@angular/common/http';
 import { UpdateAccountRequest } from '../../../models/UpdateAccountRequest';
-import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import { CurrencyMaskDirective } from '../../../directive/currency-mask.directive';
 
 type Color = { code: string; selected: boolean };

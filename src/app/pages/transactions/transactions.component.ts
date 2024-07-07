@@ -49,10 +49,6 @@ export class TransactionsComponent implements OnInit {
 
   ngOnInit(): void {
     this.updateTransactions();
-
-    this.accountService.getAccountBalance().subscribe((result) => {
-      this.accountBalance = result;
-    });
   }
 
   updateTransactions() {
@@ -94,6 +90,14 @@ export class TransactionsComponent implements OnInit {
 
         console.log(result);
       });
+
+    this.updateAccountBalance();
+  }
+
+  updateAccountBalance() {
+    this.accountService.getAccountBalance().subscribe((result) => {
+      this.accountBalance = result;
+    });
   }
 
   nexMonthFilter() {
@@ -145,7 +149,7 @@ export class TransactionsComponent implements OnInit {
     );
   }
 
-  openAlertDialog(transaction: InfoTransactionResponse) {
+  openDeleteAlertDialog(transaction: InfoTransactionResponse) {
     const dialogRef = this.dialog.open(AlertDialogComponent, {
       data: {
         title: 'Deletar lançamento',
@@ -154,19 +158,23 @@ export class TransactionsComponent implements OnInit {
         `,
         successMessage: 'Lançamento deletado com sucesso!',
         actionButtonMessage: 'Deletar',
+        confirmObservable: this.transactionService.deleteTransaction(
+          transaction.id
+        ),
       },
     });
     dialogRef.afterClosed().subscribe((sucess) => {
       if ((sucess as boolean) === true) {
-        console.error('ainda nao implementado');
+        this.updateTransactions();
       }
     });
   }
 
-  openIncomeDialog() {
+  openCreateTransactionDialog(type: TransactionTypeEnum) {
     const dialogRef = this.dialog.open(CreateTransactionDialogComponent, {
       data: {
-        transactionType: TransactionTypeEnum.INCOME,
+        transactionType: type,
+        newTransaction: true,
       },
     });
 
@@ -177,24 +185,12 @@ export class TransactionsComponent implements OnInit {
     });
   }
 
-  openExpenseDialog() {
+  openEditTransactionDialog(transaction: InfoTransactionResponse) {
     const dialogRef = this.dialog.open(CreateTransactionDialogComponent, {
       data: {
-        transactionType: TransactionTypeEnum.EXPENSE,
-      },
-    });
-
-    dialogRef.afterClosed().subscribe((sucess) => {
-      if ((sucess as boolean) === true) {
-        this.updateTransactions();
-      }
-    });
-  }
-
-  openCreditExpenseDialog() {
-    const dialogRef = this.dialog.open(CreateTransactionDialogComponent, {
-      data: {
-        transactionType: TransactionTypeEnum.CREDITEXPENSE,
+        transactionType: transaction.type,
+        newTransaction: false,
+        transaction,
       },
     });
 

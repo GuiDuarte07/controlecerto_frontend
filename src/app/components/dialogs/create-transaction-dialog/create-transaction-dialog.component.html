@@ -3,11 +3,19 @@
   mat-dialog-title
 >
   {{
-    data.transactionType === 0
+    data.newTransaction && data.transactionType === 0
       ? "Nova Despesa"
       : data.transactionType === 1
       ? "Nova Receita"
       : "Nova Despesa Cartão"
+  }}
+
+  {{
+    !data.newTransaction && data.transactionType === 0
+      ? "Editar Despesa"
+      : data.transactionType === 1
+      ? "Editar Receita"
+      : "Editar Despesa Cartão"
   }}
 </h2>
 
@@ -26,6 +34,7 @@
           formControlName="amount"
           appCurrencyMask
           prefix="R$ "
+          thousandSeparator="."
           (change)="changeAmountPerInstallment()"
           id="amount"
           [ngClass]="{
@@ -321,6 +330,6 @@
     mat-button
     (click)="createTransaction()"
   >
-    Criar
+    {{data.newTransaction ? "Criar" : "Editar"}}
   </button>
 </mat-dialog-actions>

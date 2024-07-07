@@ -41,6 +41,7 @@ export class AlertDialogComponent {
 
   closeDialog(sucess: boolean) {
     if (sucess) {
+      console.log(this.data.confirmObservable);
       this.data.confirmObservable?.subscribe({
         next: () => {
           this.openSnackBar(this.data.successMessage!);

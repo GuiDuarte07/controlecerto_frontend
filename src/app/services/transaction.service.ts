@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { InfoTransactionResponse } from '../models/InfoTransactionResponse';
 import { CreateTransactionRequest } from '../models/CreateTransaction';
 import { TransactionList } from '../models/TransactionList';
+import { UpdateTransactionRequest } from '../models/UpdateTransaction';
 
 @Injectable({
   providedIn: 'root',
@@ -15,6 +16,16 @@ export class TransactionService {
   createTransaction(transaction: CreateTransactionRequest) {
     const suffix = 'CreateTransaction';
     return this.http.post<any>(`${this.hostAddress}/${suffix}`, transaction);
+  }
+
+  updateTransaction(transaction: UpdateTransactionRequest) {
+    const suffix = 'UpdateTransaction';
+    return this.http.patch<any>(`${this.hostAddress}/${suffix}`, transaction);
+  }
+
+  deleteTransaction(transactionId: number) {
+    const suffix = 'DeleteTransaction';
+    return this.http.delete(`${this.hostAddress}/${suffix}/${transactionId}`);
   }
 
   getTransactions(startDate?: Date, endDate?: Date, accountId?: number) {

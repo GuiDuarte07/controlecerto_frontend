@@ -21,7 +21,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 })
 export class CurrencyMaskDirective implements OnInit, ControlValueAccessor {
   @Input() prefix: string = '';
-  @Input() thousandSeparator: string = '.';
+  @Input() thousandSeparator: string = '';
   @Input() decimalMarker: string = ',';
   @Input() decimalPlaces: number = 2;
 
@@ -54,7 +54,9 @@ export class CurrencyMaskDirective implements OnInit, ControlValueAccessor {
   }
 
   writeValue(value: any): void {
+    console.log(value);
     const formattedValue = this.formatInput(value ? value.toString() : '');
+    console.log(formattedValue);
     this.el.nativeElement.value = formattedValue;
   }
 
@@ -67,7 +69,15 @@ export class CurrencyMaskDirective implements OnInit, ControlValueAccessor {
   }
 
   public formatInput(value: string): string {
-    let numbersOnly = value.replace(/\D/g, '');
+    let numString = value;
+
+    if (!numString.includes(this.decimalMarker)) {
+      for (let i = 0; i < this.decimalPlaces; i++) {
+        numString += '0';
+      }
+    }
+
+    let numbersOnly = numString.replace(/\D/g, '');
 
     // Remove leading zeros
     numbersOnly = numbersOnly.replace(/^0+/, '');

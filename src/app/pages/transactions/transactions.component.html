@@ -14,7 +14,7 @@
         </button>
         <mat-menu class="!mt-2" #menu="matMenu">
           <button
-            (click)="openExpenseDialog()"
+            (click)="openCreateTransactionDialog(0)"
             class="!text-red-700 !py-0 !text-sm"
             mat-menu-item
           >
@@ -24,7 +24,7 @@
             <span class="!text-sm">Gasto</span>
           </button>
           <button
-            (click)="openIncomeDialog()"
+            (click)="openCreateTransactionDialog(1)"
             class="!text-green-600 !py-0 !text-sm"
             mat-menu-item
           >
@@ -32,7 +32,7 @@
             <span class="!text-sm">Receita</span>
           </button>
           <button
-            (click)="openCreditExpenseDialog()"
+            (click)="openCreateTransactionDialog(2)"
             class="!text-yellow-400 !py-0 !text-sm"
             mat-menu-item
           >
@@ -79,6 +79,7 @@
       <div class="w-4/12"></div>
     </div>
 
+    <!-- LISTA DE TRANSAÇÕES -->
     @for(transaction of transactions; track transaction) {
     <mat-expansion-panel
       class="!shadow-none !bg-none flex w-full items-center rounded-sm"
@@ -149,6 +150,7 @@
           <!-- Botões de Editar e Excluir -->
           <div class="flex flex-col gap-4 items-center justify-evenly">
             <button
+              (click)="openEditTransactionDialog(transaction)"
               aria-label="Editar lançamento"
               [matTooltipPosition]="'right'"
               mat-raised-button
@@ -162,7 +164,7 @@
             </button>
 
             <button
-              (click)="openAlertDialog(transaction)"
+              (click)="openDeleteAlertDialog(transaction)"
               aria-label="Excluir lançamento"
               [matTooltipPosition]="'right'"
               mat-raised-button
@@ -218,6 +220,7 @@
       </div>
     </mat-expansion-panel>
 
+    <!-- LISTA DE TRANSAÇÃO VAZIA -->
     } @if(transactions.length === 0 && invoices.length === 0) {
     <div class="flex w-full items-center min-h-32">
       <p class="text-center w-full text-slate-700">

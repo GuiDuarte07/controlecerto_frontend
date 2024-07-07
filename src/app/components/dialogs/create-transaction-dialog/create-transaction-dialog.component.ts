@@ -41,6 +41,8 @@ import { CurrencyMaskDirective } from '../../../directive/currency-mask.directiv
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { BillTypeEnum } from '../../../enums/BillTypeEnum';
+import { InfoTransactionResponse } from '../../../models/InfoTransactionResponse';
+import { UpdateTransactionRequest } from '../../../models/UpdateTransaction';
 
 interface ITransactionForm {
   amount: FormControl<number>;
@@ -76,9 +78,6 @@ interface ITransactionForm {
   styleUrl: './create-transaction-dialog.component.scss',
 })
 export class CreateTransactionDialogComponent implements OnInit {
-  @ViewChild(CurrencyMaskDirective)
-  currencyMaskDirective!: CurrencyMaskDirective;
-
   transactionForm!: FormGroup<ITransactionForm>;
   categorySelection = signal(false);
   accountSelection = signal(false);
@@ -96,7 +95,13 @@ export class CreateTransactionDialogComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
-    public data: { transactionType: TransactionTypeEnum },
+    public data:
+      | { newTransaction: true; transactionType: TransactionTypeEnum }
+      | {
+          newTransaction: false;
+          transactionType: TransactionTypeEnum;
+          transaction: InfoTransactionResponse;
+        },
     private transactionService: TransactionService,
     private creditCardService: CreditCardService,
     private accountService: AccountService,
@@ -113,52 +118,85 @@ export class CreateTransactionDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.transactionForm = new FormGroup<ITransactionForm>({
-      amount: new FormControl<number>(0, {
-        nonNullable: true,
-        validators: [Validators.required, Validators.min(0)],
-      }),
-      description: new FormControl<string>('', {
-        nonNullable: true,
-        validators: [
-          Validators.required,
-          Validators.minLength(3),
-          Validators.maxLength(100),
-        ],
-      }),
-      destination: new FormControl<string>('', {
-        nonNullable: true,
-        validators: [
-          Validators.required,
-          Validators.minLength(3),
-          Validators.maxLength(100),
-        ],
-      }),
-      observations: new FormControl<string | undefined>(undefined, {
-        nonNullable: true,
-        validators: [Validators.maxLength(300)],
-      }),
-      purchaseDate: new FormControl<Date>(new Date(), {
-        nonNullable: true,
-        validators: [Validators.required],
-      }),
-      justForRecord: new FormControl<boolean>(false, {
-        nonNullable: true,
-        validators: [Validators.required],
-      }),
-      accountId: new FormControl<number>(0, {
-        nonNullable: true,
-      }),
+      /* ARRUMAR O VALOR INICIAL NO CURRENCY */
+      amount: new FormControl<number>(
+        this.data.newTransaction ? 0 : this.data.transaction.amount,
+        {
+          nonNullable: true,
+          validators: [Validators.required, Validators.min(0)],
+        }
+      ),
+      description: new FormControl<string>(
+        this.data.newTransaction ? '' : this.data.transaction.description,
+        {
+          nonNullable: true,
+          validators: [
+            Validators.required,
+            Validators.minLength(3),
+            Validators.maxLength(100),
+          ],
+        }
+      ),
+      destination: new FormControl<string>(
+        this.data.newTransaction ? '' : this.data.transaction.destination ?? '',
+        {
+          nonNullable: true,
+          validators: [
+            Validators.required,
+            Validators.minLength(3),
+            Validators.maxLength(100),
+          ],
+        }
+      ),
+      observations: new FormControl<string | undefined>(
+        this.data.newTransaction
+          ? undefined
+          : this.data.transaction.observations,
+        {
+          nonNullable: true,
+          validators: [Validators.maxLength(300)],
+        }
+      ),
+      purchaseDate: new FormControl<Date>(
+        this.data.newTransaction
+          ? new Date()
+          : new Date(this.data.transaction.purchaseDate),
+        {
+          nonNullable: true,
+          validators: [Validators.required],
+        }
+      ),
+      justForRecord: new FormControl<boolean>(
+        this.data.newTransaction ? false : this.data.transaction.justForRecord,
+        {
+          nonNullable: true,
+          validators: [Validators.required],
+        }
+      ),
+      accountId: new FormControl<number>(
+        this.data.newTransaction ? 0 : this.data.transaction.account.id,
+        {
+          nonNullable: true,
+        }
+      ),
       creditCardId: new FormControl<number>(0, {
         nonNullable: true,
       }),
-      categoryId: new FormControl<number>(0, {
-        nonNullable: true,
-        validators: [Validators.required],
-      }),
+      categoryId: new FormControl<number>(
+        this.data.newTransaction ? 0 : this.data.transaction.category!.id!,
+        {
+          nonNullable: true,
+          validators: [Validators.required],
+        }
+      ),
     });
 
     this.accountService.getAccounts().subscribe((data) => {
       this.accounts = data;
+      if (this.data.newTransaction === false) {
+        let id = this.data.transaction.account.id;
+        this.selectedAccount = this.accounts.find((a) => a.id! === id);
+      }
     });
 
     const type =
@@ -167,12 +205,21 @@ export class CreateTransactionDialogComponent implements OnInit {
         : BillTypeEnum.EXPENSE;
     this.categoryService.GetCategories(type).subscribe((data) => {
       this.categories = data;
+      if (this.data.newTransaction === false) {
+        let id = this.data.transaction.category.id;
+        this.selectedCategory = this.categories.find((a) => a.id! === id);
+      }
     });
 
-    this.creditCardService.getCreditCards().subscribe((data) => {
-      this.creditCards = data;
-      console.log(this.creditCards);
-    });
+    if (this.data.transactionType === TransactionTypeEnum.CREDITEXPENSE) {
+      this.creditCardService.getCreditCards().subscribe((data) => {
+        this.creditCards = data;
+        if (this.data.newTransaction === false) {
+          let id = this.data.transaction.category.id;
+          this.selectedCategory = this.categories.find((a) => a.id! === id);
+        }
+      });
+    }
   }
 
   closeDialog(sucess: boolean) {
@@ -182,17 +229,13 @@ export class CreateTransactionDialogComponent implements OnInit {
   changeAmountPerInstallment() {
     function getRoundedTwoDigits(number: number): number {
       // Passo 1: Converter o número para uma string
-      console.log(number);
       const numberStr = number.toString();
-      console.log(numberStr);
 
       // Passo 2: Pegar os dois primeiros dígitos ou completar com 0 se for um único dígito
       const firstTwoDigits =
         numberStr.length > 1
           ? parseInt(numberStr.substring(0, 2))
           : parseInt(numberStr + '0');
-
-      console.log(firstTwoDigits);
 
       // Passo 3: Calcular o divisor (10 elevado ao número de dígitos - 2)
       const divisor = Math.pow(10, numberStr.length - 2);
@@ -201,8 +244,6 @@ export class CreateTransactionDialogComponent implements OnInit {
       const rounded =
         numberStr.length > 1 ? Math.round(number / divisor) : firstTwoDigits;
 
-      console.log(rounded);
-
       return rounded;
     }
 
@@ -210,7 +251,6 @@ export class CreateTransactionDialogComponent implements OnInit {
       this.transactionForm.value.amount! / this.installments
     ).toString();
 
-    console.log('antes', formatedInput);
     let num = parseInt(formatedInput.split('.')[1]);
 
     if (formatedInput.includes('.')) {
@@ -221,7 +261,6 @@ export class CreateTransactionDialogComponent implements OnInit {
     }
 
     this.amountPerInstallment = formatedInput;
-    console.log('depois', formatedInput);
   }
 
   toggleSelection(event: MouseEvent, selection: 'account' | 'category') {
@@ -235,7 +274,6 @@ export class CreateTransactionDialogComponent implements OnInit {
     }
 
     const closeSelectionOnClick = (event: MouseEvent) => {
-      console.log('click', selection);
       if (selection === 'account') {
         this.accountSelection.set(false);
       }
@@ -287,51 +325,75 @@ export class CreateTransactionDialogComponent implements OnInit {
         justForRecord,
         purchaseDate,
       } = this.transactionForm.value;
-      const creditPurchaseToCreate = new CreateCreditPurchaseRequest(
-        /* this.currencyMaskDirective.parseInput(amount!), */
-        amount!,
-        this.installments,
-        undefined,
-        purchaseDate ?? new Date(),
-        destination ?? '',
-        description,
-        creditCardId!,
-        categoryId!
-      );
 
-      console.log(creditPurchaseToCreate);
-
-      this.creditCardService
-        .createCreditPurchase(creditPurchaseToCreate)
-        .subscribe({
-          next: () => {
-            this.openSnackBar('Despesa de cartão gerada com sucesso!');
-            this.transactionForm.reset();
-            this.closeDialog(true);
-          },
-          error: (err: HttpErrorResponse) => {
-            this.openSnackBar(
-              'Houve um erro na criação dessa despesa: ' + err.error
-            );
-            console.log(err.error);
-          },
-        });
+      if (this.data.newTransaction) {
+        const creditPurchaseToCreate = new CreateCreditPurchaseRequest(
+          amount!,
+          this.installments,
+          undefined,
+          purchaseDate ?? new Date(),
+          destination ?? '',
+          description,
+          creditCardId!,
+          categoryId!
+        );
+        console.log(creditPurchaseToCreate);
+        this.creditCardService
+          .createCreditPurchase(creditPurchaseToCreate)
+          .subscribe({
+            next: () => {
+              this.openSnackBar('Despesa de cartão gerada com sucesso!');
+              this.transactionForm.reset();
+              this.closeDialog(true);
+            },
+            error: (err: HttpErrorResponse) => {
+              this.openSnackBar(
+                'Houve um erro na criação dessa despesa: ' + err.error
+              );
+              console.log(err.error);
+            },
+          });
+      } else {
+        throw new Error('Não implementado ainda!!!!');
+      }
     } else {
-      const transactionToCreate = new CreateTransactionRequest({
-        ...this.transactionForm.getRawValue(),
-        type: this.data.transactionType,
-      });
+      if (this.data.newTransaction) {
+        const transactionToCreate = new CreateTransactionRequest({
+          ...this.transactionForm.getRawValue(),
+          type: this.data.transactionType,
+        });
 
-      this.transactionService.createTransaction(transactionToCreate).subscribe({
-        next: () => {
-          this.openSnackBar('Transação gerada com sucesso!');
-          this.transactionForm.reset();
-          this.closeDialog(true);
-        },
-        error: (err: HttpErrorResponse) => {
-          this.openSnackBar('Erro: ' + err.error);
-        },
-      });
+        this.transactionService
+          .createTransaction(transactionToCreate)
+          .subscribe({
+            next: () => {
+              this.openSnackBar('Transação gerada com sucesso!');
+              this.transactionForm.reset();
+              this.closeDialog(true);
+            },
+            error: (err: HttpErrorResponse) => {
+              this.openSnackBar('Erro: ' + err.error);
+            },
+          });
+      } else {
+        const transactionToUpdate = new UpdateTransactionRequest({
+          id: this.data.transaction.id,
+          ...this.transactionForm.getRawValue(),
+        });
+
+        this.transactionService
+          .updateTransaction(transactionToUpdate)
+          .subscribe({
+            next: () => {
+              this.openSnackBar('Transação editada com sucesso!');
+              this.transactionForm.reset();
+              this.closeDialog(true);
+            },
+            error: (err: HttpErrorResponse) => {
+              this.openSnackBar('Erro: ' + err.error);
+            },
+          });
+      }
     }
   }
 

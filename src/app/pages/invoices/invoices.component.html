@@ -81,10 +81,38 @@
     </div>
 
     <!-- PAGAMENTOS -->
-    <div class="mt-6 min-h-20 flex w-full gap-2 mb-4 border-b border-solid border-slate-200">
+    <div class="mt-6 min-h-20 flex flex-col w-full gap-2 mb-4 border-b border-solid border-slate-200">
       <h3 class="text-xl text-slate-700 tracking-wide">Pagamentos</h3>
-      @for(payment of invoice.invoicePayments; track payment) {
 
+      @for(payment of invoice.invoicePayments; track payment) {
+        <div class="py-2 flex w-full items-center rounded-sm">
+          <div class="w-7/12 flex gap-2 items-center">
+            <div
+              class="text-white bg-green-600 rounded-full w-8 h-8 flex items-center justify-center p-2"
+            >
+              <span class="material-symbols-outlined text-xl">
+                payments
+              </span>
+            </div>
+  
+            <h3 class="text-sm text-slate-900 font-medium">
+              {{ payment.description }}
+            </h3>
+          </div>
+  
+          <div class="w-3/12 flex items-center justify-center overflow-hidden">
+            <p class="text-sm tracking-wide text-slate-500">
+              {{ payment.paymentDate| date : "dd/MM/yyyy" }}
+            </p>
+          </div>
+  
+          <div class="w-2/12 flex items-center justify-center">
+            <p class="text-sm tracking-wide text-black">
+              <span class=" ">-</span>
+              {{ formaterService.formatCurrency(payment.amountPaid) }}
+            </p>
+          </div>
+        </div>
       }
     </div>
 

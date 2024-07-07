@@ -28,6 +28,10 @@ export class InvoicesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.updateInvoice();
+  }
+
+  updateInvoice() {
     const paramId = parseInt(this.activatedRoute.snapshot.paramMap.get('id')!);
 
     this.creditCardService.getInvoicesById(paramId).subscribe({
@@ -57,6 +61,7 @@ export class InvoicesComponent implements OnInit {
   nextInvoice() {
     if (this.nextInvoiceId) {
       this.router.navigate(['/invoices', this.nextInvoiceId]);
+      this;
     }
   }
 

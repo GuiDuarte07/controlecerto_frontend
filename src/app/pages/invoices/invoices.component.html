@@ -23,7 +23,7 @@
           {{ formaterService.getMonthYearString(this.invoice.closingDate) }}
         </p>
         <button
-        (click)="nextInvoice()"
+          (click)="nextInvoice()"
           type="button"
           aria-label="Próximo mês"
           class="flex items-center"
@@ -36,18 +36,36 @@
       <div class="w-4/12"></div>
     </div>
 
-
     <!-- ICONE, NOME E PAGAR FATURA -->
-    <div class="flex w-full items-center gap-4 mb-4">
-      <div
-        class="text-white bg-slate-500 rounded-md w-24 h-14 flex items-center justify-center p-2"
+    <div class="flex w-full items-center mb-4 justify-between">
+      <div class="w-6/12 flex gap-4 items-center">
+        <div
+        class="text-white bg-slate-500 rounded-md w-20 h-12 flex items-center justify-center p-2"
       >
         <span class="material-symbols-outlined text-xl"> credit_card </span>
       </div>
-      <h2 class="text-xl text-slate-700 font-medium">{{invoice.creditCard.description}}</h2>
-      <button aria-label="pagar fatura do mês" (click)="openPaymentInvoiceDialog()" type="button" class="rounded-3xl shadow border border-solid border-slate-400 bg-green-600 px-3 py-2 ml-12">
+      <h2 class="text-lg text-slate-700 font-medium">
+        {{ invoice.creditCard.description }}
+
+        @if(isActualInvoice()) {
+          <span class="ml-4 text-xs px-2 py-1 rounded-2xl bg-teal-300 text-white">fatura atual</span>
+        }
+
+        @if(isOverdueInvoice()) {
+          <span class="ml-4 text-xs px-2 py-1 rounded-2xl bg-slate-500 text-white">fatura encerrada</span>
+        }
+      </h2>
+      </div>
+      @if(!invoice.isPaid) {
+        <button
+        aria-label="pagar fatura do mês"
+        (click)="openPaymentInvoiceDialog()"
+        type="button"
+        class="rounded-3xl shadow border border-solid border-slate-400 bg-green-600 px-3 py-2 mr-6"
+      >
         <div class="text-sm text-white font-medium">Pagar Fatura</div>
       </button>
+      }
     </div>
 
     <!-- CARDS FECHAMENTO, VENCIMENTO, VALOR -->
@@ -55,102 +73,153 @@
       <div
         class="shadow-lg bg-slate-200 rounded-md w-40 h-16 flex items-center justify-center p-2"
       >
-        <div class="text-slate-800 flex flex-col gap-1 justify-center items-center">
+        <div
+          class="text-slate-800 flex flex-col gap-1 justify-center items-center"
+        >
           <p class="text-xs font-medium text-slate-700">Fechamento</p>
-          <p class="">{{formaterService.formatDateString(invoice.closingDate)}}</p>
+          <p class="">
+            {{ formaterService.formatDateString(invoice.closingDate) }}
+          </p>
         </div>
       </div>
 
       <div
         class="shadow-lg bg-slate-200 rounded-md w-40 h-16 flex items-center justify-center p-2"
       >
-        <div class="text-slate-800 flex flex-col gap-1 justify-center items-center">
+        <div
+          class="text-slate-800 flex flex-col gap-1 justify-center items-center"
+        >
           <p class="text-xs font-medium text-slate-700">Vencimento</p>
-          <p class="">{{formaterService.formatDateString(invoice.dueDate)}}</p>
+          <p class="">
+            {{ formaterService.formatDateString(invoice.dueDate) }}
+          </p>
         </div>
       </div>
 
       <div
         class="shadow-lg bg-slate-200 rounded-md w-40 h-16 flex items-center justify-center p-2"
       >
-        <div class="text-slate-800 flex flex-col gap-1 justify-center items-center">
+        <div
+          class="text-slate-800 flex flex-col gap-1 justify-center items-center"
+        >
           <p class="text-xs font-medium text-slate-700">Valor total</p>
-          <p class="text-green-600">{{invoice.totalAmount | currency : "BRL" : "symbol"}}</p>
+          <p class="text-green-600">
+            {{ invoice.totalAmount | currency : "BRL" : "symbol" }}
+          </p>
         </div>
       </div>
     </div>
 
     <!-- PAGAMENTOS -->
-    <div class="mt-6 min-h-20 flex flex-col w-full gap-2 mb-4 border-b border-solid border-slate-200">
+    <div
+      class="mt-6 min-h-20 flex flex-col w-full gap-2 mb-2 pb-4"
+    >
       <h3 class="text-xl text-slate-700 tracking-wide">Pagamentos</h3>
 
-      @for(payment of invoice.invoicePayments; track payment) {
-        <div class="py-2 flex w-full items-center rounded-sm">
-          <div class="w-7/12 flex gap-2 items-center">
-            <div
-              class="text-white bg-green-600 rounded-full w-8 h-8 flex items-center justify-center p-2"
-            >
-              <span class="material-symbols-outlined text-xl">
-                payments
-              </span>
+      @if(this.invoice.invoicePayments?.length) {
+        @for(payment of invoice.invoicePayments; track payment) {
+          <div class="pt-2 flex w-full items-center rounded-sm">
+            <div class="w-7/12 flex gap-2 items-center">
+              <div
+                class="text-white bg-green-600 rounded-full w-8 h-8 flex items-center justify-center p-2"
+              >
+                <span class="material-symbols-outlined text-xl"> payments </span>
+              </div>
+    
+              <h3 class="text-sm text-slate-900 font-medium">
+                {{ payment.description }}
+              </h3>
             </div>
-  
-            <h3 class="text-sm text-slate-900 font-medium">
-              {{ payment.description }}
-            </h3>
+    
+            <div class="w-3/12 flex items-center justify-center overflow-hidden">
+              <p class="text-sm tracking-wide text-slate-500">
+                {{ payment.paymentDate | date : "dd/MM/yyyy" }}
+              </p>
+            </div>
+    
+            <div class="w-2/12 flex items-center justify-center">
+              <p class="text-sm tracking-wide text-black">
+                <span class=" ">-</span>
+                {{ formaterService.formatCurrency(payment.amountPaid) }}
+              </p>
+            </div>
           </div>
-  
-          <div class="w-3/12 flex items-center justify-center overflow-hidden">
-            <p class="text-sm tracking-wide text-slate-500">
-              {{ payment.paymentDate| date : "dd/MM/yyyy" }}
+          }
+      } @else {
+        <p class="pt-2 flex w-full items-center rounded-sm text-slate-500">Nenhum pagamento registrado.</p>
+      }
+
+    </div>
+
+    <!-- SALDO DE PAGAMENTOS -->
+    <div
+      class="py-2 border-t-2 border-solid border-slate-200 flex justify-between w-full"
+    >
+      <div class="flex-1">
+        <p class="text-base tracking-wide text-slate-600">
+          Saldo dos Pagamentos
+        </p>
+      </div>
+
+      <div class="px-4 w-4/12 flex">
+        <div class="pl-7 flex flex-col w-full">
+          <div class="flex items-center justify-between">
+            <p class="text-sm text-slate-600">total pago</p>
+            <p class="mr-4 text-sm font-medium text-green-600">
+              {{
+                totalPayment()
+                  | currency : "BRL" : ""
+              }}
             </p>
           </div>
-  
-          <div class="w-2/12 flex items-center justify-center">
-            <p class="text-sm tracking-wide text-black">
-              <span class=" ">-</span>
-              {{ formaterService.formatCurrency(payment.amountPaid) }}
+
+          <div class="flex items-center justify-between">
+            <p class="text-sm text-slate-600">restante</p>
+            <p class="mr-4 text-sm font-medium text-red-600">
+              {{ this.invoice.totalAmount - totalPayment() | currency : "BRL" : "" }}
             </p>
           </div>
         </div>
-      }
+      </div>
     </div>
-
     <!-- LANÇAMENTOS -->
-    <div class="mt-6 min-h-20 flex flex-col w-full gap-2 mb-4 border-b border-solid border-slate-200">
+    <div
+      class="mt-6 min-h-20 flex flex-col w-full gap-2 mb-2 pb-4"
+    >
       <h3 class="text-xl text-slate-700 tracking-wide">Lançamentos</h3>
 
       @for(transaction of invoice.transactions; track transaction) {
-        <div class="py-2 flex w-full items-center rounded-sm">
-          <div class="w-7/12 flex gap-2 items-center">
-            <div
-              [ngStyle]="{ 'background-color': transaction.category.color }"
-              class="text-white rounded-full w-8 h-8 flex items-center justify-center p-2"
-            >
-              <span class="material-symbols-outlined text-xl">
-                {{ transaction.category.icon }}
-              </span>
-            </div>
-  
-            <h3 class="text-sm text-slate-900 font-medium">
-              {{ transaction.description }}
-            </h3>
+      <div class="py-2 flex w-full items-center rounded-sm">
+        <div class="w-7/12 flex gap-2 items-center">
+          <div
+            [ngStyle]="{ 'background-color': transaction.category.color }"
+            class="text-white rounded-full w-8 h-8 flex items-center justify-center p-2"
+          >
+            <span class="material-symbols-outlined text-xl">
+              {{ transaction.category.icon }}
+            </span>
           </div>
-  
-          <div class="w-3/12 flex items-center justify-center overflow-hidden">
-            <p class="text-sm tracking-wide text-slate-500">
-              {{ transaction.purchaseDate | date : "dd/MM/yyyy" }}
-            </p>
-          </div>
-  
-          <div class="w-2/12 flex items-center justify-center">
-            <p class="text-sm tracking-wide text-black">
-              <span class=" ">{{ transaction.type === 1 ? "+" : "-" }}</span>
-              {{ formaterService.formatCurrency(transaction.amount) }}
-            </p>
-          </div>
+
+          <h3 class="text-sm text-slate-900 font-medium">
+            {{ transaction.description }}
+          </h3>
         </div>
-        }
+
+        <div class="w-3/12 flex items-center justify-center overflow-hidden">
+          <p class="text-sm tracking-wide text-slate-500">
+            {{ transaction.purchaseDate | date : "dd/MM/yyyy" }}
+          </p>
+        </div>
+
+        <div class="w-2/12 flex items-center justify-center">
+          <p class="text-sm tracking-wide text-black">
+            <span class=" ">{{ transaction.type === 1 ? "+" : "-" }}</span>
+            {{ formaterService.formatCurrency(transaction.amount) }}
+          </p>
+        </div>
+      </div>
+      }
+
       
     </div>
     }

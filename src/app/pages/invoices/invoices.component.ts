@@ -15,6 +15,7 @@ import { InvoicePaymentDialogComponent } from '../../components/dialogs/invoice-
   styleUrl: './invoices.component.scss',
 })
 export class InvoicesComponent implements OnInit {
+  invoiceId!: number;
   invoice!: InfoInvoiceResponse;
   nextInvoiceId?: number;
   prevInvoiceId?: number;
@@ -28,10 +29,13 @@ export class InvoicesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.updateInvoice();
+    this.activatedRoute.paramMap.subscribe((params) => {
+      this.invoiceId = parseInt(params.get('id')!);
+      this.updateInvoice();
+    });
   }
 
-  updateInvoice() {
+  updateInvoice(): void {
     const paramId = parseInt(this.activatedRoute.snapshot.paramMap.get('id')!);
 
     this.creditCardService.getInvoicesById(paramId).subscribe({
@@ -44,7 +48,7 @@ export class InvoicesComponent implements OnInit {
     });
   }
 
-  openPaymentInvoiceDialog() {
+  openPaymentInvoiceDialog(): void {
     const dialogRef = this.dialog.open(InvoicePaymentDialogComponent, {
       data: {
         invoice: this.invoice,
@@ -58,14 +62,49 @@ export class InvoicesComponent implements OnInit {
     });
   }
 
-  nextInvoice() {
+  isActualInvoice(): boolean {
+    const today = new Date();
+    return (
+      (today.getFullYear() === this.invoice.closingDate.getFullYear() &&
+        today.getMonth() === this.invoice.closingDate.getMonth() &&
+        today.getDay() < this.invoice.closingDate.getDay()) ||
+      (today.getFullYear() === this.invoice.closingDate.getFullYear() &&
+        today.getMonth() + 1 === this.invoice.closingDate.getMonth() &&
+        today.getDay() < this.invoice.closingDate.getDay()) ||
+      (today.getFullYear() + 1 === this.invoice.closingDate.getFullYear() &&
+        0 === this.invoice.closingDate.getMonth() &&
+        today.getDay() < this.invoice.closingDate.getDay())
+    );
+  }
+
+  isOverdueInvoice(): boolean {
+    const today = new Date();
+    return (
+      (today.getFullYear() == this.invoice.closingDate.getFullYear() &&
+        today.getMonth() == this.invoice.closingDate.getMonth() &&
+        today.getDay() >= this.invoice.closingDate.getDay()) ||
+      (today.getFullYear() > this.invoice.closingDate.getFullYear() &&
+        today.getMonth() > this.invoice.closingDate.getMonth())
+    );
+  }
+
+  totalPayment(): number {
+    return (
+      this.invoice.invoicePayments?.reduce(
+        (acc, payments) => acc + payments.amountPaid,
+        0
+      ) ?? 0
+    );
+  }
+
+  nextInvoice(): void {
     if (this.nextInvoiceId) {
       this.router.navigate(['/invoices', this.nextInvoiceId]);
       this;
     }
   }
 
-  prevInvoice() {
+  prevInvoice(): void {
     if (this.prevInvoiceId) {
       this.router.navigate(['/invoices', this.prevInvoiceId]);
     }

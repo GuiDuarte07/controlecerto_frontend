@@ -22,6 +22,7 @@ import { InfoInvoiceResponse } from '../../../models/InfoInvoiceResponse';
 import { CreateInvoicePaymentRequest } from '../../../models/CreteInvoicePaymentRequest';
 import { CreditCardService } from '../../../services/credit-card.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { FormaterService } from '../../../services/formater.service';
 
 interface IInvoicePaymentForm {
   amountPaid: FormControl<number>;
@@ -58,6 +59,7 @@ export class InvoicePaymentDialogComponent implements OnInit {
     public data: { invoice: InfoInvoiceResponse },
     private accountService: AccountService,
     private creditCardService: CreditCardService,
+    private formaterService: FormaterService,
     public dialogRef: MatDialogRef<InvoicePaymentDialogComponent>,
     private snackBar: MatSnackBar
   ) {}
@@ -71,10 +73,17 @@ export class InvoicePaymentDialogComponent implements OnInit {
           validators: [Validators.required],
         }
       ),
-      description: new FormControl<string>('', {
-        nonNullable: true,
-        validators: [Validators.required, Validators.maxLength(100)],
-      }),
+      description: new FormControl<string>(
+        `Pagamento Fatura ${
+          this.data.invoice.creditCard.description
+        } - ${this.formaterService.getMonthYearString(
+          this.data.invoice.closingDate
+        )}`,
+        {
+          nonNullable: true,
+          validators: [Validators.required, Validators.maxLength(100)],
+        }
+      ),
       paymentDate: new FormControl<Date>(new Date(), {
         nonNullable: true,
         validators: [Validators.required],

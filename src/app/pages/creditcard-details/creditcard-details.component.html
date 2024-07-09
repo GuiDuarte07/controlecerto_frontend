@@ -1,0 +1,92 @@
+<section class="registration-container">
+  <div class="flex flex-col w-full gap-2">
+    <div class="flex w-full justify-between items-center mb-4">
+      <h2 class="text-2xl font-bold text-slate-700 tracking-wide">
+        Cartão de Crédito
+      </h2>
+    </div>
+
+
+    <!-- ICONE, NOME, EDITAR -->
+    <div
+      class="flex items-center justify-between py-4 pl-2 shadow rounded bg-slate-50"
+    >
+      <div class="flex gap-4 items-center">
+        <!-- ICONE E NOME -->
+        <div
+          class="text-slate-700 bg-slate-500 rounded-md w-16 h-10 flex items-center justify-center p-2"
+        >
+          <span class="material-symbols-outlined text-xl text-slate-50">
+            credit_card
+          </span>
+        </div>
+
+        <h3 class="text-base font-medium text-slate-700">
+          {{ creditCard.description }} - {{ creditCard.account.bank }}
+        </h3>
+      </div>
+
+      <!-- EDITAR BTN -->
+      <div class="px-4">
+        <button type="button" aria-label="editar cartão" class="flex p-2 shadow-md bg-slate-100 rounded">
+          <span class="material-symbols-outlined"> edit_square </span>
+        </button>
+      </div>
+    </div>
+
+    <!-- INDICATIVOS DO CARTÃO -->
+    <div class="w-full flex items-start gap-4">
+      <div
+        class="w-7/12 rounded-lg flex flex-col gap-2 p-3 shadow-lg bg-slate-50"
+      >
+        <!-- LIMITES -->
+        <div class="flex w-full flex-col">
+          <div class="w-full flex justify-between">
+            <p class="text-sm text-slate-600">Credito total</p>
+            <p class="text-sm text-slate-600 font-medium">
+              {{ creditCard.totalLimit | currency : "BRL" }}
+            </p>
+          </div>
+          <div class="w-full flex justify-between">
+            <p class="text-sm text-slate-600">Credito Usado</p>
+            <p class="text-sm text-slate-600 font-medium">
+              {{ creditCard.usedLimit | currency : "BRL" }}
+            </p>
+          </div>
+          <div class="w-full flex justify-between">
+            <p class="text-sm text-slate-600">Credito Disponível</p>
+            <p class="text-sm text-slate-600 font-medium">
+              {{
+                creditCard.totalLimit - creditCard.usedLimit | currency : "BRL"
+              }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- FECHAMENTO VENCIMENTO -->
+      <div
+        class="w-5/12 rounded-lg flex flex-col gap-2 p-3 shadow-lg bg-slate-50"
+      >
+        <div class="flex w-full flex-col">
+          <div class="w-full flex justify-between">
+            <p class="text-sm text-slate-600">Dia do Fechamento</p>
+            <p class="text-sm text-slate-600 font-medium">
+              {{ creditCard.closeDay }}
+            </p>
+          </div>
+          <div class="w-full flex justify-between">
+            <p class="text-sm text-slate-600">Dia do Vencimento</p>
+            <p class="text-sm text-slate-600 font-medium">
+              {{ creditCard.dueDay }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-4">
+      <h2 class="text-base font-medium text-slate-800">Lista de faturas</h2>
+    </div>
+  </div>
+</section>

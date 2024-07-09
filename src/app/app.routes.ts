@@ -11,6 +11,7 @@ import { CreditcardsComponent } from './pages/creditcards/creditcards.component'
 import { MasterComponent } from './layouts/master/master.component';
 import { RegistrationsComponent } from './layouts/registrations/registrations.component';
 import { InvoicesComponent } from './pages/invoices/invoices.component';
+import { CreditcardDetailsComponent } from './pages/creditcard-details/creditcard-details.component';
 
 export const routes: Routes = [
   {
@@ -29,6 +30,7 @@ export const routes: Routes = [
           { path: 'accounts', component: AccountsComponent },
           { path: 'categories', component: CategoriesComponent },
           { path: 'creditcards', component: CreditcardsComponent },
+          { path: 'creditcards/:id', component: CreditcardDetailsComponent },
         ],
       },
       { path: '', redirectTo: '/home', pathMatch: 'full' },

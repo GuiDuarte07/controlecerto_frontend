@@ -8,11 +8,12 @@ import { initFlowbite } from 'flowbite';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateCreditCardDialogComponent } from '../../components/dialogs/create-credit-card-dialog/create-credit-card-dialog.component';
 import { InvoicesDialogComponent } from '../../components/dialogs/invoices-dialog/invoices-dialog.component';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-creditcards',
   standalone: true,
-  imports: [CommonModule, SidebarComponent],
+  imports: [CommonModule, SidebarComponent, RouterModule],
   templateUrl: './creditcards.component.html',
   styleUrl: './creditcards.component.scss',
 })

@@ -5,6 +5,7 @@ import { CreditCardService } from '../../services/credit-card.service';
 import { MatDialog } from '@angular/material/dialog';
 import { CreditCardInfo } from '../../models/CreditCardInfo';
 import { CommonModule } from '@angular/common';
+import { InfoInvoiceResponse } from '../../models/InfoInvoiceResponse';
 
 @Component({
   selector: 'app-creditcard-details',
@@ -16,6 +17,7 @@ import { CommonModule } from '@angular/common';
 export class CreditcardDetailsComponent {
   creditCardId!: number;
   creditCard!: CreditCardInfo;
+  invoices: InfoInvoiceResponse[] = [];
 
   constructor(
     private creditCardService: CreditCardService,
@@ -31,6 +33,7 @@ export class CreditcardDetailsComponent {
     );
 
     this.updateCreditCard();
+    this.updateInvoice();
   }
 
   updateCreditCard(): void {
@@ -45,5 +48,28 @@ export class CreditcardDetailsComponent {
         }
       },
     });
+  }
+
+  updateInvoice(): void {
+    this.creditCardService.getInvoices(this.creditCardId).subscribe({
+      next: (value) => {
+        this.invoices = value;
+      },
+    });
+  }
+
+  isActualInvoice(invoice: InfoInvoiceResponse): boolean {
+    const today = new Date();
+    return (
+      (today.getFullYear() === invoice.closingDate.getFullYear() &&
+        today.getMonth() === invoice.closingDate.getMonth() &&
+        today.getDay() < invoice.closingDate.getDay()) ||
+      (today.getFullYear() === invoice.closingDate.getFullYear() &&
+        today.getMonth() + 1 === invoice.closingDate.getMonth() &&
+        today.getDay() < invoice.closingDate.getDay()) ||
+      (today.getFullYear() + 1 === invoice.closingDate.getFullYear() &&
+        0 === invoice.closingDate.getMonth() &&
+        today.getDay() < invoice.closingDate.getDay())
+    );
   }
 }

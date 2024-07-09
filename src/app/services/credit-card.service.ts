@@ -39,13 +39,18 @@ export class CreditCardService {
       );
   }
 
-  getInvoices(accountId: number): Observable<InfoInvoiceResponse[]> {
-    const suffix = 'GetInvoicesWithPagination';
+  getInvoices(
+    creditCardId?: number,
+    startDate?: Date,
+    endDate?: Date
+  ): Observable<InfoInvoiceResponse[]> {
+    const suffix = 'GetInvoicesByDate';
     return this.http
       .get<InfoInvoiceResponse[]>(`${this.hostAddress}/${suffix}`, {
         params: {
-          pageNumber: 0,
-          accountId: accountId,
+          ...(creditCardId && { creditCardId }),
+          ...(startDate && { startDate: JSON.stringify(startDate) }),
+          ...(endDate && { endDate: JSON.stringify(endDate) }),
         },
       })
       .pipe(

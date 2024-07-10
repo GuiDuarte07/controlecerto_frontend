@@ -1,6 +1,6 @@
-<h2 mat-dialog-title>Novo Cartão</h2>
+<h2 mat-dialog-title>{{data.newCreditCard ? "Novo Cartão" : "Editar Cartão"}}</h2>
 <mat-dialog-content class="w-[600px]">
-  <form [formGroup]="creditCardForm" class="m-4 flex flex-col gap-6">
+  <form [formGroup]="creditCardForm" class="m-4 flex flex-col gap-3">
     <div class="flex items-center gap-4">
       <!-- TOTAL LIMITE -->
       <div class="w-6/12">
@@ -28,10 +28,11 @@
         >
           Conta do Cartão
         </p>
-        <div
-          role="button"
-          tabindex="0"
-          (click)="toggleSelection($event)"
+        <div  
+        role="button"
+        tabindex="0"
+        (click)="toggleSelection($event)"
+        [class.!cursor-default]="data.newCreditCard === false"
           class="relative bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-700 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
         >
           <div class="w-full flex items-center">
@@ -47,7 +48,10 @@
                   account_balance
                 </span>
               </div>
-              <p class="overflow-hidden text-xs text-slate-800 font-semibold">
+              <p
+              [class.!text-gray-500]="data.newCreditCard === false"
+                class="overflow-hidden text-xs text-slate-800 font-semibold"
+              >
                 {{ selectedAccount!.bank || selectedAccount!.description }}
               </p>
             </div>
@@ -91,20 +95,37 @@
       </div>
     </div>
 
-    <!-- <div>
-      <label
-        for="usedLimit"
-        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-        >Limite Usado do Cartão</label
-      >
-      <input
-        formControlName="usedLimit"
-        type="number"
-        id="usedLimit"
-        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-        required
-      />
-    </div> -->
+    <div class="flex items-center gap-4">
+      <div class="w-6/12">
+        <label
+          for="closeDay"
+          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >Dia de Fechamento</label
+        >
+        <input
+          formControlName="closeDay"
+          type="number"
+          id="closeDay"
+          class="disabled:text-gray-500 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          required
+        />
+      </div>
+
+      <div class="w-6/12">
+        <label
+          for="dueDay"
+          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >Dia de Vencimento</label
+        >
+        <input
+          formControlName="dueDay"
+          type="number"
+          id="dueDay"
+          class="disabled:text-gray-500 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          required
+        />
+      </div>
+    </div>
 
     <!-- Nome -->
     <div>
@@ -131,6 +152,6 @@
     mat-button
     (click)="createNewCreditCard()"
   >
-    Criar
+  {{data.newCreditCard ? "Criar" : "Editar"}}
   </button>
 </mat-dialog-actions>

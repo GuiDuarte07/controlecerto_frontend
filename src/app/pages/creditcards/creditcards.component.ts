@@ -45,7 +45,11 @@ export class CreditcardsComponent implements OnInit {
   }
 
   openCreditCardDialog() {
-    const dialogRef = this.dialog.open(CreateCreditCardDialogComponent);
+    const dialogRef = this.dialog.open(CreateCreditCardDialogComponent, {
+      data: {
+        newCreditCard: true,
+      },
+    });
     dialogRef.afterClosed().subscribe((sucess) => {
       if ((sucess as boolean) === true) {
         this.updatedCreditCards();

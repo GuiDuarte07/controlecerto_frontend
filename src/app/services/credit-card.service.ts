@@ -8,6 +8,7 @@ import { InfoInvoiceResponse } from '../models/InfoInvoiceResponse';
 import { InfoCreditExpense } from '../models/InfoCreditExpense';
 import { InvoicePageResponse } from '../models/InvoicePageResponse';
 import { CreateInvoicePaymentRequest } from '../models/CreteInvoicePaymentRequest';
+import { UpdateCreditCardRequest } from '../models/UpdateCreditCardRequest';
 
 @Injectable({
   providedIn: 'root',
@@ -139,5 +140,13 @@ export class CreditCardService {
     const suffix = 'PayInvoice';
     //retorna InfoCreditPurchaseResponse, porém como não terá uso ainda, não irei implementar
     return this.http.post<any>(`${this.hostAddress}/${suffix}`, invoicePayment);
+  }
+
+  updateCreditCard(updateCreditCard: UpdateCreditCardRequest) {
+    const suffix = 'UpdateCreditCard';
+    return this.http.patch<any>(
+      `${this.hostAddress}/${suffix}`,
+      updateCreditCard
+    );
   }
 }

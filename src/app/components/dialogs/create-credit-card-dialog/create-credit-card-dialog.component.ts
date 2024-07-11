@@ -131,7 +131,7 @@ export class CreateCreditCardDialogComponent implements OnInit {
     });
 
     if (this.data.newCreditCard) {
-      this.accountService.getAccounts().subscribe((data) => {
+      this.accountService.getAccountsWithoutCreditCard().subscribe((data) => {
         this.accounts = data;
       });
     } else {

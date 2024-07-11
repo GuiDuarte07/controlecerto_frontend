@@ -30,6 +30,24 @@ export class AccountService {
     );
   }
 
+  getAccountsWithoutCreditCard(): Observable<Account[]> {
+    const suffix = 'GetAccountsWithoutCreditCard';
+    return this.httpClient.get<Account[]>(`${this.hostAddress}/${suffix}`).pipe(
+      map((data) =>
+        data.map(
+          (item) =>
+            new Account({
+              id: item.id,
+              balance: item.balance,
+              description: item.description,
+              bank: item.bank,
+              color: item.color,
+            })
+        )
+      )
+    );
+  }
+
   createAccount(account: Account): Observable<Account> {
     const suffix = 'CreateAccount';
     return this.httpClient.post<Account>(

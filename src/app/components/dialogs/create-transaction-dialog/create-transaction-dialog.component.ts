@@ -40,6 +40,7 @@ import { CreateTransactionRequest } from '../../../models/CreateTransaction';
 import { CurrencyMaskDirective } from '../../../directive/currency-mask.directive';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { BillTypeEnum } from '../../../enums/BillTypeEnum';
 import { InfoTransactionResponse } from '../../../models/InfoTransactionResponse';
 import { UpdateTransactionRequest } from '../../../models/UpdateTransaction';
@@ -72,6 +73,7 @@ interface ITransactionForm {
     MatInputModule,
     CurrencyMaskDirective,
     MatDatepickerModule,
+    MatCheckboxModule,
   ],
   providers: [provideNativeDateAdapter(), CurrencyMaskDirective],
   templateUrl: './create-transaction-dialog.component.html',

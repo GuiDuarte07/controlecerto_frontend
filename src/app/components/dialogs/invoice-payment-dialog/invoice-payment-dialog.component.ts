@@ -23,6 +23,7 @@ import { CreateInvoicePaymentRequest } from '../../../models/CreteInvoicePayment
 import { CreditCardService } from '../../../services/credit-card.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormaterService } from '../../../services/formater.service';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 interface IInvoicePaymentForm {
   amountPaid: FormControl<number>;
@@ -42,6 +43,7 @@ interface IInvoicePaymentForm {
     MatDialogModule,
     CurrencyMaskDirective,
     MatDatepickerModule,
+    MatCheckboxModule,
   ],
   providers: [provideNativeDateAdapter(), CurrencyMaskDirective],
   templateUrl: './invoice-payment-dialog.component.html',

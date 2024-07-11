@@ -29,7 +29,7 @@
           <div class="flex items-center gap-2 w-8/12">
             <!-- ICONE -->
             <div
-              class="text-white bg-slate-500 rounded-md w-20 h-12 flex items-center justify-center p-2"
+              class="text-white bg-slate-500 rounded-md w-16 h-10 flex items-center justify-center p-2"
             >
               <span class="material-symbols-outlined text-xl">
                 credit_card
@@ -37,7 +37,7 @@
             </div>
 
             <!-- NOME DO CARTÃO -->
-            <h3 class="text-base text-slate-600 font-semibold">
+            <h3 class="text-sm text-slate-600 font-medium">
               {{ creditcard?.description }} -
               {{ creditcard?.account?.bank }}
             </h3>
@@ -47,7 +47,7 @@
           <div class="flex flex-col w-4/12">
             <!-- CREDITO USADA -->
             <div class="flex items-center gap-2 text-xs justify-between">
-              <p class="">Credito Usado</p>
+              <p class="text-slate-700">Credito Usado</p>
               <p class="font-medium text-red-600">
                 {{ creditcard.usedLimit | currency : "BRL" : "symbol" }}
               </p>
@@ -55,7 +55,7 @@
 
             <!-- CREDITO DISPONÍVEL -->
             <div class="flex items-center gap-2 text-xs justify-between">
-              <p class="">Credito Disponível</p>
+              <p class="text-slate-700">Credito Disponível</p>
               <p class="font-medium text-green-600">
                 {{
                   creditcard.totalLimit - creditcard.usedLimit

@@ -43,6 +43,8 @@ export class InvoicesComponent implements OnInit {
         this.invoice = value.invoice;
         this.nextInvoiceId = value.nextInvoiceId;
         this.prevInvoiceId = value.prevInvoiceId;
+
+        console.log(this.invoice);
       },
     });
   }
@@ -66,12 +68,12 @@ export class InvoicesComponent implements OnInit {
     return (
       (today.getFullYear() === this.invoice.closingDate.getFullYear() &&
         today.getMonth() === this.invoice.closingDate.getMonth() &&
-        today.getDay() < this.invoice.closingDate.getDay()) ||
+        today.getDate() < this.invoice.closingDate.getDate()) ||
       (today.getFullYear() === this.invoice.closingDate.getFullYear() &&
         today.getMonth() + 1 === this.invoice.closingDate.getMonth()) ||
       (today.getFullYear() + 1 === this.invoice.closingDate.getFullYear() &&
         0 === this.invoice.closingDate.getMonth() &&
-        today.getDay() < this.invoice.closingDate.getDay())
+        today.getDate() < this.invoice.closingDate.getDate())
     );
   }
 
@@ -80,7 +82,7 @@ export class InvoicesComponent implements OnInit {
     return (
       (today.getFullYear() == this.invoice.closingDate.getFullYear() &&
         today.getMonth() == this.invoice.closingDate.getMonth() &&
-        today.getDay() >= this.invoice.closingDate.getDay()) ||
+        today.getDate() >= this.invoice.closingDate.getDate()) ||
       (today.getFullYear() > this.invoice.closingDate.getFullYear() &&
         today.getMonth() > this.invoice.closingDate.getMonth())
     );

@@ -78,22 +78,21 @@ export class CreditcardDetailsComponent {
     return (
       (today.getFullYear() === invoice.closingDate.getFullYear() &&
         today.getMonth() === invoice.closingDate.getMonth() &&
-        today.getDay() < invoice.closingDate.getDay()) ||
+        today.getDate() < invoice.closingDate.getDate()) ||
       (today.getFullYear() === invoice.closingDate.getFullYear() &&
-        today.getMonth() + 1 === invoice.closingDate.getMonth() &&
-        today.getDay() < invoice.closingDate.getDay()) ||
+        today.getMonth() + 1 === invoice.closingDate.getMonth()) ||
       (today.getFullYear() + 1 === invoice.closingDate.getFullYear() &&
         0 === invoice.closingDate.getMonth() &&
-        today.getDay() < invoice.closingDate.getDay())
+        today.getDate() < invoice.closingDate.getDate())
     );
   }
 
   isOverdueInvoice(invoice: InfoInvoiceResponse): boolean {
     const today = new Date();
     return (
-      (today.getFullYear() == invoice.closingDate.getFullYear() &&
-        today.getMonth() == invoice.closingDate.getMonth() &&
-        today.getDay() >= invoice.closingDate.getDay()) ||
+      (today.getFullYear() === invoice.closingDate.getFullYear() &&
+        today.getMonth() === invoice.closingDate.getMonth() &&
+        today.getDate() >= invoice.closingDate.getDate()) ||
       (today.getFullYear() > invoice.closingDate.getFullYear() &&
         today.getMonth() > invoice.closingDate.getMonth())
     );

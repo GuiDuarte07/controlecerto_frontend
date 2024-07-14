@@ -133,7 +133,11 @@ export class CreateTransactionDialogComponent implements OnInit {
         }
       ),
       description: new FormControl<string>(
-        this.data.newTransaction ? '' : this.data.transaction.description,
+        this.data.newTransaction
+          ? ''
+          : TransactionTypeEnum.CREDITEXPENSE
+          ? this.data.transaction.creditPurchase?.description!
+          : this.data.transaction.description,
         {
           nonNullable: true,
           validators: [
@@ -166,6 +170,8 @@ export class CreateTransactionDialogComponent implements OnInit {
       purchaseDate: new FormControl<Date>(
         this.data.newTransaction
           ? new Date()
+          : this.data.transactionType === TransactionTypeEnum.CREDITEXPENSE
+          ? new Date(this.data.transaction.creditPurchase?.purchaseDate!)
           : new Date(this.data.transaction.purchaseDate),
         {
           nonNullable: true,
@@ -227,8 +233,11 @@ export class CreateTransactionDialogComponent implements OnInit {
       this.creditCardService.getCreditCards().subscribe((data) => {
         this.creditCards = data;
         if (this.data.newTransaction === false) {
-          let id = this.data.transaction.category.id;
-          this.selectedCategory = this.categories.find((a) => a.id! === id);
+          let id = this.data.transaction.creditPurchase!.creditCardId;
+          this.selectedCreditCard = this.creditCards.find((a) => a.id! === id);
+          this.transactionForm.patchValue({
+            creditCardId: this.selectedCreditCard!.id,
+          });
         }
       });
     }
@@ -295,7 +304,11 @@ export class CreateTransactionDialogComponent implements OnInit {
   createTransaction() {
     if (this.transactionForm.invalid) return;
 
-    if (this.data.transactionType === TransactionTypeEnum.CREDITEXPENSE) {
+    // Nova transação Cartão
+    if (
+      this.data.transactionType === TransactionTypeEnum.CREDITEXPENSE &&
+      this.data.newTransaction
+    ) {
       const {
         amount,
         creditCardId,
@@ -306,93 +319,107 @@ export class CreateTransactionDialogComponent implements OnInit {
         purchaseDate,
       } = this.transactionForm.value;
 
-      if (this.data.newTransaction) {
-        const creditPurchaseToCreate = new CreateCreditPurchaseRequest(
-          amount!,
-          this.installments,
-          undefined,
-          purchaseDate ?? new Date(),
-          destination ?? '',
-          description,
-          creditCardId!,
-          categoryId!
-        );
-        console.log(creditPurchaseToCreate);
-        this.creditCardService
-          .createCreditPurchase(creditPurchaseToCreate)
-          .subscribe({
-            next: () => {
-              this.openSnackBar('Despesa de cartão gerada com sucesso!');
-              this.transactionForm.reset();
-              this.closeDialog(true);
-            },
-            error: (err: HttpErrorResponse) => {
-              this.openSnackBar(
-                'Houve um erro na criação dessa despesa: ' + err.error
-              );
-              console.log(err.error);
-            },
-          });
-      } else {
-        const creditPurchaseToUpdate = new UpdateCreditPurchaseRequest({
-          id: this.data.transaction.creditPurchase!.id!,
-          ...this.transactionForm.getRawValue(),
+      const creditPurchaseToCreate = new CreateCreditPurchaseRequest(
+        amount!,
+        this.installments,
+        undefined,
+        purchaseDate ?? new Date(),
+        destination ?? '',
+        description,
+        creditCardId!,
+        categoryId!
+      );
+      console.log(creditPurchaseToCreate);
+      this.creditCardService
+        .createCreditPurchase(creditPurchaseToCreate)
+        .subscribe({
+          next: () => {
+            this.openSnackBar('Despesa de cartão gerada com sucesso!');
+            this.transactionForm.reset();
+            this.closeDialog(true);
+          },
+          error: (err: HttpErrorResponse) => {
+            this.openSnackBar(
+              'Houve um erro na criação dessa despesa: ' + err.error
+            );
+            console.log(err.error);
+          },
         });
+    }
 
-        this.creditCardService
-          .updateCreditPurchase(creditPurchaseToUpdate)
-          .subscribe({
-            next: () => {
-              this.openSnackBar('Despesa de cartão atualizada com sucesso!');
-              this.transactionForm.reset();
-              this.closeDialog(true);
-            },
-            error: (err: HttpErrorResponse) => {
-              this.openSnackBar(
-                'Houve um erro na atualização dessa despesa: ' + err.error
-              );
-              console.log(err.error);
-            },
-          });
-      }
-    } else {
-      if (this.data.newTransaction) {
-        const transactionToCreate = new CreateTransactionRequest({
-          ...this.transactionForm.getRawValue(),
-          type: this.data.transactionType,
+    // Atualizar transação Cartão
+    if (
+      this.data.transactionType === TransactionTypeEnum.CREDITEXPENSE &&
+      !this.data.newTransaction
+    ) {
+      const creditPurchaseToUpdate = new UpdateCreditPurchaseRequest({
+        id: this.data.transaction.creditPurchase!.id!,
+        ...this.transactionForm.getRawValue(),
+        totalAmount: this.transactionForm.value.amount,
+        totalInstallment: this.installments,
+      });
+
+      this.creditCardService
+        .updateCreditPurchase(creditPurchaseToUpdate)
+        .subscribe({
+          next: () => {
+            this.openSnackBar('Despesa de cartão atualizada com sucesso!');
+            this.transactionForm.reset();
+            this.closeDialog(true);
+          },
+          error: (err: HttpErrorResponse) => {
+            this.openSnackBar(
+              'Houve um erro na atualização dessa despesa: ' + err.error
+            );
+            console.log(err.error);
+          },
         });
+    }
 
-        this.transactionService
-          .createTransaction(transactionToCreate)
-          .subscribe({
-            next: () => {
-              this.openSnackBar('Transação gerada com sucesso!');
-              this.transactionForm.reset();
-              this.closeDialog(true);
-            },
-            error: (err: HttpErrorResponse) => {
-              this.openSnackBar('Erro: ' + err.error);
-            },
-          });
-      } else {
-        const transactionToUpdate = new UpdateTransactionRequest({
-          id: this.data.transaction.id,
-          ...this.transactionForm.getRawValue(),
-        });
+    // Nova transação
+    if (
+      (this.data.transactionType === TransactionTypeEnum.EXPENSE ||
+        this.data.transactionType === TransactionTypeEnum.INCOME) &&
+      this.data.newTransaction
+    ) {
+      const transactionToCreate = new CreateTransactionRequest({
+        ...this.transactionForm.getRawValue(),
+        type: this.data.transactionType,
+      });
 
-        this.transactionService
-          .updateTransaction(transactionToUpdate)
-          .subscribe({
-            next: () => {
-              this.openSnackBar('Transação editada com sucesso!');
-              this.transactionForm.reset();
-              this.closeDialog(true);
-            },
-            error: (err: HttpErrorResponse) => {
-              this.openSnackBar('Erro: ' + err.error);
-            },
-          });
-      }
+      this.transactionService.createTransaction(transactionToCreate).subscribe({
+        next: () => {
+          this.openSnackBar('Transação gerada com sucesso!');
+          this.transactionForm.reset();
+          this.closeDialog(true);
+        },
+        error: (err: HttpErrorResponse) => {
+          this.openSnackBar('Erro: ' + err.error);
+        },
+      });
+    }
+
+    // Atualizar transação
+    if (
+      (this.data.transactionType === TransactionTypeEnum.EXPENSE ||
+        this.data.transactionType === TransactionTypeEnum.INCOME) &&
+      !this.data.newTransaction
+    ) {
+      const transactionToUpdate = new UpdateTransactionRequest({
+        id: this.data.transaction.id,
+        ...this.transactionForm.getRawValue(),
+      });
+
+      this.transactionService.updateTransaction(transactionToUpdate).subscribe({
+        next: () => {
+          this.openSnackBar('Transação editada com sucesso!');
+          this.transactionForm.reset();
+          this.closeDialog(true);
+        },
+        error: (err: HttpErrorResponse) => {
+          this.openSnackBar('Erro: ' + err.error);
+        },
+      });
     }
   }
 

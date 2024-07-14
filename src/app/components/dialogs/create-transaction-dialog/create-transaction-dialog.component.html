@@ -88,17 +88,11 @@
           class="block mb-1 text-sm font-medium text-slate-500 dark:text-white"
           >Valor por Fatura</label
         >
-        <input
-          readonly
-          [(ngModel)]="amountPerInstallment"
-          [ngModelOptions]="{ standalone: true }"
-          appCurrencyMask
-          prefix="R$ "
+        <p
           type="string"
           id="installment"
           class="cursor-not-allowed bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-lg w-full p-2.5 dark:text-white"
-          required
-        />
+        >{{amountPerInstallment | currency : "BRL" : "symbol"}}</p>
       </div>
     </div>
     }

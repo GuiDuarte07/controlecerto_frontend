@@ -1,6 +1,7 @@
 import { TransactionTypeEnum } from '../enums/TransactionTypeEnum';
 import { AccountInfo } from './AccountInfo';
 import { Category } from './Category';
+import { InfoCreditPurchaseResponse } from './InfoCreditPurchaseResponse ';
 
 export class InfoTransactionResponse {
   id: number;
@@ -13,6 +14,7 @@ export class InfoTransactionResponse {
   justForRecord: boolean;
   account: AccountInfo;
   category: Category;
+  creditPurchase?: InfoCreditPurchaseResponse;
 
   // Credit Card Transaction info:
   installmentNumber?: number;
@@ -29,6 +31,7 @@ export class InfoTransactionResponse {
     category,
     installmentNumber,
     observations,
+    creditPurchase,
   }: {
     id: number;
     type: TransactionTypeEnum;
@@ -41,6 +44,7 @@ export class InfoTransactionResponse {
     account: AccountInfo;
     category: Category;
     installmentNumber: number | undefined;
+    creditPurchase: InfoCreditPurchaseResponse | undefined;
   }) {
     this.id = id;
     this.type = type;
@@ -53,5 +57,6 @@ export class InfoTransactionResponse {
     this.account = account;
     this.category = category;
     this.installmentNumber = installmentNumber;
+    this.creditPurchase = creditPurchase;
   }
 }

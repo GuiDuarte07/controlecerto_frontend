@@ -44,6 +44,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { BillTypeEnum } from '../../../enums/BillTypeEnum';
 import { InfoTransactionResponse } from '../../../models/InfoTransactionResponse';
 import { UpdateTransactionRequest } from '../../../models/UpdateTransaction';
+import { UpdateCreditPurchaseRequest } from '../../../models/UpdateCreditPurchaseRequest';
 
 interface ITransactionForm {
   amount: FormControl<number>;
@@ -93,7 +94,7 @@ export class CreateTransactionDialogComponent implements OnInit {
   selectedCreditCard?: CreditCardInfo;
 
   installments = 1;
-  amountPerInstallment = '0,00';
+  amountPerInstallment = 0;
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
@@ -121,7 +122,11 @@ export class CreateTransactionDialogComponent implements OnInit {
   ngOnInit(): void {
     this.transactionForm = new FormGroup<ITransactionForm>({
       amount: new FormControl<number>(
-        this.data.newTransaction ? 0 : this.data.transaction.amount,
+        this.data.newTransaction
+          ? 0
+          : this.data.transaction.type === TransactionTypeEnum.CREDITEXPENSE
+          ? this.data.transaction.creditPurchase!.totalAmount
+          : this.data.transaction.amount,
         {
           nonNullable: true,
           validators: [Validators.required, Validators.min(0)],
@@ -200,11 +205,11 @@ export class CreateTransactionDialogComponent implements OnInit {
       }
     });
 
-    const type =
+    const categoryType =
       this.data.transactionType === TransactionTypeEnum.INCOME
         ? BillTypeEnum.INCOME
         : BillTypeEnum.EXPENSE;
-    this.categoryService.GetCategories(type).subscribe((data) => {
+    this.categoryService.GetCategories(categoryType).subscribe((data) => {
       this.categories = data;
       if (this.data.newTransaction === false) {
         let id = this.data.transaction.category.id;
@@ -213,6 +218,12 @@ export class CreateTransactionDialogComponent implements OnInit {
     });
 
     if (this.data.transactionType === TransactionTypeEnum.CREDITEXPENSE) {
+      if (!this.data.newTransaction) {
+        this.installments =
+          this.data.transaction.creditPurchase?.totalInstallment!;
+        this.changeAmountPerInstallment();
+      }
+
       this.creditCardService.getCreditCards().subscribe((data) => {
         this.creditCards = data;
         if (this.data.newTransaction === false) {
@@ -228,40 +239,8 @@ export class CreateTransactionDialogComponent implements OnInit {
   }
 
   changeAmountPerInstallment() {
-    function getRoundedTwoDigits(number: number): number {
-      // Passo 1: Converter o número para uma string
-      const numberStr = number.toString();
-
-      // Passo 2: Pegar os dois primeiros dígitos ou completar com 0 se for um único dígito
-      const firstTwoDigits =
-        numberStr.length > 1
-          ? parseInt(numberStr.substring(0, 2))
-          : parseInt(numberStr + '0');
-
-      // Passo 3: Calcular o divisor (10 elevado ao número de dígitos - 2)
-      const divisor = Math.pow(10, numberStr.length - 2);
-
-      // Passo 4: Dividir o número pelos dígitos restantes e arredondar
-      const rounded =
-        numberStr.length > 1 ? Math.round(number / divisor) : firstTwoDigits;
-
-      return rounded;
-    }
-
-    let formatedInput = (
-      this.transactionForm.value.amount! / this.installments
-    ).toString();
-
-    let num = parseInt(formatedInput.split('.')[1]);
-
-    if (formatedInput.includes('.')) {
-      formatedInput = formatedInput.split('.')[0];
-      formatedInput += '.' + getRoundedTwoDigits(num);
-    } else {
-      formatedInput = formatedInput + '.00';
-    }
-
-    this.amountPerInstallment = formatedInput;
+    this.amountPerInstallment =
+      this.transactionForm.value.amount! / this.installments;
   }
 
   toggleSelection(event: MouseEvent, selection: 'account' | 'category') {
@@ -355,7 +334,26 @@ export class CreateTransactionDialogComponent implements OnInit {
             },
           });
       } else {
-        throw new Error('Não implementado ainda!!!!');
+        const creditPurchaseToUpdate = new UpdateCreditPurchaseRequest({
+          id: this.data.transaction.creditPurchase!.id!,
+          ...this.transactionForm.getRawValue(),
+        });
+
+        this.creditCardService
+          .updateCreditPurchase(creditPurchaseToUpdate)
+          .subscribe({
+            next: () => {
+              this.openSnackBar('Despesa de cartão atualizada com sucesso!');
+              this.transactionForm.reset();
+              this.closeDialog(true);
+            },
+            error: (err: HttpErrorResponse) => {
+              this.openSnackBar(
+                'Houve um erro na atualização dessa despesa: ' + err.error
+              );
+              console.log(err.error);
+            },
+          });
       }
     } else {
       if (this.data.newTransaction) {

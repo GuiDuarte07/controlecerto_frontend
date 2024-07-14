@@ -41,7 +41,6 @@ export class InvoicesComponent implements OnInit {
     this.creditCardService.getInvoicesById(paramId).subscribe({
       next: (value) => {
         this.invoice = value.invoice;
-        console.log(value);
         this.nextInvoiceId = value.nextInvoiceId;
         this.prevInvoiceId = value.prevInvoiceId;
       },
@@ -69,8 +68,7 @@ export class InvoicesComponent implements OnInit {
         today.getMonth() === this.invoice.closingDate.getMonth() &&
         today.getDay() < this.invoice.closingDate.getDay()) ||
       (today.getFullYear() === this.invoice.closingDate.getFullYear() &&
-        today.getMonth() + 1 === this.invoice.closingDate.getMonth() &&
-        today.getDay() < this.invoice.closingDate.getDay()) ||
+        today.getMonth() + 1 === this.invoice.closingDate.getMonth()) ||
       (today.getFullYear() + 1 === this.invoice.closingDate.getFullYear() &&
         0 === this.invoice.closingDate.getMonth() &&
         today.getDay() < this.invoice.closingDate.getDay())

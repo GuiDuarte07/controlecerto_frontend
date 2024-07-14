@@ -9,6 +9,7 @@ import { InfoCreditExpense } from '../models/InfoCreditExpense';
 import { InvoicePageResponse } from '../models/InvoicePageResponse';
 import { CreateInvoicePaymentRequest } from '../models/CreteInvoicePaymentRequest';
 import { UpdateCreditCardRequest } from '../models/UpdateCreditCardRequest';
+import { UpdateCreditPurchaseRequest } from '../models/UpdateCreditPurchaseRequest';
 
 @Injectable({
   providedIn: 'root',
@@ -147,6 +148,14 @@ export class CreditCardService {
     return this.http.patch<any>(
       `${this.hostAddress}/${suffix}`,
       updateCreditCard
+    );
+  }
+
+  updateCreditPurchase(updateCreditPurchase: UpdateCreditPurchaseRequest) {
+    const suffix = 'UpdateCreditPurchase';
+    return this.http.patch<any>(
+      `${this.hostAddress}/${suffix}`,
+      updateCreditPurchase
     );
   }
 }

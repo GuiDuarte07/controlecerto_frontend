@@ -1,68 +1,179 @@
-<div class="w-screen h-screen flex">
-  <!-- IMG Section -->
-  <section class="w-1/2 overflow-hidden h-full">
-    <img src="/assets/FinanTechImageIA.jpeg" alt="" />
-  </section>
-
-  <section class="w-1/2">
-    <form
-      (submit)="login()"
-      [formGroup]="loginForm"
-      class="m-20 p-4 bg-slate-50 rounded-lg shadow-xl"
-    >
-      <h2 class="text-center font-medium text-xl text-gray-700">
-        Bem-vindo ao Programa FinanTech
-      </h2>
-      <p
-        class="text-center text-base font-medium text-gray-700 mb-6 mt-4 block dark:text-white"
-      >
-        Faça seu login para usar o programa.
-      </p>
-
-      <div>
-        <div class="mb-6">
-          <label for="email" class="label text-6xl">E-mail</label>
-          <input
-            formControlName="email"
-            type="text"
-            id="email"
-            class="input"
-            placeholder="user@email.com"
-            required
-          />
-        </div>
-
-        <div class="mb-6">
-          <label for="password" class="label">Senha</label>
-          <input
-            formControlName="password"
-            type="password"
-            id="password"
-            class="input"
-            placeholder="•••••••••"
-            required
-          />
-        </div>
-      </div>
-
-      <div class="w-full flex justify-between items-center">
-        <button
-          type="submit"
-          [disabled]="!loginForm.valid"
-          class="btn btn-principal"
-        >
-          Acessar
-        </button>
-
-        <p class="label my-auto">
-          Não tem uma conta?
-          <a
-            routerLink="/register"
-            class="cursor-pointer text-blue-700 mr-2 underline hover:text-blue-500"
-            >Criar conta</a
+<div
+  class="w-screen h-screen flex justify-center items-center bg-gradient-to-r from-teal-400 to-teal-700"
+>
+  <div class="flex items-center flex-col h-full">
+    <div class="flex-1 flex items-center justify-center">
+      <section class="px-8 py-6 bg-gray-50 rounded-lg shadow-xl w-[400px]">
+        <form (submit)="login()" [formGroup]="loginForm" class="">
+          <div class="text-center">
+            <span
+              class="material-symbols-outlined text-teal-600 text-5xl"
+              style="font-variation-settings: 'FILL' 1"
+            >
+              login
+            </span>
+          </div>
+          <h2
+            class="text-center text-2xl font-bold text-gray-600 block dark:text-white"
           >
-        </p>
-      </div>
-    </form>
-  </section>
+            Olá novamente!
+          </h2>
+
+          <p class="text-base text-gray-400 text-center mb-4 font-medium">Realize seu login</p>
+
+          <div>
+            <div class="mb-3">
+              <label
+                for="email"
+                class="text-slate-500 pb-1 text-sm font-semibold"
+                >E-mail</label
+              >
+              <div class="relative">
+                <input
+                  formControlName="email"
+                  type="text"
+                  id="email"
+                  class="input"
+                  style="padding-right: 2.25rem"
+                  placeholder="user@email.com"
+                  required
+                />
+                <span
+                  class="material-symbols-outlined text-slate-400 absolute top-1/2 right-2 transform -translate-y-1/2 pointer-events-none"
+                >
+                  mail
+                </span>
+              </div>
+            </div>
+            <div
+              *ngIf="
+                loginForm.get('email')?.errors &&
+                loginForm.get('email')?.touched
+              "
+            >
+              <p
+                class="text-sm text-red-600"
+                *ngIf="loginForm.get('email')?.errors?.['required']"
+              >
+                Email é obrigatório.
+              </p>
+              <p
+                class="text-sm text-red-600"
+                *ngIf="loginForm.get('email')?.errors?.['minlength']"
+              >
+                Email deve ter no mínimo 3 caracteres.
+              </p>
+              <p
+                class="text-sm text-red-600"
+                *ngIf="loginForm.get('email')?.errors?.['maxlength']"
+              >
+                Email deve ter no máximo 100 caracteres.
+              </p>
+              <p
+                class="text-sm text-red-600"
+                *ngIf="loginForm.get('email')?.errors?.['email']"
+              >
+                Email deve ser válido.
+              </p>
+            </div>
+          </div>
+
+          <div>
+            <div class="mb-3">
+              <label
+                for="password"
+                class="text-slate-500 pb-1 text-sm font-semibold"
+                >Senha</label
+              >
+              <div class="relative">
+                <input
+                  formControlName="password"
+                  [type]="passwordVisibility ? 'text' : 'password'"
+                  id="password"
+                  class="input"
+                  style="padding-right: 2.25rem"
+                  placeholder="•••••••••"
+                  required
+                />
+                <button
+                  (click)="setPasswordVisibility()"
+                  type="button"
+                  class="absolute top-1/2 right-2 transform -translate-y-1/2 cursor-pointer flex justify-center items-center"
+                >
+                  @if (passwordVisibility) {
+                  <span class="material-symbols-outlined text-slate-400">
+                    visibility_off
+                  </span>
+                  }@else {
+                  <span class="material-symbols-outlined text-slate-400">
+                    visibility
+                  </span>
+                  }
+                </button>
+              </div>
+            </div>
+            <div
+              *ngIf="
+                loginForm.get('password')?.errors &&
+                loginForm.get('password')?.touched
+              "
+            >
+              <P
+                class="text-sm text-red-600"
+                *ngIf="loginForm.get('password')?.errors?.['required']"
+                >Senha é obrigatória.</P
+              >
+              <P
+                class="text-sm text-red-600"
+                *ngIf="loginForm.get('password')?.errors?.['minlength']"
+                >Senha deve ter no mínimo 3 caracteres.</P
+              >
+              <P
+                class="text-sm text-red-600"
+                *ngIf="loginForm.get('password')?.errors?.['maxlength']"
+                >Senha deve ter no máximo 100 caracteres.</P
+              >
+            </div>
+          </div>
+
+          @if(fromServerError) {
+          <p class="text-sm my-2 text-red-600">
+            houve um erro: {{ fromServerError }}
+          </p>
+          }
+
+          <div class="mt-8 w-full flex items-center">
+            <button
+              [disabled]="!loginForm.valid"
+              type="submit"
+              class="disabled:bg-slate-400 px-9 py-2 bg-teal-600 text-white font-semibold text-sm rounded-lg flex gap-2 items-center"
+            >
+              Entrar
+              <span
+                class="text-white text-lg font-bold material-symbols-outlined"
+              >
+                arrow_forward
+              </span>
+            </button>
+
+            <p class="text-sm text-slate-500 ml-6">
+              Realizar
+              <a
+                routerLink="/register"
+                class="cursor-pointer text-blue-600 mr-2 hover:text-blue-800"
+                >cadastro</a
+              >
+            </p>
+          </div>
+        </form>
+      </section>
+    </div>
+
+    <footer class="w-full my-2">
+      <p class="text-sm text-white">
+        &copy; 2024 FinanTech. All rights reserved | Made by Guilherme Duarte.
+      </p>
+      <p></p>
+    </footer>
+  </div>
 </div>

@@ -14,6 +14,7 @@ import { CreateTransactionDialogComponent } from '../../components/dialogs/creat
 import { TransactionTypeEnum } from '../../enums/TransactionTypeEnum';
 import { InfoInvoiceResponse } from '../../models/InfoInvoiceResponse';
 import { AccountService } from '../../services/account.service';
+import { CreditCardService } from '../../services/credit-card.service';
 
 @Component({
   selector: 'app-transactions',
@@ -42,6 +43,7 @@ export class TransactionsComponent implements OnInit {
 
   constructor(
     private transactionService: TransactionService,
+    private creditCardService: CreditCardService,
     private accountService: AccountService,
     public formaterService: FormaterService,
     public dialog: MatDialog
@@ -150,6 +152,30 @@ export class TransactionsComponent implements OnInit {
   }
 
   openDeleteAlertDialog(transaction: InfoTransactionResponse) {
+    if (transaction.type === TransactionTypeEnum.CREDITEXPENSE) {
+      const dialogRef = this.dialog.open(AlertDialogComponent, {
+        data: {
+          title: 'Deletar lançamento',
+          message: `Você tem certeza que deseja deletar esse lançamento?
+                    ${transaction.description}      
+                     \n* Lembrando que esse processo irá deletar todas as parcelas dessa compra, mas só será possível se nenhuma fatura tiver sido paga ainda.    
+          `,
+          successMessage: 'Lançamento deletado com sucesso!',
+          actionButtonMessage: 'Deletar',
+          confirmObservable: this.creditCardService.deleteCreditPurchase(
+            transaction.creditPurchase!.id!
+          ),
+        },
+      });
+      dialogRef.afterClosed().subscribe((sucess) => {
+        if ((sucess as boolean) === true) {
+          this.updateTransactions();
+        }
+      });
+
+      return;
+    }
+
     const dialogRef = this.dialog.open(AlertDialogComponent, {
       data: {
         title: 'Deletar lançamento',

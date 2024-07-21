@@ -29,10 +29,10 @@ export class AlertDialogComponent {
     public dialogRef: MatDialogRef<AlertDialogComponent>,
     private snackBar: MatSnackBar
   ) {}
-  /* R$ 4.286,10 */
+
   openSnackBar(message: string) {
     this.snackBar.open(message, undefined, {
-      duration: 3000,
+      duration: 5000,
       horizontalPosition: 'end',
       verticalPosition: 'bottom',
       panelClass: ['.snackbar-error'],

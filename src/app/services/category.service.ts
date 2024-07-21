@@ -4,12 +4,13 @@ import { Category } from '../models/Category';
 import { map } from 'rxjs';
 import { UpdateCategoryRequest } from '../models/UpdateCategoryRequest';
 import { BillTypeEnum } from '../enums/BillTypeEnum';
+import { serverConnectionString } from '../config/server';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CategoryService {
-  private hostAddress = 'http://localhost:5037/api/Category';
+  private hostAddress = `${serverConnectionString}/Category`;
   constructor(private http: HttpClient) {}
 
   GetCategories(type?: BillTypeEnum) {

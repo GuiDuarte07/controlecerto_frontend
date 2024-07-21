@@ -4,12 +4,13 @@ import { Observable, tap } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
 import { AuthResponse } from '../models/AuthResponse';
 import { Router } from '@angular/router';
+import { serverConnectionString } from '../config/server';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private hostAddress = 'http://localhost:5037/api/Auth';
+  private hostAddress = `${serverConnectionString}/Auth`;
 
   constructor(
     private http: HttpClient,

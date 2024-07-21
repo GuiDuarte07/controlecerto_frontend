@@ -4,12 +4,13 @@ import { Observable, map } from 'rxjs';
 import { Account } from '../models/AccountRequest ';
 import { BalanceStatement } from '../models/BalanceStatement';
 import { UpdateAccountRequest } from '../models/UpdateAccountRequest';
+import { serverConnectionString } from '../config/server';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AccountService {
-  private hostAddress = 'http://localhost:5037/api/Account';
+  private hostAddress = `${serverConnectionString}/Account`;
 
   constructor(private httpClient: HttpClient) {}
 

@@ -8,9 +8,9 @@
         <button
           [matMenuTriggerFor]="menu"
           type="button"
-          class="size-6 bg-emerald-400 rounded-full flex justify-center items-center transition-transform transform hover:rotate-90 duration-300"
+          class="size-6 text-white bg-emerald-400 rounded-full flex justify-center items-center transition-transform transform hover:rotate-90 duration-300"
         >
-          <span class="material-symbols-outlined text-xl"> add </span>
+          <span class="material-symbols-outlined text-xl font-bold"> add </span>
         </button>
         <mat-menu class="!mt-2" #menu="matMenu">
           <button
@@ -102,10 +102,10 @@
           </h3>
         </div>
 
-        <div
-          class="w-2/12 flex items-center justify-start"
-        >
-          <p class="whitespace-nowrap overflow-hidden text-ellipsis  text-base text-slate-500">
+        <div class="w-2/12 flex items-center justify-start">
+          <p
+            class="whitespace-nowrap overflow-hidden text-ellipsis text-base text-slate-500"
+          >
             {{ transaction.account.bank }}
           </p>
         </div>
@@ -231,12 +231,15 @@
         Não foi encontrado nenhum lançamento para esse mês.
       </p>
     </div>
+    } 
 
-    } @if(invoices.length) { @for(invoice of invoices; track invoice) {
-    @if(invoice.totalAmount > 0) {
-    <div class="-full h-[2px] rounded-2xl bg-slate-300 my-1"></div>
+    <div class="w-full h-[2px] rounded-2xl bg-slate-200 my-1"></div>
+    
+    @if(invoices.length) {
+    
+    @for(invoice of invoices; track invoice) { @if(invoice.totalAmount > 0) {
     <mat-expansion-panel
-      [expanded]="true"
+      [expanded]="false"
       class="!shadow-none !bg-none flex w-full items-center rounded-sm !p-0"
     >
       <mat-expansion-panel-header class="!p-0 w-full">
@@ -322,7 +325,6 @@
               <h3 class="text-sm text-slate-900 font-medium">
                 {{ payment.description }}
               </h3>
-
 
               <p class="text-sm tracking-wide text-black">
                 {{ formaterService.formatCurrencySymbol(payment.amountPaid) }}

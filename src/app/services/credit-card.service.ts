@@ -10,12 +10,13 @@ import { InvoicePageResponse } from '../models/InvoicePageResponse';
 import { CreateInvoicePaymentRequest } from '../models/CreteInvoicePaymentRequest';
 import { UpdateCreditCardRequest } from '../models/UpdateCreditCardRequest';
 import { UpdateCreditPurchaseRequest } from '../models/UpdateCreditPurchaseRequest';
+import { serverConnectionString } from '../config/server';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CreditCardService {
-  private hostAddress = 'http://localhost:5037/api/CreditCard';
+  private hostAddress = `${serverConnectionString}/CreditCard`;
 
   constructor(private http: HttpClient) {}
 
@@ -157,5 +158,10 @@ export class CreditCardService {
       `${this.hostAddress}/${suffix}`,
       updateCreditPurchase
     );
+  }
+
+  deleteCreditPurchase(id: number) {
+    const suffix = 'DeleteCreditPurchase';
+    return this.http.delete<any>(`${this.hostAddress}/${suffix}/${id}`);
   }
 }

@@ -4,12 +4,13 @@ import { InfoTransactionResponse } from '../models/InfoTransactionResponse';
 import { CreateTransactionRequest } from '../models/CreateTransaction';
 import { TransactionList } from '../models/TransactionList';
 import { UpdateTransactionRequest } from '../models/UpdateTransaction';
+import { serverConnectionString } from '../config/server';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TransactionService {
-  private hostAddress = 'http://localhost:5037/api/Transaction';
+  private hostAddress = `${serverConnectionString}/Transaction`;
 
   constructor(private http: HttpClient) {}
 

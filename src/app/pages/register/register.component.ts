@@ -1,3 +1,4 @@
+import { UserService } from './../../services/user.service';
 import { Component } from '@angular/core';
 import {
   FormControl,
@@ -6,6 +7,12 @@ import {
   Validators,
 } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { Createuser } from '../../models/CreateUser';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { RegisterSuccessDialogComponent } from '../../components/dialogs/register-success-dialog/register-success-dialog.component';
+import { InfoUserResponse } from '../../models/InfoUserResponse';
+import { HttpErrorResponse } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
 
 interface IRegisterForm {
   email: FormControl<string>;
@@ -16,12 +23,20 @@ interface IRegisterForm {
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
 })
 export class RegisterComponent {
   registerForm!: FormGroup<IRegisterForm>;
+  fromServerError?: string;
+
+  passwordVisibility = false;
+
+  constructor(
+    private readonly userService: UserService,
+    public dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
     this.registerForm = new FormGroup({
@@ -52,13 +67,47 @@ export class RegisterComponent {
         ],
       }),
     });
+
+    this.openSuccessDialog(
+      new InfoUserResponse(
+        21,
+        'José Guilherme Duarte Abrantes José Guilherme Duarte Abrantes',
+        'guidluads@dfas',
+        false
+      )
+    );
   }
 
   register() {
+    this.fromServerError = '';
+
     this.registerForm.patchValue({
       name: this.capitalizeFirstLetter(this.registerForm.value.name!),
     });
-    console.log(this.registerForm.getRawValue());
+
+    const user = new Createuser(this.registerForm.getRawValue());
+
+    this.userService.createUser(user).subscribe({
+      next: (user) => {
+        this.registerForm.reset();
+        this.openSuccessDialog(user);
+      },
+      error: (err: HttpErrorResponse) => {
+        this.fromServerError = err.message;
+      },
+    });
+  }
+
+  openSuccessDialog(user: InfoUserResponse) {
+    this.dialog.open(RegisterSuccessDialogComponent, {
+      data: {
+        user,
+      },
+    });
+  }
+
+  setPasswordVisibility() {
+    this.passwordVisibility = !this.passwordVisibility;
   }
 
   capitalizeFirstLetter(str: string) {

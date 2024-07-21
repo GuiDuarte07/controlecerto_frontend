@@ -1,0 +1,11 @@
+<h2 class="ml-6 text-center mb-4 mt-6 text-xl font-semibold tracking-wide text-slate-600">Conta Criada Com Sucesso!</h2>
+<mat-dialog-content class="max-w-[500px]">
+  <p class="mt-3 mb-4">Bem vindo ao nosso site {{data.user.name}}.</p>
+
+  <p class="">Seu próximo passo é fazer o login usando seu e-mail e senha</p>
+</mat-dialog-content>
+<mat-dialog-actions align="center">
+  <button (click)="goToLogin()" type="button" class="my-6 bg-teal-600 px-10 py-3 text-white font-semibold text-base rounded-3xl shadow-md">
+    Fazer Login
+  </button>
+</mat-dialog-actions>

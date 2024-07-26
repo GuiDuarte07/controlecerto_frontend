@@ -20,6 +20,13 @@
     </div>
 
     <ul class="flex flex-col gap-4">
+      @if(($creditCards | async)?.length == 0) {
+        <div class="flex w-full items-center min-h-32">
+          <p class="text-center w-full text-slate-700">
+            Não foi cadastrado nenhum cartão.
+          </p>
+        </div>
+      }
       @for(creditcard of $creditCards | async; track creditcard) {
       <li
         class="w-full rounded-lg shadow-sm px-2 hover:bg-slate-100 transition-all duration-150"

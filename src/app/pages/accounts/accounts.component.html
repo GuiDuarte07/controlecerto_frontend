@@ -17,6 +17,13 @@
   </div>
 
   <ul class="w-full">
+    @if((accounts$ | async)?.length == 0) {
+      <div class="flex w-full items-center min-h-32">
+        <p class="text-center w-full text-slate-700">
+          Não foi cadastrado nenhuma conta.
+        </p>
+      </div>
+    }
     @for(account of accounts$ | async; track account) {
     <li
       class="my-4 py-4 flex justify-between w-full items-center border-b border-solid border-slate-200"

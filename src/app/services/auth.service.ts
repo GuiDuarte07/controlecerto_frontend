@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import { CSP_NONCE, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { catchError, map, Observable, of, tap } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
 import { AuthResponse } from '../models/AuthResponse';
 import { Router } from '@angular/router';
@@ -28,15 +28,38 @@ export class AuthService {
       .post<AuthResponse>(`${this.hostAddress}/${suffix}`, body)
       .pipe(
         tap((response) => {
-          console.log('Salvar cookies');
           this.cookieService.set('AccessToken', response.accessToken);
           this.cookieService.set('RefreshToken', response.refreshToken);
         })
       );
   }
 
-  public logout() {
-    this.cookieService.delete('BearerToken');
+  getNewAccessToken(): Observable<{ accessToken: string }> {
+    const route = 'GenerateAccessToken';
+    const refreshToken = this.cookieService.get('RefreshToken');
+    if (!refreshToken) {
+      this.logout();
+    }
+
+    return this.http.get<{ accessToken: string }>(
+      `${this.hostAddress}/${route}/${refreshToken}`
+    );
+  }
+
+  public logout(): Observable<boolean> {
+    const route = 'Logout';
+    const refreshToken = localStorage.getItem('RefreshToken');
+
+    this.cookieService.delete('AccessToken');
+    this.cookieService.delete('RefreshToken');
     this.router.navigate(['/login']);
+
+    if (!refreshToken) {
+      return of(true);
+    }
+
+    return this.http.get<boolean>(
+      `${this.hostAddress}/${route}/${refreshToken}`
+    );
   }
 }

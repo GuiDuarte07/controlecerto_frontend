@@ -12,6 +12,7 @@ import localePt from '@angular/common/locales/pt';
 import { TokenInterceptor } from './interceptors/token.interceptor';
 import { registerLocaleData } from '@angular/common';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
 
 registerLocaleData(localePt);
 
@@ -25,12 +26,18 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideHttpClient(withInterceptorsFromDi()),
     tokenInterceptorProvider,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true,
+    },
     provideRouter(routes),
     provideHttpClient(),
     CookieService,
     {
       provide: LOCALE_ID,
       useValue: 'pt-BR',
-    }, provideAnimationsAsync(),
+    },
+    provideAnimationsAsync(),
   ],
 };

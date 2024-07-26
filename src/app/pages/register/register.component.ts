@@ -67,15 +67,6 @@ export class RegisterComponent {
         ],
       }),
     });
-
-    this.openSuccessDialog(
-      new InfoUserResponse(
-        21,
-        'José Guilherme Duarte Abrantes José Guilherme Duarte Abrantes',
-        'guidluads@dfas',
-        false
-      )
-    );
   }
 
   register() {

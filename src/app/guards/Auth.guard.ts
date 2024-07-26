@@ -6,8 +6,9 @@ export const AuthGuard: CanActivateFn = (route, state) => {
   const cookieService = inject(CookieService);
   const router = inject(Router);
 
-  const authToken = cookieService.get('BearerToken');
-  if (authToken) {
+  const accessToken = cookieService.get('AccessToken');
+  const refreshToken = cookieService.get('RefreshToken');
+  if (accessToken && refreshToken) {
     return true;
   }
 

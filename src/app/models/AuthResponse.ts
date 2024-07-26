@@ -4,10 +4,16 @@ import { InfoUserResponse } from './InfoUserResponse';
 
 export class AuthResponse {
   user: InfoUserResponse;
-  token: string;
+  accessToken: string;
+  refreshToken: string;
 
-  constructor(user: InfoUserResponse, token: string) {
+  constructor(
+    user: InfoUserResponse,
+    accessToken: string,
+    refreshToken: string
+  ) {
     this.user = user;
-    this.token = token;
+    this.accessToken = accessToken;
+    this.refreshToken = refreshToken;
   }
 }

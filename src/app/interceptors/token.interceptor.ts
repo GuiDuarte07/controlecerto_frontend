@@ -16,7 +16,7 @@ export class TokenInterceptor implements HttpInterceptor {
     request: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    const authToken = this.cookieService.get('BearerToken');
+    const authToken = this.cookieService.get('AccessToken');
 
     if (authToken) {
       request = request.clone({

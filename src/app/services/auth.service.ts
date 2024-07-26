@@ -28,7 +28,9 @@ export class AuthService {
       .post<AuthResponse>(`${this.hostAddress}/${suffix}`, body)
       .pipe(
         tap((response) => {
-          this.cookieService.set('BearerToken', response.token);
+          console.log('Salvar cookies');
+          this.cookieService.set('AccessToken', response.accessToken);
+          this.cookieService.set('RefreshToken', response.refreshToken);
         })
       );
   }

@@ -13,6 +13,7 @@ import { RegisterSuccessDialogComponent } from '../../components/dialogs/registe
 import { InfoUserResponse } from '../../models/InfoUserResponse';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 interface IRegisterForm {
   email: FormControl<string>;
@@ -23,12 +24,18 @@ interface IRegisterForm {
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterLink,
+    MatProgressSpinnerModule,
+  ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
 })
 export class RegisterComponent {
   registerForm!: FormGroup<IRegisterForm>;
+  loading = false;
   fromServerError?: string;
 
   passwordVisibility = false;
@@ -70,6 +77,7 @@ export class RegisterComponent {
   }
 
   register() {
+    this.loading = true;
     this.fromServerError = '';
 
     this.registerForm.patchValue({
@@ -82,9 +90,11 @@ export class RegisterComponent {
       next: (user) => {
         this.registerForm.reset();
         this.openSuccessDialog(user);
+        this.loading = false;
       },
       error: (err: HttpErrorResponse) => {
         this.fromServerError = err.error;
+        this.loading = false;
       },
     });
   }

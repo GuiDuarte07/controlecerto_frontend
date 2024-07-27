@@ -133,16 +133,23 @@
 
           <div class="mt-8 w-full flex items-center">
             <button
-              [disabled]="!registerForm.valid"
+              [disabled]="!registerForm.valid || loading"
               type="submit"
               class="disabled:bg-slate-400 px-9 py-2 bg-teal-600 text-white font-semibold text-sm rounded-lg flex gap-2 items-center"
             >
+            @if (loading) {
+              <div class="px-8 py-1">
+                <mat-spinner diameter="20"></mat-spinner>
+              </div>
+            }  @else {
               Registar
               <span
                 class="text-white text-lg font-bold material-symbols-outlined"
               >
                 arrow_forward
               </span>
+            }
+              
             </button>
 
             <p class="text-sm text-slate-500 ml-6">

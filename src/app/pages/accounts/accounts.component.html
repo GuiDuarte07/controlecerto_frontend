@@ -17,22 +17,27 @@
   </div>
 
   <ul class="w-full">
-    @if((accounts$ | async)?.length == 0) {
-      <div class="flex w-full items-center min-h-32">
-        <p class="text-center w-full text-slate-700">
-          Não foi cadastrado nenhuma conta.
-        </p>
-      </div>
-    }
-    @for(account of accounts$ | async; track account) {
+    @if (loading) {
+    <div class="flex w-full items-center justify-center min-h-32">
+      <mat-spinner diameter="60"></mat-spinner>
+    </div>
+    } @else { @if(accounts.length == 0) {
+    <div class="flex w-full items-center min-h-32">
+      <p class="text-center w-full text-slate-700">
+        Não foi cadastrado nenhuma conta.
+      </p>
+    </div>
+    } @for(account of accounts; track account) {
     <li
       class="my-4 py-4 flex justify-between w-full items-center border-b border-solid border-slate-200"
     >
-      <button type="button"
-      (click)="openAccountDialog(account)" class="flex items-center gap-3 group">
+      <button
+        type="button"
+        (click)="openAccountDialog(account)"
+        class="flex items-center gap-3 group"
+      >
         <!-- ICON -->
         <div
-          
           [ngStyle]="{ 'background-color': account.color }"
           class="rounded-full size-9 flex items-center justify-center relative group-hover:!bg-slate-400 transition duration-100"
         >
@@ -52,7 +57,9 @@
           </span>
         </div>
 
-        <p class="text-base text-slate-600 font-semibold group-hover:font-bold">{{ account.bank }}</p>
+        <p class="text-base text-slate-600 font-semibold group-hover:font-bold">
+          {{ account.bank }}
+        </p>
       </button>
       <div class="flex gap-2 items-center">
         <p class="text-sm font-medium text-slate-700">saldo atual:</p>
@@ -80,6 +87,6 @@
         </mat-menu>
       </div>
     </li>
-    }
+    } }
   </ul>
 </section>

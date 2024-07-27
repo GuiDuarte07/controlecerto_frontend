@@ -4,13 +4,14 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 import { AccountTypeEnum } from '../../enums/AccountTypeEnum ';
 import { AccountDialogComponent } from '../../components/dialogs/account-dialog/account-modal.component';
-import { Observable } from 'rxjs';
+import { forkJoin, Observable } from 'rxjs';
 import { Account } from '../../models/AccountRequest ';
 import { BalanceStatement } from '../../models/BalanceStatement';
 import { initFlowbite } from 'flowbite';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AlertDialogComponent } from '../../components/dialogs/alert-dialog/alert-dialog.component';
 
 @Component({
@@ -22,13 +23,14 @@ import { AlertDialogComponent } from '../../components/dialogs/alert-dialog/aler
     AccountDialogComponent,
     MatButtonModule,
     MatMenuModule,
+    MatProgressSpinnerModule,
   ],
   templateUrl: './accounts.component.html',
   styleUrl: './accounts.component.scss',
 })
 export class AccountsComponent implements OnInit {
-  accounts$!: Observable<Account[]>;
-  balance!: BalanceStatement;
+  accounts!: Account[];
+  loading = false;
 
   constructor(
     private accountService: AccountService,
@@ -48,12 +50,14 @@ export class AccountsComponent implements OnInit {
 
   ngOnInit(): void {
     this.updatedAccounts();
-
-    this.accountService.getBalance().subscribe((b) => (this.balance = b));
   }
 
   updatedAccounts() {
-    this.accounts$ = this.accountService.getAccounts();
+    this.loading = true;
+    this.accountService.getAccounts().subscribe((accounts) => {
+      this.accounts = accounts;
+      this.loading = true;
+    });
   }
 
   openDeleteAlertDialog(account: Account) {

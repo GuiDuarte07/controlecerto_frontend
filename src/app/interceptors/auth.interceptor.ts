@@ -6,8 +6,8 @@ import {
   HttpRequest,
   HttpErrorResponse,
 } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
+import { Observable, Subject, throwError } from 'rxjs';
+import { catchError, filter, switchMap, take } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { AuthService } from '../services/auth.service';
@@ -15,6 +15,7 @@ import { AuthService } from '../services/auth.service';
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   private isRefreshing = false;
+  private refreshTokenSubject: Subject<string> = new Subject<string>();
 
   constructor(
     private authService: AuthService,
@@ -39,11 +40,13 @@ export class AuthInterceptor implements HttpInterceptor {
   private handle401Error(req: HttpRequest<any>, next: HttpHandler) {
     if (!this.isRefreshing) {
       this.isRefreshing = true;
+      this.refreshTokenSubject.next('');
 
       return this.authService.getNewAccessToken().pipe(
         switchMap((data) => {
           console.log(data.accessToken);
           this.isRefreshing = false;
+          this.refreshTokenSubject.next(data.accessToken);
           this.cookieService.set('AccessToken', data.accessToken);
           return next.handle(this.addTokenHeader(req, data.accessToken));
         }),
@@ -56,7 +59,12 @@ export class AuthInterceptor implements HttpInterceptor {
         })
       );
     } else {
-      return throwError(() => new Error('Already refreshing token'));
+      console.log('Refreshing token');
+      return this.refreshTokenSubject.pipe(
+        filter((token) => token !== ''),
+        take(1),
+        switchMap((token) => next.handle(this.addTokenHeader(req, token)))
+      );
     }
   }
 

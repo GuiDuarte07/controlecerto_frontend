@@ -9,6 +9,7 @@ import {
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 interface ILoginForm {
   email: FormControl<string>;
@@ -18,13 +19,19 @@ interface ILoginForm {
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, RouterLink],
+  imports: [
+    ReactiveFormsModule,
+    CommonModule,
+    RouterLink,
+    MatProgressSpinnerModule,
+  ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup<ILoginForm>;
   passwordVisibility = false;
+  loading = false;
   fromServerError?: string;
 
   constructor(private authService: AuthService, private router: Router) {}
@@ -52,16 +59,19 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
+    this.loading = true;
     const email = this.loginForm.value.email!;
     const password = this.loginForm.value.password!;
     this.authService.authenticate(email, password).subscribe({
       next: (response) => {
         console.log(response);
         this.router.navigateByUrl('/home');
+        this.loading = false;
       },
       error: (error: HttpErrorResponse) => {
         console.error('Authentication failed', error);
-        this.fromServerError = error.message;
+        this.fromServerError = error.error;
+        this.loading = false;
       },
     });
   }

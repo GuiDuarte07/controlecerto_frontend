@@ -84,7 +84,7 @@ export class RegisterComponent {
         this.openSuccessDialog(user);
       },
       error: (err: HttpErrorResponse) => {
-        this.fromServerError = err.message;
+        this.fromServerError = err.error;
       },
     });
   }

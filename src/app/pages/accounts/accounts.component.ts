@@ -56,7 +56,7 @@ export class AccountsComponent implements OnInit {
     this.loading = true;
     this.accountService.getAccounts().subscribe((accounts) => {
       this.accounts = accounts;
-      this.loading = true;
+      this.loading = false;
     });
   }
 

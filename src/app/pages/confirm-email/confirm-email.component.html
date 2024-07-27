@@ -1,0 +1,42 @@
+<main class="w-screen h-screen flex justify-center items-center">
+  @if(loading) {
+  <mat-spinner diameter="80"></mat-spinner>
+  } @else { @if(confirmedEmail) {
+  <div class="flex flex-col">
+    <h1 class="text-center text-3xl font-semibold text-gray-900 my-2">
+      E-mail Confirmado! ✨
+    </h1>
+    <p class="text-lg text-gray-800 my-2 text-center">
+      Parabéns! seu E-mail foi confirmado
+    </p>
+    <a
+      type="button"
+      routerLink="/"
+      class="px-3 py-3 bg-teal-600 text-center font-medium text-white rounded-lg my-6 cursor-pointer"
+      >Ir para tela inicial</a
+    >
+  </div>
+  } @else {
+  <div class="flex flex-col">
+    <h1 class="text-center text-3xl font-semibold text-gray-900 my-2">
+      Erro ao confirmar E-mail 😥
+    </h1>
+    <p class="text-lg text-red-600 my-2 text-center">
+      {{serverErrorMessage}}
+    </p>
+    <button
+      type="button"
+      (click)="resendConfirmEmail()"
+      [disabled]="sendEmailButtonSuccess"
+      class="disabled:bg-gray-500 disabled:cursor-default px-3 py-3 bg-teal-600 text-center font-medium text-white rounded-lg my-6 cursor-pointer"
+      >
+        @if(loadingSendEmailButton) {
+          <mat-spinner diameter="20"></mat-spinner>
+        } @else {
+          {{sendEmailButtonSuccess ? "E-mail enviado" : "Enviar outro e-mail"}}
+        }
+      </button
+    >
+  </div>
+  } }
+</main>

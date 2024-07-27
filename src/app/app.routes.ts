@@ -12,6 +12,7 @@ import { MasterComponent } from './layouts/master/master.component';
 import { RegistrationsComponent } from './layouts/registrations/registrations.component';
 import { InvoicesComponent } from './pages/invoices/invoices.component';
 import { CreditcardDetailsComponent } from './pages/creditcard-details/creditcard-details.component';
+import { ConfirmEmailComponent } from './pages/confirm-email/confirm-email.component';
 
 export const routes: Routes = [
   {
@@ -38,4 +39,5 @@ export const routes: Routes = [
   },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
+  { path: 'confirm-email/:token', component: ConfirmEmailComponent },
 ];

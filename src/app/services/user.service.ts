@@ -19,4 +19,14 @@ export class UserService {
       user
     );
   }
+
+  confirmEmail(token: string) {
+    const rote = 'ConfirmEmail';
+    return this.httpClient.get(`${this.hostAddress}/${rote}/${token}`);
+  }
+
+  sendConfirmEmail() {
+    const rote = 'SendConfirmEmail';
+    return this.httpClient.get(`${this.hostAddress}/${rote}`);
+  }
 }

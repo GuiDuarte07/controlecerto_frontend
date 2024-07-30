@@ -1,0 +1,202 @@
+<main class="w-[900px] flex justify-between mb-6 gap-4">
+  <section
+    class="w-[200px] flex items-center flex-col gap-1 bg-white rounded-lg p-4 pt-8"
+  >
+    <div class="flex items-center justify-center flex-col w-full gap-2 pb-8">
+      <div
+        class="h-40 bg-slate-200 w-full rounded-lg flex items-center justify-center"
+      >
+        <span
+          class="material-symbols-outlined text-black text-6xl"
+          style="font-variation-settings: 'FILL' 1"
+        >
+          account_circle
+        </span>
+      </div>
+      <p class="text-slate-700">{{ user.name }}</p>
+    </div>
+  </section>
+  <section
+    class="flex flex-wrap flex-col flex-1 w-full gap-1 bg-white rounded-lg p-4 pl-8 pt-8"
+  >
+    <div class="flex w-full mb-4">
+      <h2 class="text-2xl font-bold text-slate-700 tracking-wide">Perfil</h2>
+    </div>
+
+    @if (loading) {
+    <div class="flex w-full items-center justify-center min-h-32">
+      <mat-spinner diameter="60"></mat-spinner>
+    </div>
+    } @else {
+    <div class="flex flex-col gap-2">
+      <div class="mb-3">
+        <label for="email" class="text-slate-500 pb-3 text-sm font-semibold"
+          >E-mail</label
+        >
+        <div class="relative">
+          <input
+            type="text"
+            id="email"
+            class="input"
+            style="padding-right: 2.25rem"
+            placeholder="Seu E-mail"
+            required
+            [disabled]="!editEmail"
+            [(ngModel)]="newEmailString"
+          />
+          <button
+            (click)="setEditEmail()"
+            type="button"
+            class="absolute top-1/2 right-2 transform -translate-y-1/2 cursor-pointer flex justify-center items-center"
+          >
+            @if (editEmail) {
+            <span class="material-symbols-outlined text-green-500">
+              check_circle
+            </span>
+            }@else {
+            <span class="material-symbols-outlined text-slate-400">
+              edit_square
+            </span>
+            }
+          </button>
+        </div>
+      </div>
+      <div class="mb-3">
+        <mat-expansion-panel
+          class=""
+        >
+          <mat-expansion-panel-header class="!text-slate-600">
+            Mudar senha
+          </mat-expansion-panel-header>
+
+          <!-- MAT EXPANSION PANEL INVISIBLE -->
+          <div class="flex w-full gap-4 flex-col">
+            <div class="mb-3">
+              <label
+                for="passPassword"
+                class="text-slate-500 pb-1 text-sm font-semibold"
+                >Senha Anterior</label
+              >
+              <div class="relative">
+                <input
+                  [type]="passwordVisibility ? 'text' : 'password'"
+                  id="passPassword"
+                  class="input"
+                  style="padding-right: 2.25rem"
+                  placeholder="•••••••••"
+                  required
+                />
+                <button
+                  (click)="setPasswordVisibility()"
+                  type="button"
+                  class="absolute top-1/2 right-2 transform -translate-y-1/2 cursor-pointer flex justify-center items-center"
+                >
+                  @if (passwordVisibility) {
+                  <span class="material-symbols-outlined text-slate-400">
+                    visibility_off
+                  </span>
+                  }@else {
+                  <span class="material-symbols-outlined text-slate-400">
+                    visibility
+                  </span>
+                  }
+                </button>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label
+                for="newPassword"
+                class="text-slate-500 pb-1 text-sm font-semibold"
+                >Nova Senha</label
+              >
+              <div class="relative">
+                <input
+                  [type]="passwordVisibility ? 'text' : 'password'"
+                  id="newPassword"
+                  class="input"
+                  style="padding-right: 2.25rem"
+                  placeholder="•••••••••"
+                  required
+                />
+                <button
+                  (click)="setPasswordVisibility()"
+                  type="button"
+                  class="absolute top-1/2 right-2 transform -translate-y-1/2 cursor-pointer flex justify-center items-center"
+                >
+                  @if (passwordVisibility) {
+                  <span class="material-symbols-outlined text-slate-400">
+                    visibility_off
+                  </span>
+                  }@else {
+                  <span class="material-symbols-outlined text-slate-400">
+                    visibility
+                  </span>
+                  }
+                </button>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label
+                for="confirmPassword"
+                class="text-slate-500 pb-1 text-sm font-semibold"
+                >Confirmar Nova Senha</label
+              >
+              <div class="relative">
+                <input
+                  [type]="passwordVisibility ? 'text' : 'password'"
+                  id="confirmPassword"
+                  class="input"
+                  style="padding-right: 2.25rem"
+                  placeholder="•••••••••"
+                  required
+                />
+                <button
+                  (click)="setPasswordVisibility()"
+                  type="button"
+                  class="absolute top-1/2 right-2 transform -translate-y-1/2 cursor-pointer flex justify-center items-center"
+                >
+                  @if (passwordVisibility) {
+                  <span class="material-symbols-outlined text-slate-400">
+                    visibility_off
+                  </span>
+                  }@else {
+                  <span class="material-symbols-outlined text-slate-400">
+                    visibility
+                  </span>
+                  }
+                </button>
+              </div>
+            </div>
+            
+          </div>
+        </mat-expansion-panel>
+      </div>
+    </div>
+    }
+  </section>
+</main>
+
+<!-- <div
+              *ngIf="
+                loginForm.get('password')?.errors &&
+                loginForm.get('password')?.touched
+              "
+            >
+              <P
+                class="text-sm text-red-600"
+                *ngIf="loginForm.get('password')?.errors?.['required']"
+                >Senha é obrigatória.</P
+              >
+              <P
+                class="text-sm text-red-600"
+                *ngIf="loginForm.get('password')?.errors?.['minlength']"
+                >Senha deve ter no mínimo 3 caracteres.</P
+              >
+              <P
+                class="text-sm text-red-600"
+                *ngIf="loginForm.get('password')?.errors?.['maxlength']"
+                >Senha deve ter no máximo 100 caracteres.</P
+              >
+            </div> -->

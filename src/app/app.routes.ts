@@ -13,6 +13,7 @@ import { RegistrationsComponent } from './layouts/registrations/registrations.co
 import { InvoicesComponent } from './pages/invoices/invoices.component';
 import { CreditcardDetailsComponent } from './pages/creditcard-details/creditcard-details.component';
 import { ConfirmEmailComponent } from './pages/confirm-email/confirm-email.component';
+import { ProfileComponent } from './pages/profile/profile.component';
 
 export const routes: Routes = [
   {
@@ -23,6 +24,7 @@ export const routes: Routes = [
       { path: 'home', component: HomeComponent },
       { path: 'transactions', component: TransactionsComponent },
       { path: 'invoices/:id', component: InvoicesComponent },
+      { path: 'profile', component: ProfileComponent },
       {
         path: 'registrations',
         canActivate: [AuthGuard],

@@ -1,0 +1,28 @@
+# Ignorar diretórios padrão de Node.js
+node_modules
+dist
+coverage
+
+# Ignorar arquivos de configuração de IDE
+.vscode
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Ignorar arquivos de log
+*.log
+
+# Ignorar arquivos de sistema operacional
+.DS_Store
+Thumbs.db
+
+# Ignorar arquivos de controle de versão
+.git
+.gitignore
+
+# Ignorar arquivos temporários
+tmp
+temp
+*.swp

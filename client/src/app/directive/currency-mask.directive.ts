@@ -54,9 +54,7 @@ export class CurrencyMaskDirective implements OnInit, ControlValueAccessor {
   }
 
   writeValue(value: any): void {
-    console.log(value);
     const formattedValue = this.formatInput(value ? value.toString() : '');
-    console.log(formattedValue);
     this.el.nativeElement.value = formattedValue;
   }
 
@@ -70,17 +68,30 @@ export class CurrencyMaskDirective implements OnInit, ControlValueAccessor {
 
   public formatInput(value: string): string {
     let numString = value;
+    numString = numString.replace(/\./g, this.decimalMarker);
 
     if (!numString.includes(this.decimalMarker)) {
       for (let i = 0; i < this.decimalPlaces; i++) {
         numString += '0';
       }
+    } else {
+      const decimalPart = numString.split(',')[1];
+
+
+      if (decimalPart.length < this.decimalPlaces) {
+        for (let i = this.decimalPlaces - decimalPart.length; i < this.decimalPlaces; i++) {
+          numString += '0';
+        }
+      }
     }
+
 
     let numbersOnly = numString.replace(/\D/g, '');
 
+
     // Remove leading zeros
     numbersOnly = numbersOnly.replace(/^0+/, '');
+
 
     // Ensure there are at least `decimalPlaces` digits
     while (numbersOnly.length <= this.decimalPlaces) {
@@ -89,6 +100,7 @@ export class CurrencyMaskDirective implements OnInit, ControlValueAccessor {
 
     const integerPart = numbersOnly.slice(0, -this.decimalPlaces);
     const decimalPart = numbersOnly.slice(-this.decimalPlaces);
+
 
     const formattedIntegerPart = integerPart.replace(
       /\B(?=(\d{3})+(?!\d))/g,

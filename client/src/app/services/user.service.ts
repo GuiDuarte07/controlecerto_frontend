@@ -42,7 +42,20 @@ export class UserService {
     const rote = 'ChangePassword';
     return this.httpClient.post<void>(`${this.hostAddress}/${rote}`, {
       oldPassword: oldPassword,
-      newPassword: newPassword
+      newPassword: newPassword,
+    });
+  }
+
+  verifyForgotPasswordToken(token: string) {
+    const rote = 'VerifyForgotPasswordToken';
+    return this.httpClient.get<boolean>(`${this.hostAddress}/${rote}/${token}`);
+  }
+
+  sendForgotPassword(token: string, password: string, confirmPassword: string) {
+    const rote = 'ForgotPassword';
+    return this.httpClient.post<void>(`${this.hostAddress}/${rote}/${token}`, {
+      password,
+      confirmPassword,
     });
   }
 }

@@ -2,6 +2,7 @@ export class UpdateTransactionRequest {
   id: number;
   amount?: number;
   purchaseDate?: Date;
+  justForRecord?: boolean;
   destination?: string;
   description?: string;
   observations?: string;
@@ -10,6 +11,7 @@ export class UpdateTransactionRequest {
   constructor({
     id,
     amount,
+    justForRecord,
     categoryId,
     description,
     destination,
@@ -18,6 +20,7 @@ export class UpdateTransactionRequest {
   }: {
     id: number;
     amount?: number;
+    justForRecord?: boolean;
     purchaseDate?: Date;
     destination?: string;
     description?: string;
@@ -26,6 +29,7 @@ export class UpdateTransactionRequest {
   }) {
     this.id = id;
     this.amount = amount;
+    this.justForRecord = justForRecord;
     this.purchaseDate = purchaseDate;
     this.destination = destination;
     this.description = description;

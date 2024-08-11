@@ -218,7 +218,7 @@ export class CreateTransactionDialogComponent implements OnInit {
     this.categoryService.GetCategories(categoryType).subscribe((data) => {
       this.categories = data;
       if (this.data.newTransaction === false) {
-        let id = this.data.transaction.category.id;
+        let id = this.data.transaction.category!.id;
         this.selectedCategory = this.categories.find((a) => a.id! === id);
       }
     });

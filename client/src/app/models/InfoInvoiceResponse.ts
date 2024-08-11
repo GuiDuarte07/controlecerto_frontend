@@ -7,6 +7,7 @@ export class InfoInvoiceResponse {
   totalAmount: number;
   totalPaid: number;
   isPaid: boolean;
+  invoiceDate: Date;
   closingDate: Date;
   dueDate: Date;
   creditCard: CreditCardInfo;
@@ -18,6 +19,7 @@ export class InfoInvoiceResponse {
     totalAmount: number,
     totalPaid: number,
     isPaid: boolean,
+    invoiceDate: Date,
     closingDate: Date,
     dueDate: Date,
     creditCard: CreditCardInfo,
@@ -28,6 +30,7 @@ export class InfoInvoiceResponse {
     this.totalAmount = totalAmount;
     this.totalPaid = totalPaid;
     this.isPaid = isPaid;
+    this.invoiceDate = invoiceDate;
     this.closingDate = closingDate;
     this.dueDate = dueDate;
     this.creditCard = creditCard;

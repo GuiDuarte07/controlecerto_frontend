@@ -87,11 +87,11 @@
       <mat-expansion-panel-header class="!p-0 w-full">
         <div class="w-6/12 flex gap-2 items-center">
           <div
-            [ngStyle]="{ 'background-color': transaction.category.color }"
+            [ngStyle]="{ 'background-color': transaction.category?.color || '#057a55' }"
             class="text-white rounded-full w-8 h-8 flex items-center justify-center p-2"
           >
             <span class="material-symbols-outlined text-xl">
-              {{ transaction.category.icon }}
+              {{ transaction.category?.icon || 'payments' }}
             </span>
           </div>
 
@@ -128,11 +128,11 @@
           <!-- ícone, descrição e quantia -->
           <div class="flex flex-col gap-2 items-center">
             <div
-              [ngStyle]="{ 'background-color': transaction.category.color }"
+              [ngStyle]="{ 'background-color': transaction.category?.color || '#057a55' }"
               class="text-white rounded-full w-14 h-14 flex items-center justify-center p-2"
             >
               <span class="material-symbols-outlined text-3xl">
-                {{ transaction.category.icon }}
+                {{ transaction.category?.icon || 'payments' }}
               </span>
             </div>
 
@@ -152,35 +152,37 @@
           </div>
 
           <!-- Botões de Editar e Excluir -->
-          <div class="flex flex-col gap-4 items-center justify-evenly">
-            <button
-              (click)="openEditTransactionDialog(transaction)"
-              aria-label="Editar lançamento"
-              [matTooltipPosition]="'right'"
-              mat-raised-button
-              matTooltip="Editar Lançamento"
-              type="button"
-              class="flex items-center justify-center size-8 bg-slate-400 rounded-full"
-            >
-              <span class="material-symbols-outlined text-base text-white">
-                edit_square
-              </span>
-            </button>
+          @if(transaction.type != 4) {
+            <div class="flex flex-col gap-4 items-center justify-evenly">
+              <button
+                (click)="openEditTransactionDialog(transaction)"
+                aria-label="Editar lançamento"
+                [matTooltipPosition]="'right'"
+                mat-raised-button
+                matTooltip="Editar Lançamento"
+                type="button"
+                class="flex items-center justify-center size-8 bg-slate-400 rounded-full"
+              >
+                <span class="material-symbols-outlined text-base text-white">
+                  edit_square
+                </span>
+              </button>
 
-            <button
-              (click)="openDeleteAlertDialog(transaction)"
-              aria-label="Excluir lançamento"
-              [matTooltipPosition]="'right'"
-              mat-raised-button
-              matTooltip="Excluir lançamento"
-              type="button"
-              class="flex items-center justify-center size-8 bg-slate-400 rounded-full"
-            >
-              <span class="material-symbols-outlined text-base text-white">
-                delete
-              </span>
-            </button>
-          </div>
+              <button
+                (click)="openDeleteAlertDialog(transaction)"
+                aria-label="Excluir lançamento"
+                [matTooltipPosition]="'right'"
+                mat-raised-button
+                matTooltip="Excluir lançamento"
+                type="button"
+                class="flex items-center justify-center size-8 bg-slate-400 rounded-full"
+              >
+                <span class="material-symbols-outlined text-base text-white">
+                  delete
+                </span>
+              </button>
+            </div>
+          }
         </div>
 
         <!-- Segunda parte (conta, categoria, etc) -->
@@ -196,7 +198,7 @@
             <div class="flex flex-col gap-1 w-4/12 justify-center">
               <p class="text-sm text-slate-400">Categoria</p>
               <p class="text-sm text-slate-800">
-                {{ transaction.category.name }}
+                {{ transaction.category?.name || 'pagamento fatura' }}
               </p>
             </div>
           </div>
@@ -231,12 +233,12 @@
         Não foi encontrado nenhum lançamento para esse mês.
       </p>
     </div>
-    } 
+    }
 
     <div class="w-full h-[2px] rounded-2xl bg-slate-200 my-1"></div>
-    
+
     @if(invoices.length) {
-    
+
     @for(invoice of invoices; track invoice) { @if(invoice.totalAmount > 0) {
     <mat-expansion-panel
       [expanded]="false"
@@ -250,7 +252,7 @@
             <span class="material-symbols-outlined text-xl"> credit_card </span>
           </div>
           <h3 class="text-sm text-slate-900 font-medium">
-            Fatura {{ formaterService.getMonthYearString(invoice.dueDate) }}
+            Fatura {{ formaterService.getMonthYearString(invoice.invoiceDate) }}
           </h3>
         </div>
 
@@ -270,135 +272,7 @@
         </div>
       </mat-expansion-panel-header>
 
-      @for(payment of invoice.invoicePayments; track payment) {
-      <mat-expansion-panel
-        class="remove-child-padding !shadow-none !bg-none flex !w-full items-center rounded-sm p-0!"
-      >
-        <mat-expansion-panel-header class="!p-0 w-full">
-          <div class="w-6/12 flex gap-2 items-center">
-            <div
-              class="text-white bg-green-600 rounded-full w-8 h-8 flex items-center justify-center p-2"
-            >
-              <span class="material-symbols-outlined text-xl"> payments </span>
-            </div>
-
-            <h3
-              class="whitespace-nowrap overflow-hidden text-ellipsis text-sm text-slate-900 font-medium"
-            >
-              {{ payment.description }}
-            </h3>
-          </div>
-
-          <div class="w-2/12 flex items-center justify-start overflow-hidden">
-            <p
-              class="whitespace-nowrap overflow-hidden text-ellipsis text-base text-slate-500"
-            >
-              {{ payment.account.bank }}
-            </p>
-          </div>
-
-          <div class="w-4/12 flex items-center">
-            <p class="w-6/12 text-sm tracking-wide text-slate-500">
-              {{ payment.paymentDate | date : "dd/MM/yyyy" }}
-            </p>
-            <p class="w-6/12 text-sm tracking-wide text-black">
-              <span class=" ">-</span>
-              {{ formaterService.formatCurrency(payment.amountPaid) }}
-            </p>
-          </div>
-        </mat-expansion-panel-header>
-
-        <!-- MAT EXPANSION PANEL INVISIBLE -->
-        <div class="flex w-full px-16 gap-4">
-          <!-- Primeira parte (icone, botoes, etc) -->
-          <div class="w-6/12 flex gap-6">
-            <!-- ícone, descrição e quantia -->
-            <div class="flex flex-col gap-2 items-center">
-              <div
-                class="text-white rounded-full bg-green-600 w-14 h-14 flex items-center justify-center p-2"
-              >
-                <span class="material-symbols-outlined text-xl">
-                  payments
-                </span>
-              </div>
-
-              <h3 class="text-sm text-slate-900 font-medium">
-                {{ payment.description }}
-              </h3>
-
-              <p class="text-sm tracking-wide text-black">
-                {{ formaterService.formatCurrencySymbol(payment.amountPaid) }}
-              </p>
-            </div>
-
-            <!-- Botões de Editar e Excluir -->
-            <div class="flex flex-col gap-4 items-center justify-evenly">
-              <button
-                aria-label="Editar lançamento"
-                [matTooltipPosition]="'right'"
-                mat-raised-button
-                matTooltip="Editar Lançamento"
-                type="button"
-                class="flex items-center justify-center size-8 bg-slate-400 rounded-full"
-              >
-                <span class="material-symbols-outlined text-base text-white">
-                  edit_square
-                </span>
-              </button>
-
-              <button
-                aria-label="Excluir lançamento"
-                [matTooltipPosition]="'right'"
-                mat-raised-button
-                matTooltip="Excluir lançamento"
-                type="button"
-                class="flex items-center justify-center size-8 bg-slate-400 rounded-full"
-              >
-                <span class="material-symbols-outlined text-base text-white">
-                  delete
-                </span>
-              </button>
-            </div>
-          </div>
-
-          <!-- Segunda parte (conta, categoria, etc) -->
-          <div class="w-6/12 flex flex-col items-center justify-center gap-2">
-            <div class="w-full flex items-center">
-              <div class="flex flex-col gap-1 w-4/12 justify-center">
-                <p class="text-sm text-slate-400">Conta</p>
-                <p class="text-sm text-slate-800">
-                  {{ payment.account.bank }}
-                </p>
-              </div>
-
-              <div class="flex flex-col gap-1 w-4/12 justify-center">
-                <p class="text-sm text-slate-400">Categoria</p>
-                <p class="text-sm text-slate-800">teste</p>
-              </div>
-            </div>
-
-            <div class="w-full flex items-center">
-              <div class="flex flex-col gap-1 w-4/12 justify-center">
-                <p class="text-sm text-slate-400">Data</p>
-                <p class="text-sm tracking-wide text-slate-800">
-                  {{ formaterService.formatDateString(payment.paymentDate) }}
-                </p>
-              </div>
-
-              <div class="flex flex-col gap-1 w-4/12 justify-center">
-                <p class="text-sm text-slate-400">Hora</p>
-                <p class="text-sm tracking-wide text-slate-800">
-                  {{
-                    formaterService.formatDateToHourMinutes(payment.paymentDate)
-                  }}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </mat-expansion-panel>
-      }
-      <!-- TRANSAÇÕES DA FATURAR -->
+      <!-- TRANSAÇÕES DA FATURA -->
       @for(transaction of invoice.transactions; track transaction) {
       <mat-expansion-panel
         class="remove-child-padding !shadow-none !bg-none flex !w-full items-center rounded-sm p-0!"
@@ -406,11 +280,11 @@
         <mat-expansion-panel-header class="!p-0 w-full">
           <div class="w-6/12 flex gap-2 items-center">
             <div
-              [ngStyle]="{ 'background-color': transaction.category.color }"
+              [ngStyle]="{ 'background-color': transaction.category!.color }"
               class="text-white rounded-full w-8 h-8 flex items-center justify-center p-2"
             >
               <span class="material-symbols-outlined text-xl">
-                {{ transaction.category.icon }}
+                {{ transaction.category!.icon }}
               </span>
             </div>
 
@@ -447,11 +321,11 @@
             <!-- ícone, descrição e quantia -->
             <div class="flex flex-col gap-2 items-center">
               <div
-                [ngStyle]="{ 'background-color': transaction.category.color }"
+                [ngStyle]="{ 'background-color': transaction.category!.color }"
                 class="text-white rounded-full w-14 h-14 flex items-center justify-center p-2"
               >
                 <span class="material-symbols-outlined text-3xl">
-                  {{ transaction.category.icon }}
+                  {{ transaction.category!.icon }}
                 </span>
               </div>
 
@@ -515,7 +389,7 @@
               <div class="flex flex-col gap-1 w-4/12 justify-center">
                 <p class="text-sm text-slate-400">Categoria</p>
                 <p class="text-sm text-slate-800">
-                  {{ transaction.category.name }}
+                  {{ transaction.category!.name }}
                 </p>
               </div>
             </div>

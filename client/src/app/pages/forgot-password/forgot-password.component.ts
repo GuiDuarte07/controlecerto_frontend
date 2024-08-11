@@ -90,8 +90,6 @@ export class ForgotPasswordComponent implements OnInit {
         this.sendForgotPasswordLoading = false;
         this.successToUpdatePassword = true;
         this.fromServerError = null;
-
-        console.log('success', this.successToUpdatePassword);
       },
       error: (error: HttpErrorResponse) => {
         this.successToUpdatePassword = false;

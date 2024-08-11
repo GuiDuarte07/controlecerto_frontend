@@ -3,4 +3,5 @@ export enum TransactionTypeEnum {
   INCOME,
   CREDITEXPENSE,
   TRANSFERENCE,
+  INVOICEPAYMENT
 }

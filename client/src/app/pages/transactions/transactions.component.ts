@@ -125,7 +125,7 @@ export class TransactionsComponent implements OnInit {
   expensesTotal() {
     let expenseValue = 0;
     this.transactions.forEach((t) => {
-      if (t.type === TransactionTypeEnum.EXPENSE) {
+      if (t.type === TransactionTypeEnum.EXPENSE || t.type === TransactionTypeEnum.INVOICEPAYMENT) {
         expenseValue += t.amount;
       }
     });
@@ -157,8 +157,8 @@ export class TransactionsComponent implements OnInit {
         data: {
           title: 'Deletar lançamento',
           message: `Você tem certeza que deseja deletar esse lançamento?
-                    ${transaction.description}      
-                     \n* Lembrando que esse processo irá deletar todas as parcelas dessa compra, mas só será possível se nenhuma fatura tiver sido paga ainda.    
+                    ${transaction.description}
+                     \n* Lembrando que esse processo irá deletar todas as parcelas dessa compra, mas só será possível se nenhuma fatura tiver sido paga ainda.
           `,
           successMessage: 'Lançamento deletado com sucesso!',
           actionButtonMessage: 'Deletar',
@@ -180,7 +180,7 @@ export class TransactionsComponent implements OnInit {
       data: {
         title: 'Deletar lançamento',
         message: `Você tem certeza que deseja deletar esse lançamento?
-                  ${transaction.description}          
+                  ${transaction.description}
         `,
         successMessage: 'Lançamento deletado com sucesso!',
         actionButtonMessage: 'Deletar',

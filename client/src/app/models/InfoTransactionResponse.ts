@@ -13,7 +13,7 @@ export class InfoTransactionResponse {
   destination?: string;
   justForRecord: boolean;
   account: AccountInfo;
-  category: Category;
+  category?: Category;
   creditPurchase?: InfoCreditPurchaseResponse;
 
   // Credit Card Transaction info:

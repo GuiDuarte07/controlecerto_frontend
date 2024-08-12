@@ -237,6 +237,8 @@
 
     <div class="w-full h-[2px] rounded-2xl bg-slate-200 my-1"></div>
 
+
+    <!-- LISTA DE FATURAS -->
     @if(invoices.length) {
 
     @for(invoice of invoices; track invoice) { @if(invoice.totalAmount > 0) {
@@ -271,6 +273,30 @@
           </p>
         </div>
       </mat-expansion-panel-header>
+
+      <!-- DETALHES DA FATURA -->
+        <div class="w-full flex gap-4 pt-2 pb-3 px-1 items-center border-b border-b-slate-300 border-solid">
+          <div class="w-6/12">
+            <div *ngIf="invoice.isPaid" class="font-medium">Fatura Paga</div>
+            <div *ngIf="!invoice.isPaid" class="font-medium">
+              <p class="">Fatura Pendente</p>
+              <p class="">Falta a ser pago: {{(invoice.totalAmount - invoice.totalPaid) | currency : "BRL" : "" }}</p>
+            </div>
+          </div>
+
+          <div class="w-6/12 flex items-center justify-between mr-8">
+            <a [routerLink]="['/invoices', invoice.id]" class="px-3 py-1 bg-blue-600 text-white rounded-2xl cursor-pointer">Ir para fatura</a>
+
+            <button
+              *ngIf="!invoice.isPaid"
+              (click)="openPaymentInvoiceDialog(invoice)"
+              type="button"
+              class="px-3 py-1 bg-green-600 text-white rounded-2xl cursor-pointer"
+            >
+              Pagar Fatura
+            </button>
+          </div>
+        </div>
 
       <!-- TRANSAÇÕES DA FATURA -->
       @for(transaction of invoice.transactions; track transaction) {

@@ -15,6 +15,8 @@ import { TransactionTypeEnum } from '../../enums/TransactionTypeEnum';
 import { InfoInvoiceResponse } from '../../models/InfoInvoiceResponse';
 import { AccountService } from '../../services/account.service';
 import { CreditCardService } from '../../services/credit-card.service';
+import { RouterLink } from '@angular/router';
+import { InvoicePaymentDialogComponent } from '../../components/dialogs/invoice-payment-dialog/invoice-payment-dialog.component';
 
 @Component({
   selector: 'app-transactions',
@@ -25,6 +27,7 @@ import { CreditCardService } from '../../services/credit-card.service';
     MatExpansionModule,
     MatTooltipModule,
     MatMenuModule,
+    RouterLink,
   ],
   templateUrl: './transactions.component.html',
   styleUrl: './transactions.component.scss',
@@ -125,7 +128,10 @@ export class TransactionsComponent implements OnInit {
   expensesTotal() {
     let expenseValue = 0;
     this.transactions.forEach((t) => {
-      if (t.type === TransactionTypeEnum.EXPENSE || t.type === TransactionTypeEnum.INVOICEPAYMENT) {
+      if (
+        t.type === TransactionTypeEnum.EXPENSE ||
+        t.type === TransactionTypeEnum.INVOICEPAYMENT
+      ) {
         expenseValue += t.amount;
       }
     });
@@ -223,6 +229,20 @@ export class TransactionsComponent implements OnInit {
     dialogRef.afterClosed().subscribe((sucess) => {
       if ((sucess as boolean) === true) {
         this.updateTransactions();
+      }
+    });
+  }
+
+  openPaymentInvoiceDialog(invoice: InfoInvoiceResponse): void {
+    const dialogRef = this.dialog.open(InvoicePaymentDialogComponent, {
+      data: {
+        invoice,
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((sucess) => {
+      if ((sucess as boolean) === true) {
+        /* this.updateTransactions(); */
       }
     });
   }

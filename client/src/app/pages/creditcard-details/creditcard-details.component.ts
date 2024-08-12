@@ -75,26 +75,41 @@ export class CreditcardDetailsComponent {
 
   isActualInvoice(invoice: InfoInvoiceResponse): boolean {
     const today = new Date();
-    return (
-      (today.getFullYear() === invoice.closingDate.getFullYear() &&
-        today.getMonth() === invoice.closingDate.getMonth() &&
-        today.getDate() < invoice.closingDate.getDate()) ||
-      (today.getFullYear() === invoice.closingDate.getFullYear() &&
-        today.getMonth() + 1 === invoice.closingDate.getMonth()) ||
-      (today.getFullYear() + 1 === invoice.closingDate.getFullYear() &&
-        0 === invoice.closingDate.getMonth() &&
-        today.getDate() < invoice.closingDate.getDate())
-    );
+
+    const actualInvoiceDate = new Date();
+    actualInvoiceDate.setDate(1);
+    actualInvoiceDate.setHours(0,0,0,0);
+
+    const isAfterOrInClosingDate =
+      today.getDate() >= invoice.closingDate.getDate();
+
+    if (isAfterOrInClosingDate) {
+      actualInvoiceDate.setMonth(actualInvoiceDate.getMonth() + 1);
+    }
+
+    return actualInvoiceDate.getTime() === invoice.invoiceDate.getTime();
   }
 
   isOverdueInvoice(invoice: InfoInvoiceResponse): boolean {
     const today = new Date();
-    return (
-      (today.getFullYear() === invoice.closingDate.getFullYear() &&
-        today.getMonth() === invoice.closingDate.getMonth() &&
-        today.getDate() >= invoice.closingDate.getDate()) ||
-      (today.getFullYear() > invoice.closingDate.getFullYear() &&
-        today.getMonth() > invoice.closingDate.getMonth())
-    );
+
+    const actualInvoiceDate = new Date();
+    actualInvoiceDate.setDate(1);
+    actualInvoiceDate.setHours(0, 0, 0, 0);
+
+    if(actualInvoiceDate.getFullYear() > invoice.invoiceDate.getFullYear())
+      return true;
+    else if (actualInvoiceDate.getFullYear() < invoice.invoiceDate.getFullYear())
+      return false;
+
+    if(actualInvoiceDate.getMonth() > invoice.invoiceDate.getMonth())
+      return true;
+    else if (actualInvoiceDate.getMonth() < invoice.invoiceDate.getMonth())
+      return false;
+
+
+    if (today.getDate() >= invoice.closingDate.getDate())
+      return true;
+    return false;
   }
 }

@@ -58,34 +58,49 @@ export class InvoicesComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((sucess) => {
       if ((sucess as boolean) === true) {
-        /* this.updateTransactions(); */
+        this.updateInvoice();
       }
     });
   }
 
   isActualInvoice(): boolean {
     const today = new Date();
-    return (
-      (today.getFullYear() === this.invoice.closingDate.getFullYear() &&
-        today.getMonth() === this.invoice.closingDate.getMonth() &&
-        today.getDate() < this.invoice.closingDate.getDate()) ||
-      (today.getFullYear() === this.invoice.closingDate.getFullYear() &&
-        today.getMonth() + 1 === this.invoice.closingDate.getMonth()) ||
-      (today.getFullYear() + 1 === this.invoice.closingDate.getFullYear() &&
-        0 === this.invoice.closingDate.getMonth() &&
-        today.getDate() < this.invoice.closingDate.getDate())
-    );
+
+    const actualInvoiceDate = new Date();
+    actualInvoiceDate.setDate(1);
+    actualInvoiceDate.setHours(0, 0, 0, 0);
+
+    const isAfterOrInClosingDate =
+      today.getDate() >= this.invoice.closingDate.getDate();
+
+    if (isAfterOrInClosingDate) {
+      actualInvoiceDate.setMonth(actualInvoiceDate.getMonth() + 1);
+    }
+
+    return actualInvoiceDate.getTime() === this.invoice.invoiceDate.getTime();
   }
 
   isOverdueInvoice(): boolean {
     const today = new Date();
-    return (
-      (today.getFullYear() == this.invoice.closingDate.getFullYear() &&
-        today.getMonth() == this.invoice.closingDate.getMonth() &&
-        today.getDate() >= this.invoice.closingDate.getDate()) ||
-      (today.getFullYear() > this.invoice.closingDate.getFullYear() &&
-        today.getMonth() > this.invoice.closingDate.getMonth())
-    );
+
+    const actualInvoiceDate = new Date();
+    actualInvoiceDate.setDate(1);
+    actualInvoiceDate.setHours(0, 0, 0, 0);
+
+    if (actualInvoiceDate.getFullYear() > this.invoice.invoiceDate.getFullYear())
+      return true;
+    else if (
+      actualInvoiceDate.getFullYear() < this.invoice.invoiceDate.getFullYear()
+    )
+      return false;
+
+    if (actualInvoiceDate.getMonth() > this.invoice.invoiceDate.getMonth())
+      return true;
+    else if (actualInvoiceDate.getMonth() < this.invoice.invoiceDate.getMonth())
+      return false;
+
+    if (today.getDate() >= this.invoice.closingDate.getDate()) return true;
+    return false;
   }
 
   totalPayment(): number {

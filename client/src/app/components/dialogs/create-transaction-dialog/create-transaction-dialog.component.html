@@ -2,7 +2,7 @@
   class="!ml-6 !mb-4 !mt-4 !text-xl !font-normal !tracking-wide !text-slate-700"
   mat-dialog-title
 >
-  
+
   {{data.newTransaction && data.transactionType === 0 ? "Nova Despesa" : ""}}
   {{data.newTransaction && data.transactionType === 1 ? "Nova Receita" : ""}}
   {{data.newTransaction && data.transactionType === 2 ? "Nova Despesa Cartão" : ""}}
@@ -260,7 +260,7 @@
         </div>
 
         @if (selectedCreditCard) {
-          <p 
+          <p
           [ngClass]="{'!text-red-500': (transactionForm.value.amount! > (selectedCreditCard!.totalLimit - selectedCreditCard!.usedLimit))}"
           class="text-green-500 absolute top-full left-0 mt-1 text-xs font-medium">
             Limite: {{(selectedCreditCard!.totalLimit - selectedCreditCard!.usedLimit) | currency : "BRL" : "symbol"}}
@@ -275,7 +275,7 @@
       <label
         for="destination"
         class="block mb-1 text-sm font-medium text-slate-600 dark:text-white"
-        >Destino</label
+        >{{data.transactionType === 1 ? 'Origem' : 'Destino'}}</label
       >
       <input
         formControlName="destination"
@@ -297,13 +297,12 @@
         class="block mb-1 text-sm font-medium text-slate-600 dark:text-white"
         >Descrição</label
       >
-      <textarea
+      <input
         formControlName="description"
         id="description"
-        rows="2"
         class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-700 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
         placeholder="Insira uma descrição para esse registro..."
-      ></textarea>
+      />
     </div>
 
     <div class="!mt-0">

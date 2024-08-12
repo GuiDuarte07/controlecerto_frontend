@@ -135,7 +135,7 @@ export class CreateTransactionDialogComponent implements OnInit {
       description: new FormControl<string>(
         this.data.newTransaction
           ? ''
-          : TransactionTypeEnum.CREDITEXPENSE
+          : this.data.transaction.type === TransactionTypeEnum.CREDITEXPENSE
           ? this.data.transaction.creditPurchase?.description!
           : this.data.transaction.description,
         {

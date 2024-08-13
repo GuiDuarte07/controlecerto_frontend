@@ -152,8 +152,7 @@
           </div>
 
           <!-- Botões de Editar e Excluir -->
-          @if(transaction.type != 4) {
-            <div class="flex flex-col gap-4 items-center justify-evenly">
+          <div class="flex flex-col gap-4 items-center justify-evenly">
               <button
                 (click)="openEditTransactionDialog(transaction)"
                 aria-label="Editar lançamento"
@@ -182,7 +181,6 @@
                 </span>
               </button>
             </div>
-          }
         </div>
 
         <!-- Segunda parte (conta, categoria, etc) -->

@@ -182,6 +182,29 @@ export class TransactionsComponent implements OnInit {
       return;
     }
 
+    if(transaction.type === TransactionTypeEnum.INVOICEPAYMENT) {
+      const dialogRef = this.dialog.open(AlertDialogComponent, {
+        data: {
+          title: 'Deletar lançamento',
+          message: `Você tem certeza que deseja excluir esse pagamento de fatura?
+                    \n${transaction.description}
+          `,
+          successMessage: 'Pagamento deletado com sucesso!',
+          actionButtonMessage: 'Deletar',
+          confirmObservable: this.creditCardService.deleteInvoicePayment(
+            transaction.id
+          ),
+        },
+      });
+      dialogRef.afterClosed().subscribe((sucess) => {
+        if ((sucess as boolean) === true) {
+          this.updateTransactions();
+        }
+      });
+
+      return;
+    }
+
     const dialogRef = this.dialog.open(AlertDialogComponent, {
       data: {
         title: 'Deletar lançamento',
@@ -242,7 +265,7 @@ export class TransactionsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((sucess) => {
       if ((sucess as boolean) === true) {
-        /* this.updateTransactions(); */
+        this.updateTransactions();
       }
     });
   }

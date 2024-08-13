@@ -146,6 +146,11 @@ export class CreditCardService {
     return this.http.post<any>(`${this.hostAddress}/${suffix}`, invoicePayment);
   }
 
+  deleteInvoicePayment(id: number){
+    const suffix = 'DeleteInvoicePayment';
+    return this.http.delete<any>(`${this.hostAddress}/${suffix}/${id}`);
+  }
+
   updateCreditCard(updateCreditCard: UpdateCreditCardRequest) {
     const suffix = 'UpdateCreditCard';
     return this.http.patch<any>(

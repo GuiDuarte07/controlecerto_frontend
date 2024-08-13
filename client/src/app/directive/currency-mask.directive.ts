@@ -19,23 +19,24 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
     },
   ],
 })
-export class CurrencyMaskDirective implements OnInit, ControlValueAccessor {
+export class CurrencyMaskDirective implements ControlValueAccessor {
   @Input() prefix: string = '';
   @Input() thousandSeparator: string = '';
   @Input() decimalMarker: string = ',';
   @Input() decimalPlaces: number = 2;
 
+  private started = false;
   private onChange = (value: any) => {};
   private onTouched = () => {};
 
   constructor(private el: ElementRef<HTMLInputElement>) {}
 
   @HostListener('input', ['$event'])
-  onInputChange(event: Event): void {
+  onInputChange(event: InputEvent): void {
     const input = event.target as HTMLInputElement;
     const formattedValue = this.formatInput(input.value);
     input.value = formattedValue;
-    this.onChange(this.parseInput(formattedValue));
+    //this.onChange(this.parseInput(formattedValue));
   }
 
   @HostListener('blur')
@@ -43,19 +44,10 @@ export class CurrencyMaskDirective implements OnInit, ControlValueAccessor {
     this.onTouched();
   }
 
-  /*
-   * NOT WORKING CORRECTLY FOR FORMCONTROL INITIAL VALUES
-   */
-  ngOnInit(): void {
-    const initialValue = this.el.nativeElement.value;
-    const formattedValue = this.formatInput(initialValue);
-    this.el.nativeElement.value = formattedValue;
-    this.onChange(this.parseInput(formattedValue));
-  }
-
   writeValue(value: any): void {
-    const formattedValue = this.formatInput(value ? value.toString() : '');
+    const formattedValue = this.formatInicialValue(value);
     this.el.nativeElement.value = formattedValue;
+    this.started = true;
   }
 
   registerOnChange(fn: any): void {
@@ -68,30 +60,17 @@ export class CurrencyMaskDirective implements OnInit, ControlValueAccessor {
 
   public formatInput(value: string): string {
     let numString = value;
-    numString = numString.replace(/\./g, this.decimalMarker);
 
     if (!numString.includes(this.decimalMarker)) {
       for (let i = 0; i < this.decimalPlaces; i++) {
         numString += '0';
       }
-    } else {
-      const decimalPart = numString.split(',')[1];
-
-
-      if (decimalPart.length < this.decimalPlaces) {
-        for (let i = this.decimalPlaces - decimalPart.length; i < this.decimalPlaces; i++) {
-          numString += '0';
-        }
-      }
     }
-
 
     let numbersOnly = numString.replace(/\D/g, '');
 
-
     // Remove leading zeros
     numbersOnly = numbersOnly.replace(/^0+/, '');
-
 
     // Ensure there are at least `decimalPlaces` digits
     while (numbersOnly.length <= this.decimalPlaces) {
@@ -101,36 +80,23 @@ export class CurrencyMaskDirective implements OnInit, ControlValueAccessor {
     const integerPart = numbersOnly.slice(0, -this.decimalPlaces);
     const decimalPart = numbersOnly.slice(-this.decimalPlaces);
 
-
     const formattedIntegerPart = integerPart.replace(
       /\B(?=(\d{3})+(?!\d))/g,
       this.thousandSeparator
     );
 
-    return `${this.prefix}${formattedIntegerPart}${this.decimalMarker}${decimalPart}`;
+    const formatedNumber = `${this.prefix}${formattedIntegerPart}${this.decimalMarker}${decimalPart}`;
+
+    return formatedNumber;
   }
 
-  public parseInput(value: string): number {
-    let parsedValue = value;
 
-    // Remove prefix
-    if (this.prefix) {
-      parsedValue = parsedValue.replace(this.prefix, '');
-    }
+  private formatInicialValue (value?: number): string {
 
-    // Remove thousand separators
-    if (this.thousandSeparator) {
-      const regex = new RegExp(`\\${this.thousandSeparator}`, 'g');
-      parsedValue = parsedValue.replace(regex, '');
-    }
+    let numString = value ? value.toFixed(2).toString() : '0';
 
-    // Replace decimal marker with dot
-    if (this.decimalMarker) {
-      const regex = new RegExp(`\\${this.decimalMarker}`);
-      parsedValue = parsedValue.replace(regex, '.');
-    }
+    numString = numString.replace('.', this.decimalMarker);
 
-    // Convert to float
-    return parseFloat(parsedValue);
+    return this.formatInput(numString);
   }
 }

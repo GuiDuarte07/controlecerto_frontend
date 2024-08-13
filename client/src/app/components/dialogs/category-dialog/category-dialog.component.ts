@@ -18,6 +18,7 @@ import { CommonModule } from '@angular/common';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatButton } from '@angular/material/button';
 import { UpdateCategoryRequest } from '../../../models/UpdateCategoryRequest';
+import { colorOptions } from '../../../utils/color_options';
 
 type Color = { code: string; selected: boolean };
 
@@ -37,18 +38,9 @@ interface ICateogryForm {
 })
 export class CategoryDialogComponent implements OnInit {
   categoryForm!: FormGroup<ICateogryForm>;
-  defaultColors: Color[] = [
-    { code: '#FF5733', selected: false },
-    { code: '#FFD700', selected: false },
-    { code: '#32CD32', selected: false },
-    { code: '#4682B4', selected: false },
-    { code: '#9400D3', selected: false },
-    { code: '#FF1493', selected: false },
-    { code: '#00CED1', selected: false },
-    { code: '#8A2BE2', selected: false },
-    { code: '#F08080', selected: false },
-    { code: '#7FFFD4', selected: false },
-  ];
+  defaultColors: Color[] = colorOptions.map(color => ({
+    code: color, selected: false
+  }));
 
   collapsedIcons: boolean = true;
 

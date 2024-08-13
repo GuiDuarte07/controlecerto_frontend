@@ -2,7 +2,7 @@ import { AccountTypeEnum } from '../enums/AccountTypeEnum ';
 
 export class UpdateAccountRequest {
   id: number;
-  description?: string;
+  description: string | null;
   bank?: string;
   accountType?: AccountTypeEnum;
   color?: string;
@@ -15,7 +15,7 @@ export class UpdateAccountRequest {
     color,
   }: {
     id: number;
-    description?: string;
+    description: string | null;
     bank?: string;
     accountType?: AccountTypeEnum;
     color?: string;

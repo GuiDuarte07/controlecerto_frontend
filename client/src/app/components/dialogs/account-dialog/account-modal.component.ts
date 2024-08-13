@@ -19,12 +19,13 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpErrorResponse } from '@angular/common/http';
 import { UpdateAccountRequest } from '../../../models/UpdateAccountRequest';
 import { CurrencyMaskDirective } from '../../../directive/currency-mask.directive';
+import { colorOptions } from '../../../utils/color_options';
 
 type Color = { code: string; selected: boolean };
 
 interface IAccountForm {
-  balance: FormControl<string>;
-  description: FormControl<string>;
+  balance: FormControl<number>;
+  description: FormControl<string | null>;
   bank: FormControl<string>;
   color: FormControl<string>;
 }
@@ -46,18 +47,10 @@ interface IAccountForm {
 export class AccountDialogComponent implements OnInit {
   accountForm!: FormGroup<IAccountForm>;
 
-  defaultColors: Color[] = [
-    { code: '#FF5733', selected: false },
-    { code: '#FFD700', selected: false },
-    { code: '#32CD32', selected: false },
-    { code: '#4682B4', selected: false },
-    { code: '#9400D3', selected: false },
-    { code: '#FF1493', selected: false },
-    { code: '#00CED1', selected: false },
-    { code: '#8A2BE2', selected: false },
-    { code: '#F08080', selected: false },
-    { code: '#7FFFD4', selected: false },
-  ];
+  defaultColors: Color[] = colorOptions.map((color) => ({
+    code: color,
+    selected: false,
+  }));
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
@@ -76,22 +69,18 @@ export class AccountDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.accountForm = new FormGroup({
-      balance: new FormControl<string>(
-        this.data.newAccount ? '0' : this.data.account.balance.toString(),
+      balance: new FormControl<number>(
+        this.data.newAccount ? 0 : this.data.account.balance,
         {
           nonNullable: true,
           validators: [Validators.required],
         }
       ),
-      description: new FormControl<string>(
-        this.data.newAccount ? '' : this.data.account.description,
+      description: new FormControl<string | null>(
+        this.data.newAccount ? null : this.data.account.description,
         {
-          nonNullable: true,
-          validators: [
-            Validators.required,
-            Validators.minLength(3),
-            Validators.maxLength(100),
-          ],
+          nonNullable: false,
+          validators: [Validators.minLength(3), Validators.maxLength(100)],
         }
       ),
       bank: new FormControl<string>(
@@ -121,7 +110,7 @@ export class AccountDialogComponent implements OnInit {
     if (this.data.newAccount) {
       let accountToCreate = new Account({
         ...this.accountForm.getRawValue(),
-        balance: parseFloat(this.accountForm.value.balance!),
+        balance: this.accountForm.value.balance!,
       });
       console.log(accountToCreate);
       this.accountService.createAccount(accountToCreate).subscribe({
@@ -151,18 +140,6 @@ export class AccountDialogComponent implements OnInit {
         },
       });
     }
-  }
-
-  formatAmount(event: any): void {
-    let value: string = event.target.value.replace(/\D/g, '');
-    const length = value.length;
-
-    if (length <= 2) {
-      value = value.padStart(3, '0');
-    }
-
-    const formattedValue = `${value.slice(0, -2)},${value.slice(-2)}`;
-    this.accountForm.patchValue({ balance: formattedValue });
   }
 
   cleanForm() {

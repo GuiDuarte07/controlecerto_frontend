@@ -36,4 +36,7 @@ export const iconsOptions = [
   'edit',
   'dark_mode',
   'storefront',
+  'syringe',
+  'trophy',
+  'featured_seasonal_and_gifts',
 ];

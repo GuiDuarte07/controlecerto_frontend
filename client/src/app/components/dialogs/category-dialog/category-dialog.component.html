@@ -72,7 +72,7 @@
             (click)="changeSelectedIcon(icon)"
             type="button"
           >
-            <span class="material-icons-outlined">
+            <span class="material-symbols-outlined">
               {{ icon }}
             </span>
           </button>
@@ -86,7 +86,7 @@
         class="inset-x-0 bottom-0 flex justify-center bg-gradient-to-t from-white/100 to-white/0 pt-16 pb-2 dark:from-slate-900 dark:to-slate-900/0 absolute"
       >
         <span
-          style="transform: rotate(270deg); font-size: 2rem"
+          style="transform: rotate(270deg); font-size: 1.4rem"
           class="material-icons-outlined"
         >
           keyboard_double_arrow_left
@@ -99,7 +99,7 @@
         class="w-full shadow-lg"
       >
         <span
-          style="transform: rotate(90deg); font-size: 1.2rem"
+          style="transform: rotate(90deg); font-size: 1.4rem"
           class="material-icons-outlined"
         >
           keyboard_double_arrow_left
@@ -114,14 +114,14 @@
         <p class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
           Cor da Catagoria
         </p>
-        <div class="flex w-full gap-2">
+        <div class="flex w-full gap-2 flex-wrap">
           @for(color of defaultColors; track color) {
           <button
             type="button"
             (click)="setDefaultColor(color)"
             [style.background-color]="color.code"
             class="size-8 rounded-full"
-            [ngClass]="{ 'border-[3px] border-gray-700': color.selected }"
+            [ngClass]="{ 'border-[4px] border-gray-200': color.selected }"
           >
             @if(color.selected) { }
           </button>

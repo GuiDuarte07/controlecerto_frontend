@@ -1,5 +1,5 @@
 <h2 class="!ml-6 !mb-4 !mt-4 !text-xl !font-normal !tracking-wide"  mat-dialog-title>{{ data.newAccount ? "Criar Conta" : "Editar Conta" }}</h2>
-<mat-dialog-content>
+<mat-dialog-content class="w-[600px]">
   <form
     [formGroup]="accountForm"
     (ngSubmit)="createNewAccount()"
@@ -8,17 +8,17 @@
     @if(data.newAccount) {
     <div>
       <label
-        for="bank"
+        for="balance"
         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
         >Saldo Inicial</label
       >
       <input
+        id="balance"
         formControlName="balance"
         appCurrencyMask
+        thousandSeparator="."
         prefix="R$ "
-        type="text"
         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-        placeholder="Digite o nome dessa conta."
         required
       />
     </div>
@@ -41,27 +41,11 @@
     </div>
 
     <div class="">
-      <label
-        for="description"
-        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-        >Descrição</label
-      >
-      <textarea
-        formControlName="description"
-        id="description"
-        rows="2"
-        class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-        placeholder="Insira uma descrição para essa conta..."
-      ></textarea>
-    </div>
-
-
-    <div class="">
       <div class="">
         <p class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
           Cor da Conta
         </p>
-        <div class="flex w-full gap-2">
+        <div class="flex w-full gap-2 flex-wrap">
           @for(color of defaultColors; track color) {
           <button
             type="button"
@@ -76,6 +60,22 @@
 
         </div>
       </div>
+    </div>
+
+
+    <div class="">
+      <label
+        for="description"
+        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+        >Descrição</label
+      >
+      <textarea
+        formControlName="description"
+        id="description"
+        rows="2"
+        class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        placeholder="Insira uma descrição para essa conta..."
+      ></textarea>
     </div>
   </form>
 </mat-dialog-content>

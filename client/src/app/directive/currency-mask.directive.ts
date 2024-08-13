@@ -25,7 +25,6 @@ export class CurrencyMaskDirective implements ControlValueAccessor {
   @Input() decimalMarker: string = ',';
   @Input() decimalPlaces: number = 2;
 
-  private started = false;
   private onChange = (value: any) => {};
   private onTouched = () => {};
 
@@ -47,7 +46,6 @@ export class CurrencyMaskDirective implements ControlValueAccessor {
   writeValue(value: any): void {
     const formattedValue = this.formatInicialValue(value);
     this.el.nativeElement.value = formattedValue;
-    this.started = true;
   }
 
   registerOnChange(fn: any): void {

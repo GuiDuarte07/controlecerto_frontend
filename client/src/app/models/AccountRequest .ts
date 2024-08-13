@@ -3,13 +3,13 @@ import { AccountTypeEnum } from '../enums/AccountTypeEnum ';
 export class Account {
   id?: number;
   balance: number;
-  description: string;
+  description: string | null;
   bank: string;
   color: string;
 
   constructor(data: {
     balance: number;
-    description: string;
+    description: string | null;
     bank: string;
     color: string;
     id?: number;

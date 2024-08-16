@@ -35,7 +35,7 @@ export class CurrencyMaskDirective implements ControlValueAccessor {
     const input = event.target as HTMLInputElement;
     const formattedValue = this.formatInput(input.value);
     input.value = formattedValue;
-    //this.onChange(this.parseInput(formattedValue));
+    this.onChange(this.parseInput(formattedValue));
   }
 
   @HostListener('blur')
@@ -88,9 +88,31 @@ export class CurrencyMaskDirective implements ControlValueAccessor {
     return formatedNumber;
   }
 
+  public parseInput(value: string): number {
+    let parsedValue = value;
 
-  private formatInicialValue (value?: number): string {
+    // Remove prefix
+    if (this.prefix) {
+      parsedValue = parsedValue.replace(this.prefix, '');
+    }
 
+    // Remove thousand separators
+    if (this.thousandSeparator) {
+      const regex = new RegExp(`\\${this.thousandSeparator}`, 'g');
+      parsedValue = parsedValue.replace(regex, '');
+    }
+
+    // Replace decimal marker with dot
+    if (this.decimalMarker) {
+      const regex = new RegExp(`\\${this.decimalMarker}`);
+      parsedValue = parsedValue.replace(regex, '.');
+    }
+
+    // Convert to float
+    return parseFloat(parsedValue);
+  }
+
+  private formatInicialValue(value?: number): string {
     let numString = value ? value.toFixed(2).toString() : '0';
 
     numString = numString.replace('.', this.decimalMarker);

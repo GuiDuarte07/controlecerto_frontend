@@ -48,12 +48,13 @@ export class CreditCardService {
     endDate?: Date
   ): Observable<InfoInvoiceResponse[]> {
     const suffix = 'GetInvoicesByDate';
+    console.log(startDate!.toISOString())
     return this.http
       .get<InfoInvoiceResponse[]>(`${this.hostAddress}/${suffix}`, {
         params: {
           ...(creditCardId && { creditCardId }),
-          ...(startDate && { startDate: JSON.stringify(startDate) }),
-          ...(endDate && { endDate: JSON.stringify(endDate) }),
+          ...(startDate && { startDate: startDate.toISOString() }),
+          ...(endDate && { endDate: endDate.toISOString() }),
         },
       })
       .pipe(

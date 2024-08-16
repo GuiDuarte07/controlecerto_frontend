@@ -5,6 +5,9 @@ import { CreateTransactionRequest } from '../models/CreateTransaction';
 import { TransactionList } from '../models/TransactionList';
 import { UpdateTransactionRequest } from '../models/UpdateTransaction';
 import { serverConnectionString } from '../config/server';
+import { map } from 'rxjs';
+import { InfoInvoiceResponse } from '../models/InfoInvoiceResponse';
+import { InfoInvoicePaymentResponse } from '../models/InfoInvoicePaymentResponse ';
 
 @Injectable({
   providedIn: 'root',
@@ -39,6 +42,70 @@ export class TransactionService {
 
     return this.http.get<TransactionList>(`${this.hostAddress}/${suffix}`, {
       params: params,
+    })
+    /*
+    .pipe(
+      map(response => {
+        return new TransactionList({
+          transactions: response.transactions.map(t => this.mapToInfoTransactionResponse(t)),
+          invoices: response.invoices.map(this.mapToInfoInvoiceResponse),
+        });
+      })
+    );
+    */
+  }
+
+  private mapToInfoTransactionResponse(data: any): InfoTransactionResponse {
+    console.log(data)
+    return new InfoTransactionResponse({
+      id: data.id,
+      type: data.type,
+      amount: data.amount,
+      purchaseDate: new Date(data.purchaseDate),
+      description: data.description,
+      observations: data.observations,
+      destination: data.destination,
+      justForRecord: data.justForRecord,
+      account: data.account,
+      category: data.category,
+      installmentNumber: data.installmentNumber,
+      creditPurchase: data.creditPurchase
+        ? data.creditPurchase
+        : undefined,
     });
+  }
+
+  // Função para converter um objeto JSON em InfoInvoiceResponse
+  private mapToInfoInvoiceResponse(data: any): InfoInvoiceResponse {
+    return new InfoInvoiceResponse(
+      data.id,
+      data.totalAmount,
+      data.totalPaid,
+      data.isPaid,
+      new Date(data.invoiceDate),
+      new Date(data.closingDate),
+      new Date(data.dueDate),
+      data.creditCard,
+      data.transactions
+        ? data.transactions.map(this.mapToInfoTransactionResponse)
+        : undefined,
+      data.invoicePayments
+        ? data.invoicePayments.map(this.mapToInfoInvoicePaymentResponse)
+        : undefined
+    );
+  }
+
+  // Função para converter um objeto JSON em InfoInvoicePaymentResponse
+  private mapToInfoInvoicePaymentResponse(
+    data: any
+  ): InfoInvoicePaymentResponse {
+    return new InfoInvoicePaymentResponse(
+      data.id,
+      data.amountPaid,
+      data.description,
+      new Date(data.paymentDate),
+      data.account,
+      data.justForRecord
+    );
   }
 }

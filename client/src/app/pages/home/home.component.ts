@@ -1,13 +1,17 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 import { AccountService } from '../../services/account.service';
 import { BalanceStatement } from '../../models/BalanceStatement';
 import { CommonModule } from '@angular/common';
-import { initFlowbite } from 'flowbite';
 import { Account } from '../../models/AccountRequest ';
 import { CreditCardService } from '../../services/credit-card.service';
 import { InfoInvoiceResponse } from '../../models/InfoInvoiceResponse';
 import { FormaterService } from '../../services/formater.service';
+import { TransactionTypeEnum } from '../../enums/TransactionTypeEnum';
+import { MatDialog } from '@angular/material/dialog';
+import { CreateTransactionDialogComponent } from '../../components/dialogs/create-transaction-dialog/create-transaction-dialog.component';
+import { TransactionService } from '../../services/transaction.service';
+import { InfoTransactionResponse } from '../../models/InfoTransactionResponse';
 
 type boardType = 'balance' | 'income' | 'expense' | 'invoice';
 
@@ -18,7 +22,7 @@ type boardType = 'balance' | 'income' | 'expense' | 'invoice';
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
-export class HomeComponent implements OnInit, AfterViewInit {
+export class HomeComponent implements OnInit {
   balance: BalanceStatement = {
     balance: 0,
     expenses: 0,
@@ -30,11 +34,14 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   accounts: Account[] | undefined;
   invoices: InfoInvoiceResponse[] | undefined;
+  transactions: InfoTransactionResponse[] | undefined;
 
   constructor(
     private readonly accountService: AccountService,
     private readonly creditCardService: CreditCardService,
-    public formaterService: FormaterService
+    private readonly transactionService: TransactionService,
+    public formaterService: FormaterService,
+    public dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -45,20 +52,16 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.setBoardDetails('invoice');
   }
 
-  ngAfterViewInit(): void {
-    initFlowbite();
-  }
-
   setBoardDetails(type: boardType) {
     this.boardOption = type;
 
-    if (type === 'balance' && this.accounts === undefined) {
+    if (type === 'balance' /*  && this.accounts === undefined */) {
       this.accountService
         .getAccounts()
         .subscribe((acc) => (this.accounts = acc));
     }
 
-    if (type === 'invoice' && this.invoices === undefined) {
+    if (type === 'invoice' /*  && this.invoices === undefined */) {
       const currentDate = new Date();
 
       const firstDayOfMonth = new Date(
@@ -67,15 +70,54 @@ export class HomeComponent implements OnInit, AfterViewInit {
         1
       );
 
-      const lastDayOfMonth = new Date(
-        currentDate.getFullYear(),
-        currentDate.getMonth() + 1,
-        0
-      );
-
       this.creditCardService
         .getInvoices(undefined, firstDayOfMonth, firstDayOfMonth)
-        .subscribe((i) => {this.invoices = i;console.log(i)});
+        .subscribe((i) => {
+          this.invoices = i;
+        });
     }
+
+    if (type === 'income') {
+      this.transactionService.getTransactions().subscribe({
+        next: (transactions) => {
+          this.transactions = transactions.transactions.filter(
+            (t) => t.type === TransactionTypeEnum.INCOME
+          );
+          this.transactions = this.transactions.slice(0, 5);
+        },
+      });
+    }
+
+    if (type === 'expense') {
+      this.transactionService.getTransactions().subscribe({
+        next: (transactions) => {
+          console.log(transactions);
+          this.transactions = transactions.transactions.filter(
+            (t) => t.type === TransactionTypeEnum.EXPENSE
+          );
+          this.transactions = this.transactions.slice(0, 5);
+          console.log(this.transactions);
+        },
+      });
+    }
+  }
+
+  sumTransactions() {
+    return this.transactions?.reduce((prev, act) => prev + act.amount, 0);
+  }
+
+  openCreateTransactionDialog(type: TransactionTypeEnum) {
+    const dialogRef = this.dialog.open(CreateTransactionDialogComponent, {
+      data: {
+        transactionType: type,
+        newTransaction: true,
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((sucess) => {
+      if ((sucess as boolean) === true) {
+        this.setBoardDetails(this.boardOption);
+      }
+    });
   }
 }

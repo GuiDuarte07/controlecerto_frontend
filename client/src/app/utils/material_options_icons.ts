@@ -52,4 +52,5 @@ export const iconsOptions = [
   'architecture',
   'carpenter',
   'construction',
+  'build',
 ];

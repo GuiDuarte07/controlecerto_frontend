@@ -36,13 +36,32 @@ export class TransactionService {
     const suffix = 'GetTransactions';
 
     let params: any = {};
-    if (startDate) params.startDate = startDate.toISOString();
-    if (endDate) params.endDate = endDate.toISOString();
+
+    if (startDate) {
+      params.startDate = startDate.toISOString();
+    } else {
+      params.startDate = new Date(
+        new Date().getFullYear(),
+        new Date().getMonth(),
+        1
+      ).toISOString();
+    }
+
+    if (endDate) {
+      params.endDate = endDate.toISOString();
+    } else {
+      params.endDate = new Date(
+        new Date().getFullYear(),
+        new Date().getMonth() + 1,
+        0
+      ).toISOString();
+    }
+
     if (accountId) params.accountId = accountId;
 
     return this.http.get<TransactionList>(`${this.hostAddress}/${suffix}`, {
       params: params,
-    })
+    });
     /*
     .pipe(
       map(response => {
@@ -56,7 +75,7 @@ export class TransactionService {
   }
 
   private mapToInfoTransactionResponse(data: any): InfoTransactionResponse {
-    console.log(data)
+    console.log(data);
     return new InfoTransactionResponse({
       id: data.id,
       type: data.type,
@@ -69,9 +88,7 @@ export class TransactionService {
       account: data.account,
       category: data.category,
       installmentNumber: data.installmentNumber,
-      creditPurchase: data.creditPurchase
-        ? data.creditPurchase
-        : undefined,
+      creditPurchase: data.creditPurchase ? data.creditPurchase : undefined,
     });
   }
 

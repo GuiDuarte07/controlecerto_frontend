@@ -1,8 +1,9 @@
 import { CreditCardService } from './../../../services/credit-card.service';
-import { Component, Inject, OnInit, signal } from '@angular/core';
+import { Component, Inject, model, OnInit, signal } from '@angular/core';
 import {
   FormControl,
   FormGroup,
+  FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -26,6 +27,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { CurrencyMaskDirective } from '../../../directive/currency-mask.directive';
 import { CreditCardInfo } from '../../../models/CreditCardInfo';
 import { UpdateCreditCardRequest } from '../../../models/UpdateCreditCardRequest';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 interface ICreditCardForm {
   totalLimit: FormControl<number>;
@@ -33,12 +36,15 @@ interface ICreditCardForm {
   dueDay: FormControl<number>;
   closeDay: FormControl<number>;
   accountId: FormControl<number | null>;
+  skipWeekend: FormControl<boolean>;
+  oneWeekDifference: FormControl<boolean>;
 }
 
 @Component({
   selector: 'app-create-credit-card-dialog',
   standalone: true,
   imports: [
+    FormsModule,
     ReactiveFormsModule,
     MatDialogModule,
     MatButtonModule,
@@ -47,6 +53,8 @@ interface ICreditCardForm {
     MatInputModule,
     CommonModule,
     CurrencyMaskDirective,
+    MatCheckboxModule,
+    MatTooltipModule,
   ],
   providers: [CurrencyMaskDirective],
   templateUrl: './create-credit-card-dialog.component.html',
@@ -103,7 +111,7 @@ export class CreateCreditCardDialogComponent implements OnInit {
           validators: [
             Validators.required,
             Validators.min(1),
-            Validators.max(20),
+            Validators.max(21),
           ],
         }
       ),
@@ -121,6 +129,12 @@ export class CreateCreditCardDialogComponent implements OnInit {
           ],
         }
       ),
+      skipWeekend: new FormControl<boolean>(true, {
+        nonNullable: true,
+      }),
+      oneWeekDifference: new FormControl<boolean>(true, {
+        nonNullable: true,
+      }),
       accountId: new FormControl<number | null>(
         this.data.newCreditCard ? null : this.data.creditCard.account.id,
         {
@@ -129,6 +143,23 @@ export class CreateCreditCardDialogComponent implements OnInit {
         }
       ),
     });
+
+    this.creditCardForm.get('closeDay')?.valueChanges.subscribe((value) => {
+      if (this.creditCardForm.value.oneWeekDifference) {
+        this.creditCardForm.patchValue({ dueDay: value + 7 });
+      }
+    });
+
+    this.creditCardForm.get('dueDay')?.disable();
+    this.creditCardForm
+      .get('oneWeekDifference')
+      ?.valueChanges.subscribe((value) => {
+        if (value) {
+          this.creditCardForm.get('dueDay')?.disable();
+        } else {
+          this.creditCardForm.get('dueDay')?.enable();
+        }
+      });
 
     if (this.data.newCreditCard) {
       this.accountService.getAccountsWithoutCreditCard().subscribe((data) => {

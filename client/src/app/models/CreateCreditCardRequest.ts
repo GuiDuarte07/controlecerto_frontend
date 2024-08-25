@@ -5,6 +5,7 @@ export class CreateCreditCardRequest {
   dueDay: number;
   closeDay: number;
   accountId: number;
+  skipWeekend: boolean;
 
   constructor({
     totalLimit,
@@ -13,6 +14,7 @@ export class CreateCreditCardRequest {
     dueDay,
     closeDay,
     accountId,
+    skipWeekend,
   }: {
     totalLimit: number;
     usedLimit: number;
@@ -20,6 +22,7 @@ export class CreateCreditCardRequest {
     dueDay: number;
     closeDay: number;
     accountId: number;
+    skipWeekend: boolean;
   }) {
     this.totalLimit = totalLimit;
     this.usedLimit = usedLimit;
@@ -27,5 +30,6 @@ export class CreateCreditCardRequest {
     this.dueDay = dueDay;
     this.closeDay = closeDay;
     this.accountId = accountId;
+    this.skipWeekend = skipWeekend;
   }
 }

@@ -1,4 +1,6 @@
-<h2 mat-dialog-title>{{data.newCreditCard ? "Novo Cartão" : "Editar Cartão"}}</h2>
+<h2 mat-dialog-title>
+  {{ data.newCreditCard ? "Novo Cartão" : "Editar Cartão" }}
+</h2>
 <mat-dialog-content class="w-[600px]">
   <form [formGroup]="creditCardForm" class="m-4 flex flex-col gap-3">
     <div class="flex items-center gap-4">
@@ -28,11 +30,11 @@
         >
           Conta do Cartão
         </p>
-        <div  
-        role="button"
-        tabindex="0"
-        (click)="toggleSelection($event)"
-        [class.!cursor-default]="data.newCreditCard === false"
+        <div
+          role="button"
+          tabindex="0"
+          (click)="toggleSelection($event)"
+          [class.!cursor-default]="data.newCreditCard === false"
           class="relative bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-700 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
         >
           <div class="w-full flex items-center">
@@ -49,7 +51,7 @@
                 </span>
               </div>
               <p
-              [class.!text-gray-500]="data.newCreditCard === false"
+                [class.!text-gray-500]="data.newCreditCard === false"
                 class="overflow-hidden text-xs text-slate-800 font-semibold"
               >
                 {{ selectedAccount!.bank || selectedAccount!.description }}
@@ -97,11 +99,22 @@
 
     <div class="flex items-center gap-4">
       <div class="w-6/12">
-        <label
-          for="closeDay"
-          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          >Dia de Fechamento</label
-        >
+        <div class="flex gap-1 items-center mb-2">
+          <label
+            for="closeDay"
+            class="block text-sm font-medium text-gray-900 dark:text-white"
+            >Dia de Fechamento
+          </label>
+          <span
+            class="material-symbols-outlined text-lg"
+            #tooltip="matTooltip"
+            matTooltip="Dia que sua fatura fecha para pagamento. Insira um dia entre o dia 1 e o dia 21."
+            matTooltipPosition="right"
+            matTooltipHideDelay="200"
+          >
+            info
+          </span>
+        </div>
         <input
           formControlName="closeDay"
           type="number"
@@ -112,19 +125,45 @@
       </div>
 
       <div class="w-6/12">
-        <label
-          for="dueDay"
-          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          >Dia de Vencimento</label
-        >
+        <div class="flex gap-1 items-center mb-2">
+          <label
+            for="dueDay"
+            class="block text-sm font-medium text-gray-900 dark:text-white"
+            >Dia de Vencimento
+          </label>
+          <span
+            class="material-symbols-outlined text-lg"
+            #tooltip="matTooltip"
+            matTooltip="Dia que sua fatura vence. A data de vencimento precisa ser maior que a data de fechamento. Insira um dia entre o dia 2 e o dia 28."
+            matTooltipPosition="right"
+            matTooltipHideDelay="200"
+          >
+            info
+          </span>
+        </div>
         <input
           formControlName="dueDay"
           type="number"
           id="dueDay"
-          class="disabled:text-gray-500 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          class="disabled:border-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           required
         />
       </div>
+    </div>
+
+    <div class="flex items-center gap-1">
+      <mat-checkbox class="!py-0" formControlName="oneWeekDifference"
+        >Uma semana de diferença entre fechamento e vencimento.
+      </mat-checkbox>
+      <span
+            class="material-symbols-outlined text-lg"
+            #tooltip="matTooltip"
+            matTooltip="A data de vencimento será calculado automaticamente sendo sempre uma semana depois da data do fechamento."
+            matTooltipPosition="left"
+            matTooltipHideDelay="200"
+          >
+            info
+          </span>
     </div>
 
     <!-- Nome -->
@@ -143,6 +182,21 @@
         required
       />
     </div>
+
+    <div class="flex items-center gap-1">
+      <mat-checkbox class="!py-0" formControlName="skipWeekend"
+        >Considerar fim de semana no calculo da data de fechamento.
+      </mat-checkbox>
+      <span
+            class="material-symbols-outlined text-lg"
+            #tooltip="matTooltip"
+            matTooltip="A data de fechamento e vencimento não cairá mais no fim de semana, pois caso aconteça a data de fechamento será ajustado para a próxima segunda-feira."
+            matTooltipPosition="left"
+            matTooltipHideDelay="200"
+          >
+            info
+          </span>
+    </div>
   </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
@@ -152,6 +206,6 @@
     mat-button
     (click)="createNewCreditCard()"
   >
-  {{data.newCreditCard ? "Criar" : "Editar"}}
+    {{ data.newCreditCard ? "Criar" : "Editar" }}
   </button>
 </mat-dialog-actions>

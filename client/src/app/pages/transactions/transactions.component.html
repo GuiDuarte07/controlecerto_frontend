@@ -153,7 +153,8 @@
 
           <!-- Botões de Editar e Excluir -->
           <div class="flex flex-col gap-4 items-center justify-evenly">
-              <button
+              @if(transaction.category) {
+                <button
                 (click)="openEditTransactionDialog(transaction)"
                 aria-label="Editar lançamento"
                 [matTooltipPosition]="'right'"
@@ -166,6 +167,7 @@
                   edit_square
                 </span>
               </button>
+              }
 
               <button
                 (click)="openDeleteAlertDialog(transaction)"

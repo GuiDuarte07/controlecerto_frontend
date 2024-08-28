@@ -48,7 +48,6 @@ export class CreditCardService {
     endDate?: Date
   ): Observable<InfoInvoiceResponse[]> {
     const suffix = 'GetInvoicesByDate';
-    console.log(startDate!.toISOString())
     return this.http
       .get<InfoInvoiceResponse[]>(`${this.hostAddress}/${suffix}`, {
         params: {
@@ -147,7 +146,7 @@ export class CreditCardService {
     return this.http.post<any>(`${this.hostAddress}/${suffix}`, invoicePayment);
   }
 
-  deleteInvoicePayment(id: number){
+  deleteInvoicePayment(id: number) {
     const suffix = 'DeleteInvoicePayment';
     return this.http.delete<any>(`${this.hostAddress}/${suffix}/${id}`);
   }

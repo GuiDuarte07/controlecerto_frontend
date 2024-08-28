@@ -305,9 +305,11 @@
       />
     </div>
 
-    <div class="!mt-0">
-      <mat-checkbox formControlName="justForRecord">Ignorar valor da transação</mat-checkbox>
-    </div>
+    @if(data.transactionType !== 2) {
+      <div class="!mt-0">
+        <mat-checkbox formControlName="justForRecord">Ignorar valor da transação</mat-checkbox>
+      </div>
+    }
   </form>
 </mat-dialog-content>
 

@@ -1,9 +1,9 @@
 <div
-  class="w-screen h-screen flex justify-center items-center bg-gradient-to-r from-teal-400 to-teal-700"
+  class="w-screen h-screen flex justify-center overflow-hidden items-center bg-gradient-to-r from-teal-400 to-teal-700"
 >
-  <div class="flex items-center flex-col h-full">
-    <div class="flex-1 flex items-center justify-center">
-      <section class="px-8 py-6 bg-gray-50 rounded-lg shadow-xl w-[400px]">
+  <div class="flex items-center flex-col h-full w-full">
+    <div class="flex-1 flex items-center h-full justify-center w-full">
+      <section class="px-8 py-6 bg-gray-50 rounded-lg h-full w-full shadow-xl md:w-[400px]">
         <form (submit)="register()" [formGroup]="registerForm" class="">
           <div class="text-center">
             <span
@@ -131,7 +131,7 @@
             <p class="text-sm my-2 text-red-600">houve um erro: {{fromServerError}}</p>
           }
 
-          <div class="mt-8 w-full flex items-center">
+          <div class="mt-8 w-full flex md:flex-row flex-col items-center gap-6">
             <button
               [disabled]="!registerForm.valid || loading"
               type="submit"
@@ -152,7 +152,7 @@
               
             </button>
 
-            <p class="text-sm text-slate-500 ml-6">
+            <p class="text-sm text-slate-500">
               Fazer
               <a
                 routerLink="/login"
@@ -166,7 +166,7 @@
       </section>
     </div>
 
-    <footer class="w-full my-2">
+    <footer class="hidden w-full my-2">
       <p class="text-sm text-white">
         &copy; 2024 FinanTech. All rights reserved | Made by Guilherme Duarte.
       </p>

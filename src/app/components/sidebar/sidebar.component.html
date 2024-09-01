@@ -1,11 +1,11 @@
 <nav class="bg-teal-600 h-14 w-screen flex items-center mb-12 justify-center">
-  <div class="w-[800px] flex items-center h-full justify-between">
-    <div class="w-2/12"></div>
+  <div class="w-full md:w-[800px] flex items-center h-full justify-between">
+    <div class="md:w-2/12"></div>
     <div class="flex items-center h-full flex-1 justify-center">
       <a
         [class.active-route-sidebar]="isCurrentRoute('/home')"
         routerLink="/home"
-        class="flex items-center h-full pointer mx-4 text-slate-200 font-light text-base"
+        class="flex items-center h-full pointer md:mx-4 mx-1 text-slate-200 font-light md:text-base text-sm"
       >
         Visão Geral
       </a>
@@ -13,7 +13,7 @@
       <a
         [class.active-route-sidebar]="isCurrentRoute('/registrations')"
         routerLink="/registrations/accounts"
-        class="flex items-center h-full pointer mx-4 text-slate-200 font-light text-base"
+        class="flex items-center h-full pointer md:mx-4 mx-1 text-slate-200 font-light md:text-base text-sm"
       >
         Cadastros
       </a>
@@ -21,15 +21,15 @@
       <a
         [class.active-route-sidebar]="isCurrentRoute('/transactions')"
         routerLink="/transactions"
-        class="flex items-center h-full pointer mx-4 text-slate-200 font-light text-base"
+        class="flex items-center h-full pointer md:mx-4 mx-1 text-slate-200 font-light md:text-base text-sm"
       >
         Lançamentos
       </a>
     </div>
-    <div class="w-2/12 flex gap-4 flex-end items-center">
+    <div class="md:w-2/12 flex gap-4 flex-end items-center">
       <button type="button" class="">
         <span
-          class="material-symbols-outlined text-white text-xl"
+          class="material-symbols-outlined text-white text-base md:text-xl"
           style="font-variation-settings: 'FILL' 1"
         >
           settings
@@ -42,7 +42,7 @@
         <span
           [matBadge]="0"
           matBadgeOverlap="true"
-          class="material-symbols-outlined text-white text-xl font-bold"
+          class="material-symbols-outlined text-white text-base md:text-xl font-bold"
           style="font-variation-settings: 'FILL' 1"
         >
           notifications
@@ -58,9 +58,9 @@
 
       <!-- USER BUTTON -->
       <button type="button" [matMenuTriggerFor]="userMenu"
-      aria-label="Menu do usuário" class="ml-4">
+      aria-label="Menu do usuário" class="md:ml-4">
         <span
-          class="material-symbols-outlined text-white text-4xl"
+          class="material-symbols-outlined text-white md:text-4xl text-2xl"
           style="font-variation-settings: 'FILL' 1"
         >
           account_circle

@@ -77,7 +77,7 @@ body {
 }
 
 .active-route-sidebar {
-  @apply font-bold border-solid border-b-2 border-white
+  @apply md:font-bold font-medium border-solid border-b-2 border-white
 }
 
 .snackbar-error {

@@ -49,7 +49,7 @@ export class HomeComponent implements OnInit {
       this.balance = b;
     });
 
-    this.setBoardDetails('invoice');
+    this.setBoardDetails('income');
   }
 
   setBoardDetails(type: boardType) {

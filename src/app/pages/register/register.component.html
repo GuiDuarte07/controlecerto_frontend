@@ -3,7 +3,7 @@
 >
   <div class="flex items-center flex-col h-full w-full">
     <div class="flex-1 flex items-center h-full justify-center w-full">
-      <section class="px-8 py-6 bg-gray-50 rounded-lg h-full w-full shadow-xl md:w-[400px]">
+      <section class="h-full md:h-fit px-8 py-6 bg-gray-50 rounded-lg w-full shadow-xl md:w-[400px]">
         <form (submit)="register()" [formGroup]="registerForm" class="">
           <div class="text-center">
             <span
@@ -166,8 +166,8 @@
       </section>
     </div>
 
-    <footer class="hidden w-full my-2">
-      <p class="text-sm text-white">
+    <footer class="hidden md:block md:w-full md:my-2">
+      <p class="text-sm text-white text-center">
         &copy; 2024 FinanTech. All rights reserved | Made by Guilherme Duarte.
       </p>
       <p></p>

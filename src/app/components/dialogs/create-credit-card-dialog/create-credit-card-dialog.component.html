@@ -1,11 +1,11 @@
-<h2 mat-dialog-title>
+<h2 class="md:ml-6 md:mb-4 md:mt-4 md:block flex items-center justify-center mb-2 mt-3 text-xl font-semibold tracking-wide">
   {{ data.newCreditCard ? "Novo Cartão" : "Editar Cartão" }}
 </h2>
-<mat-dialog-content class="w-[600px]">
+<mat-dialog-content class="md:w-[600px] w-full">
   <form [formGroup]="creditCardForm" class="m-4 flex flex-col gap-3">
-    <div class="flex items-center gap-4">
+    <div class="flex items-center gap-4 flex-col sm:flex-row">
       <!-- TOTAL LIMITE -->
-      <div class="w-6/12">
+      <div class="sm:w-6/12 w-full">
         <label
           for="totalLimit"
           class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -23,7 +23,7 @@
       </div>
 
       <!-- CONTA SELECT -->
-      <div class="w-6/12">
+      <div class="sm:w-6/12 w-full">
         <p
           for="cardAccount"
           class="block text-sm font-medium text-gray-900 dark:text-white mb-2"
@@ -97,8 +97,8 @@
       </div>
     </div>
 
-    <div class="flex items-center gap-4">
-      <div class="w-6/12">
+    <div class="flex items-center gap-4 flex-col sm:flex-row">
+      <div class="sm:w-6/12 w-full">
         <div class="flex gap-1 items-center mb-2">
           <label
             for="closeDay"
@@ -124,7 +124,7 @@
         />
       </div>
 
-      <div class="w-6/12">
+      <div class="sm:w-6/12 w-full">
         <div class="flex gap-1 items-center mb-2">
           <label
             for="dueDay"

@@ -1,5 +1,5 @@
-<h2 class="!ml-6 !mb-4 !mt-4 !text-xl !font-normal !tracking-wide"  mat-dialog-title>{{ data.newAccount ? "Criar Conta" : "Editar Conta" }}</h2>
-<mat-dialog-content class="w-[600px]">
+<h2 class="md:ml-6 md:mb-4 md:mt-4 md:block flex items-center justify-center mb-2 mt-3 text-xl font-semibold tracking-wide">{{ data.newAccount ? "Criar Conta" : "Editar Conta" }}</h2>
+<mat-dialog-content class="md:w-[600px] w-full">
   <form
     [formGroup]="accountForm"
     (ngSubmit)="createNewAccount()"
@@ -40,6 +40,22 @@
       />
     </div>
 
+
+    <div class="">
+      <label
+        for="description"
+        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+        >Descrição</label
+      >
+      <textarea
+        formControlName="description"
+        id="description"
+        rows="2"
+        class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        placeholder="Insira uma descrição para essa conta..."
+      ></textarea>
+    </div>
+
     <div class="">
       <div class="">
         <p class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -61,22 +77,7 @@
         </div>
       </div>
     </div>
-
-
-    <div class="">
-      <label
-        for="description"
-        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-        >Descrição</label
-      >
-      <textarea
-        formControlName="description"
-        id="description"
-        rows="2"
-        class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-        placeholder="Insira uma descrição para essa conta..."
-      ></textarea>
-    </div>
+    
   </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">

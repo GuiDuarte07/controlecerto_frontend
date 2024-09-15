@@ -38,7 +38,6 @@ export class AuthInterceptor implements HttpInterceptor {
   }
 
   private handle401Error(req: HttpRequest<any>, next: HttpHandler) {
-    alert();
     if (!this.isRefreshing) {
       this.isRefreshing = true;
       this.refreshTokenSubject.next('');

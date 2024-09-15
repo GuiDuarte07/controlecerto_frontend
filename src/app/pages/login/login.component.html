@@ -1,9 +1,9 @@
 <div
-  class="w-screen h-screen flex justify-center items-center bg-gradient-to-r from-teal-400 to-teal-700"
+  class="w-screen h-screen flex md:justify-center overflow-hidden items-center bg-gradient-to-r from-teal-400 to-teal-700"
 >
-  <div class="flex items-center flex-col h-full">
-    <div class="flex-1 flex items-center justify-center">
-      <section class="px-8 py-6 bg-gray-50 rounded-lg shadow-xl w-[400px]">
+  <div class="flex items-center flex-col h-full w-full">
+    <div class="flex-1 flex items-center h-full justify-center">
+      <section class="h-full md:h-fit px-8 py-6 bg-gray-50 rounded-lg shadow-xl w-[400px]">
         <form (submit)="login()" [formGroup]="loginForm" class="">
           <div class="text-center">
             <span
@@ -142,7 +142,7 @@
           </p>
           }
 
-          <div class="mt-8 w-full flex items-center">
+          <div class="mt-8 w-full flex md:flex-row flex-col gap-6 items-center">
             <button
               aria-label="Fazer o login"
               [disabled]="!loginForm.valid || loading"
@@ -163,7 +163,7 @@
               }
             </button>
 
-            <p class="text-sm text-slate-500 ml-6">
+            <p class="text-sm text-slate-500 ">
               Realizar
               <a
                 routerLink="/register"
@@ -176,8 +176,8 @@
       </section>
     </div>
 
-    <footer class="w-full my-2">
-      <p class="text-sm text-white">
+    <footer class="hidden md:block md:w-full md:my-2">
+      <p class="text-sm text-white text-center">
         &copy; 2024 FinanTech. All rights reserved | Made by Guilherme Duarte.
       </p>
       <p></p>

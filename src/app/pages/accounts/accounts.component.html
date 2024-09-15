@@ -1,10 +1,10 @@
 <section class="registration-container">
   <div class="flex w-full justify-between items-center mb-4">
-    <h2 class="text-2xl font-bold text-slate-700 tracking-wide">Contas</h2>
+    <h2 class="text-lg md:text-2xl font-bold text-slate-700 tracking-wide">Contas</h2>
 
     <button
       (click)="openAccountDialog()"
-      class="flex items-center gap-2 bg-teal-200 rounded-lg px-2 py-1"
+      class="flex items-center sm:gap-2 bg-teal-200 rounded-lg px-2 py-1"
     >
       <span
         aria-label="sinal de mais"
@@ -29,7 +29,7 @@
     </div>
     } @for(account of accounts; track account) {
     <li
-      class="my-4 py-4 flex justify-between w-full items-center border-b border-solid border-slate-200"
+      class="my-4 py-4 flex gap-2 flex-col sm:flex-row justify-between w-full sm:items-center border-b border-solid border-slate-200"
     >
       <button
         type="button"

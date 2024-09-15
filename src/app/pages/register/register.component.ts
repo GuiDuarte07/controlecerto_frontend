@@ -51,7 +51,7 @@ export class RegisterComponent {
         nonNullable: true,
         validators: [
           Validators.required,
-          Validators.minLength(3),
+          Validators.minLength(5),
           Validators.maxLength(100),
           Validators.pattern(/^[a-zA-Z\s]+$/),
         ],

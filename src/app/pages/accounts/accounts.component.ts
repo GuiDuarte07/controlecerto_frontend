@@ -13,6 +13,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AlertDialogComponent } from '../../components/dialogs/alert-dialog/alert-dialog.component';
+import { MediaMatcher } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-accounts',
@@ -31,14 +32,19 @@ import { AlertDialogComponent } from '../../components/dialogs/alert-dialog/aler
 export class AccountsComponent implements OnInit {
   accounts!: Account[];
   loading = false;
+  mobileQuery: MediaQueryList;
 
   constructor(
     private accountService: AccountService,
-    public dialog: MatDialog
-  ) {}
+    public dialog: MatDialog,
+    media: MediaMatcher
+  ) {
+    this.mobileQuery = media.matchMedia('(max-width: 600px)');
+  }
 
   openAccountDialog(account?: Account) {
     const dialogRef = this.dialog.open(AccountDialogComponent, {
+      panelClass: 'dialog-responsive',
       data: account ? { newAccount: false, account } : { newAccount: true }, //error
     });
     dialogRef.afterClosed().subscribe((sucess) => {

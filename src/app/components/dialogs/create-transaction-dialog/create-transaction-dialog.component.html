@@ -10,12 +10,12 @@
   {{!data.newTransaction && data.transactionType === 1 ? "Editar Receita" : ""}}
 </h2>
 
-<mat-dialog-content class="min-w-[500px]">
+<mat-dialog-content class="w-full md:min-w-[500px] !m-0 !p-0">
   <form [formGroup]="transactionForm" class="m-8 flex flex-col gap-4">
     <!-- FIRST COLUMN -->
-    <div class="flex items-center gap-4">
+    <div class="flex items-center gap-4 md:flex-row flex-col">
       <!-- AMOUNT INPUT -->
-      <div class="w-6/12">
+      <div class="w-full md:w-6/12">
         <label
           for="amount"
           class="block mb-1 text-sm font-medium text-slate-600 dark:text-white"
@@ -39,7 +39,7 @@
       </div>
 
       <!-- DATEPICKER -->
-      <div class="w-6/12">
+      <div class="w-full md:w-6/12">
         <label
           for="purchaseDatePicker"
           class="block mb-1 text-sm font-medium text-slate-600 dark:text-white"
@@ -66,7 +66,7 @@
     <!-- SECOND COLUMN (CREDIT CARD) INSTALLMENT INPUT TO CREDIT -->
     @if(data.transactionType === 2){
     <div class="flex items-center gap-4">
-      <div class="w-6/12">
+      <div class="md:w-6/12 w-4/12">
         <label
           for="installment"
           class="block mb-1 text-sm font-medium text-slate-600 dark:text-white"
@@ -82,7 +82,7 @@
           required
         />
       </div>
-      <div class="w-6/12">
+      <div class="md:w-6/12 w-8/12">
         <label
           for="installmentValue"
           class="block mb-1 text-sm font-medium text-slate-500 dark:text-white"
@@ -99,7 +99,7 @@
 
     <!-- SECOND COLUMN -->
     <!-- SELECTIONS -->
-    <div class="flex gap-4">
+    <div class="flex gap-4 md:flex-row flex-col">
       <!-- CATEGORY SELECTION -->
       <div class="w-full">
         <p

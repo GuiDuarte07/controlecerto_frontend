@@ -1,2 +1,3 @@
-/* export const serverConnectionString = 'http://localhost:8080/api'; */
-export const serverConnectionString = 'https://controlecerto.online/api';
+import { environment } from '../../environments/environment';
+
+export const serverConnectionString = environment.serverConnectionString;

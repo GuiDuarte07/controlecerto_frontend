@@ -215,8 +215,12 @@ export class CreateTransactionDialogComponent implements OnInit {
       this.data.transactionType === TransactionTypeEnum.INCOME
         ? BillTypeEnum.INCOME
         : BillTypeEnum.EXPENSE;
-    this.categoryService.GetCategories(categoryType).subscribe((data) => {
-      this.categories = data;
+    this.categoryService.GetCategories(categoryType).subscribe((categories) => {
+      const categoryType =
+        this.data.transactionType === TransactionTypeEnum.INCOME
+          ? BillTypeEnum.INCOME
+          : BillTypeEnum.EXPENSE;
+      this.categories = categories.filter((c) => c.billType === categoryType);
       if (this.data.newTransaction === false) {
         let id = this.data.transaction.category!.id;
         this.selectedCategory = this.categories.find((a) => a.id! === id);

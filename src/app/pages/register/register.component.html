@@ -44,10 +44,10 @@
               </div>
             </div>
             <div *ngIf="registerForm.get('name')?.errors && registerForm.get('name')?.touched">
-              <p class="text-sm text-red-600" *ngIf="registerForm.get('name')?.errors?.['required']">Nome é obrigatório.</p>
-              <p class="text-sm text-red-600" *ngIf="registerForm.get('name')?.errors?.['minlength']">Nome deve ter no mínimo 5 caracteres.</p>
-              <p class="text-sm text-red-600" *ngIf="registerForm.get('name')?.errors?.['maxlength']">Nome deve ter no máximo 100 caracteres.</p>
-              <p class="text-sm text-red-600" *ngIf="registerForm.get('name')?.errors?.['pattern']">Nome deve conter apenas letras e espaços.</p>
+              <p class="text-sm text-red-600" *ngIf="registerForm.get('name')?.errors?.['required']">Seu nome é obrigatório.</p>
+              <p class="text-sm text-red-600" *ngIf="registerForm.get('name')?.errors?.['minlength']">Seu nome deve ter no mínimo 5 caracteres.</p>
+              <p class="text-sm text-red-600" *ngIf="registerForm.get('name')?.errors?.['maxlength']">Seu nome deve ter no máximo 100 caracteres.</p>
+              <p class="text-sm text-red-600" *ngIf="registerForm.get('name')?.errors?.['pattern']">Seu nome deve conter apenas letras e espaços.</p>
             </div>
           </div>
 

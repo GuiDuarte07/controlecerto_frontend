@@ -1,8 +1,10 @@
+import { UserService } from './../../services/user.service';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
+  FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -24,6 +26,7 @@ interface ILoginForm {
     CommonModule,
     RouterLink,
     MatProgressSpinnerModule,
+    FormsModule,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
@@ -34,7 +37,14 @@ export class LoginComponent implements OnInit {
   loading = false;
   fromServerError?: string;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  forgotMyPassword = false;
+  emailToForgotPassword: string = '';
+
+  constructor(
+    private authService: AuthService,
+    private userService: UserService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.loginForm = new FormGroup({
@@ -64,7 +74,6 @@ export class LoginComponent implements OnInit {
     const password = this.loginForm.value.password!;
     this.authService.authenticate(email, password).subscribe({
       next: (response) => {
-        console.log(response);
         this.router.navigateByUrl('/home');
         this.loading = false;
       },
@@ -76,7 +85,33 @@ export class LoginComponent implements OnInit {
     });
   }
 
+  forgotPassword() {
+    this.forgotMyPassword = !this.forgotMyPassword;
+  }
+
+  sendForgotPasswordEmail() {
+    this.loading = true;
+    this.userService
+      .sendForgotPasswordEmail(this.emailToForgotPassword)
+      .subscribe({
+        next: () => {
+          this.loading = false;
+          alert(
+            'Um e-mail foi enviado a seu endereço de e-mail com mais instruções para recuperar sua senha.'
+          );
+        },
+        error: (error: HttpErrorResponse) => {
+          this.fromServerError = error.error;
+          this.loading = false;
+        },
+      });
+  }
+
   setPasswordVisibility() {
     this.passwordVisibility = !this.passwordVisibility;
+  }
+
+  reloadPage() {
+    location.reload();
   }
 }

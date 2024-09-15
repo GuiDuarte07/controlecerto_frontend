@@ -1,3 +1,4 @@
+import { UserService } from './../../services/user.service';
 import { Component, OnInit } from '@angular/core';
 import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 import { AccountService } from '../../services/account.service';
@@ -12,6 +13,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { CreateTransactionDialogComponent } from '../../components/dialogs/create-transaction-dialog/create-transaction-dialog.component';
 import { TransactionService } from '../../services/transaction.service';
 import { InfoTransactionResponse } from '../../models/InfoTransactionResponse';
+import { DetailsUserResponse } from '../../models/DetailsUserResponse';
 
 type boardType = 'balance' | 'income' | 'expense' | 'invoice';
 
@@ -32,12 +34,15 @@ export class HomeComponent implements OnInit {
 
   boardOption!: boardType;
 
+  user: DetailsUserResponse | null = null;
+
   accounts: Account[] | undefined;
   invoices: InfoInvoiceResponse[] | undefined;
   transactions: InfoTransactionResponse[] | undefined;
 
   constructor(
     private readonly accountService: AccountService,
+    private readonly userService: UserService,
     private readonly creditCardService: CreditCardService,
     private readonly transactionService: TransactionService,
     public formaterService: FormaterService,
@@ -49,7 +54,8 @@ export class HomeComponent implements OnInit {
       this.balance = b;
     });
 
-    this.setBoardDetails('income');
+    this.setBoardDetails('balance');
+    this.userService.getUser().subscribe((user) => (this.user = user));
   }
 
   setBoardDetails(type: boardType) {

@@ -53,7 +53,7 @@ export class RegisterComponent {
           Validators.required,
           Validators.minLength(5),
           Validators.maxLength(100),
-          Validators.pattern(/^[a-zA-Z\s]+$/),
+          Validators.pattern(/^[a-zA-ZÀ-ÖØ-öø-ÿ]+( [a-zA-ZÀ-ÖØ-öø-ÿ]+)*$/),
         ],
       }),
       email: new FormControl<string>('', {

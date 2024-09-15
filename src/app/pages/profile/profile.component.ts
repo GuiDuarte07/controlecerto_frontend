@@ -1,5 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { InfoUserResponse } from '../../models/InfoUserResponse';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -42,7 +48,7 @@ export class ProfileComponent implements OnInit {
   changePasswordError = '';
   changePasswordForm!: FormGroup<IChangePasswordForm>;
 
-  user!: DetailsUserResponse;
+  user!: DetailsUserResponse | null;
 
   constructor(
     private readonly userService: UserService,
@@ -79,14 +85,18 @@ export class ProfileComponent implements OnInit {
       }),
     });
 
+    this.loading = true;
     this.userService.getUser().subscribe({
       next: (user) => {
-        this.user = user;
-        this.newEmailString = this.user.email;
-        this.newNameString = this.user.name;
-        this.loading = false;
-      }
-    })
+        if (user) {
+          this.loading = false;
+          this.user = user;
+          this.newEmailString = user.email;
+          this.newNameString = user.name;
+          this.loading = false;
+        }
+      },
+    });
   }
 
   updatePassword() {
@@ -130,7 +140,7 @@ export class ProfileComponent implements OnInit {
       this.newEmailString = '';
     } else {
       //Enviar requisição para backend
-      if (this.newEmailString == this.user.email) {
+      if (this.newEmailString == this.user!.email) {
         this.editEmail = !this.editEmail;
       }
     }
@@ -142,7 +152,7 @@ export class ProfileComponent implements OnInit {
       this.newNameString = '';
     } else {
       //Enviar requisição para backend
-      if (this.newNameString == this.user.name) {
+      if (this.newNameString == this.user!.name) {
         this.editName = !this.editName;
       }
     }

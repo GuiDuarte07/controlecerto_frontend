@@ -18,7 +18,7 @@
           <mat-spinner diameter="20"></mat-spinner>
         </div>
       }@else {
-        <p class="text-slate-700 text-center">Usuário desde<br>{{user.createdAt | date : "dd/MM/yyyy"}}</p>
+        <p class="text-slate-700 text-center">Usuário desde<br>{{user!.createdAt | date : "dd/MM/yyyy"}}</p>
       }
     </div>
   </section>

@@ -25,6 +25,7 @@ import { CreateCreditPurchaseRequest } from '../../../models/CreateCreditPurchas
 import { CreditCardInfo } from '../../../models/CreditCardInfo';
 import {
   MAT_DIALOG_DATA,
+  MatDialog,
   MatDialogActions,
   MatDialogContent,
   MatDialogModule,
@@ -45,6 +46,8 @@ import { BillTypeEnum } from '../../../enums/BillTypeEnum';
 import { InfoTransactionResponse } from '../../../models/InfoTransactionResponse';
 import { UpdateTransactionRequest } from '../../../models/UpdateTransaction';
 import { UpdateCreditPurchaseRequest } from '../../../models/UpdateCreditPurchaseRequest';
+import { AccountDialogComponent } from '../account-dialog/account-modal.component';
+import { CreateCreditCardDialogComponent } from '../create-credit-card-dialog/create-credit-card-dialog.component';
 
 interface ITransactionForm {
   amount: FormControl<number>;
@@ -110,7 +113,8 @@ export class CreateTransactionDialogComponent implements OnInit {
     private accountService: AccountService,
     private categoryService: CategoryService,
     public dialogRef: MatDialogRef<CreateTransactionDialogComponent>,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    public dialog: MatDialog
   ) {}
 
   dateOptions = {
@@ -203,30 +207,14 @@ export class CreateTransactionDialogComponent implements OnInit {
       ),
     });
 
-    this.accountService.getAccounts().subscribe((data) => {
-      this.accounts = data;
-      if (this.data.newTransaction === false) {
-        let id = this.data.transaction.account.id;
-        this.selectedAccount = this.accounts.find((a) => a.id! === id);
-      }
-    });
+    this.updateAccounts();
 
-    const categoryType =
-      this.data.transactionType === TransactionTypeEnum.INCOME
-        ? BillTypeEnum.INCOME
-        : BillTypeEnum.EXPENSE;
-    this.categoryService.GetCategories(categoryType).subscribe((categories) => {
-      const categoryType =
-        this.data.transactionType === TransactionTypeEnum.INCOME
-          ? BillTypeEnum.INCOME
-          : BillTypeEnum.EXPENSE;
-      this.categories = categories.filter((c) => c.billType === categoryType);
-      if (this.data.newTransaction === false) {
-        let id = this.data.transaction.category!.id;
-        this.selectedCategory = this.categories.find((a) => a.id! === id);
-      }
-    });
+    this.updateCategories();
 
+    this.updateCreditCards();
+  }
+
+  updateCreditCards() {
     if (this.data.transactionType === TransactionTypeEnum.CREDITEXPENSE) {
       if (!this.data.newTransaction) {
         this.installments =
@@ -245,6 +233,35 @@ export class CreateTransactionDialogComponent implements OnInit {
         }
       });
     }
+  }
+
+  updateCategories() {
+    // Tipo da categoria
+    const categoryType =
+      this.data.transactionType === TransactionTypeEnum.INCOME
+        ? BillTypeEnum.INCOME
+        : BillTypeEnum.EXPENSE;
+
+    // Puxando as categorias
+    this.categoryService.GetCategories(categoryType).subscribe((categories) => {
+      this.categories = categories;
+      console.log(categories);
+      //this.categories = categories.filter((c) => c.billType === categoryType);
+      if (this.data.newTransaction === false) {
+        let id = this.data.transaction.category!.id;
+        this.selectedCategory = this.categories.find((a) => a.id! === id);
+      }
+    });
+  }
+
+  updateAccounts() {
+    this.accountService.getAccounts().subscribe((data) => {
+      this.accounts = data;
+      if (this.data.newTransaction === false) {
+        let id = this.data.transaction.account.id;
+        this.selectedAccount = this.accounts.find((a) => a.id! === id);
+      }
+    });
   }
 
   closeDialog(sucess: boolean) {
@@ -461,5 +478,31 @@ export class CreateTransactionDialogComponent implements OnInit {
 
     // Formata a data como "dd/mm/yyyy"
     return `${day}/${month}/${year}`;
+  }
+
+  /* Criar nova conta ou cartão */
+  openAccountDialog() {
+    const dialogRef = this.dialog.open(AccountDialogComponent, {
+      panelClass: 'dialog-responsive',
+      data: { newAccount: true },
+    });
+    dialogRef.afterClosed().subscribe((sucess) => {
+      if ((sucess as boolean) === true) {
+        this.updateAccounts();
+      }
+    });
+  }
+
+  openCreditCardDialog() {
+    const dialogRef = this.dialog.open(CreateCreditCardDialogComponent, {
+      data: {
+        newCreditCard: true,
+      },
+    });
+    dialogRef.afterClosed().subscribe((sucess) => {
+      if ((sucess as boolean) === true) {
+        this.updateCreditCards();
+      }
+    });
   }
 }

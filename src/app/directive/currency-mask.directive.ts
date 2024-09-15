@@ -3,7 +3,6 @@ import {
   HostListener,
   ElementRef,
   Input,
-  OnInit,
   forwardRef,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -21,7 +20,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 })
 export class CurrencyMaskDirective implements ControlValueAccessor {
   @Input() prefix: string = '';
-  @Input() thousandSeparator: string = '';
+  @Input() thousandSeparator: string = '.';
   @Input() decimalMarker: string = ',';
   @Input() decimalPlaces: number = 2;
 

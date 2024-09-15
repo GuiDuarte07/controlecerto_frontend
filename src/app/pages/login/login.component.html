@@ -3,7 +3,10 @@
 >
   <div class="flex items-center flex-col h-full w-full">
     <div class="flex-1 flex items-center h-full justify-center">
-      <section class="h-full md:h-fit px-8 py-6 bg-gray-50 rounded-lg shadow-xl w-[400px]">
+      <section
+        class="h-full md:h-fit px-8 py-6 bg-gray-50 rounded-lg shadow-xl w-[400px]"
+      >
+        @if(!forgotMyPassword) {
         <form (submit)="login()" [formGroup]="loginForm" class="">
           <div class="text-center">
             <span
@@ -19,7 +22,9 @@
             Olá novamente!
           </h2>
 
-          <p class="text-base text-gray-400 text-center mb-4 font-medium">Realize seu login</p>
+          <p class="text-base text-gray-400 text-center mb-4 font-medium">
+            Realize seu login
+          </p>
 
           <div>
             <div class="mb-3">
@@ -150,20 +155,19 @@
               class="disabled:bg-slate-400 px-9 py-2 bg-teal-600 text-white font-semibold text-sm rounded-lg flex gap-2 items-center"
             >
               @if(loading) {
-                <div class="px-8 py-1">
-                  <mat-spinner diameter="20"></mat-spinner>
-                </div>
-              } @else {
-                Entrar
-                <span
-                  class="text-white text-lg font-bold material-symbols-outlined"
-                >
-                  arrow_forward
-                </span>
+              <div class="px-8 py-1">
+                <mat-spinner diameter="20"></mat-spinner>
+              </div>
+              } @else { Entrar
+              <span
+                class="text-white text-lg font-bold material-symbols-outlined"
+              >
+                arrow_forward
+              </span>
               }
             </button>
 
-            <p class="text-sm text-slate-500 ">
+            <p class="text-sm text-slate-500">
               Realizar
               <a
                 routerLink="/register"
@@ -172,7 +176,97 @@
               >
             </p>
           </div>
+
+          <div class="mt-2">
+            <button
+              (click)="forgotPassword()"
+              type="button"
+              class="text-sm cursor-pointer text-blue-600 mr-2 hover:text-blue-800"
+            >
+              Esqueci minha senha
+            </button>
+          </div>
         </form>
+        } @else {
+        <div class="py-10">
+          <div class="text-center">
+            <span
+              class="material-symbols-outlined text-teal-600 text-5xl"
+              style="font-variation-settings: 'FILL' 1"
+            >
+              login
+            </span>
+          </div>
+          <h2
+            class="text-center text-2xl font-bold text-gray-600 block dark:text-white"
+          >
+            Esqueci minha senha
+          </h2>
+
+          <p class="text-base text-gray-400 text-center mb-4 font-medium">
+            Insira o e-mail da sua conta para que possamos recuperar sua senha
+          </p>
+          <div class="mt-8">
+            <label
+              for="emailToForgotPassword"
+              class="text-slate-500 pb-1 text-sm font-semibold"
+              >E-mail</label
+            >
+            <div class="relative">
+              <input
+                [(ngModel)]="emailToForgotPassword"
+                type="text"
+                id="emailToForgotPassword"
+                class="input"
+                style="padding-right: 2.25rem"
+                placeholder="user@email.com"
+                required
+              />
+              <span
+                class="material-symbols-outlined text-slate-400 absolute top-1/2 right-2 transform -translate-y-1/2 pointer-events-none"
+              >
+                mail
+              </span>
+            </div>
+          </div>
+
+          @if(fromServerError) {
+            <p class="text-sm my-2 text-red-600">
+              houve um erro: {{ fromServerError }}
+            </p>
+            }
+
+          <div class="mt-8 w-full flex md:flex-row flex-col gap-6 items-center">
+            <button
+              (click)="sendForgotPasswordEmail()"
+              aria-label="Enviar para esse e-mail a solicitação de alteração de senha"
+              type="button"
+              class="disabled:bg-slate-400 px-9 py-2 bg-teal-600 text-white font-semibold text-sm rounded-lg flex gap-2 items-center"
+            >
+              @if(loading) {
+              <div class="px-8 py-1">
+                <mat-spinner diameter="20"></mat-spinner>
+              </div>
+              } @else { Enviar
+              <span
+                class="text-white text-lg font-bold material-symbols-outlined"
+              >
+                arrow_forward
+              </span>
+              }
+            </button>
+
+            <p class="text-sm text-slate-500">
+              <a
+                routerLink="/login"
+                (click)="reloadPage()"
+                class="cursor-pointer text-blue-600 mr-2 hover:text-blue-800"
+                >cancelar solicitação</a
+              >
+            </p>
+          </div>
+        </div>
+        }
       </section>
     </div>
 

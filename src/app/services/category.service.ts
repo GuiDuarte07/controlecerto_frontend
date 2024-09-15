@@ -16,7 +16,11 @@ export class CategoryService {
   GetCategories(type?: BillTypeEnum) {
     let suffix = 'GetAllCategories';
     return this.http
-      .get<Category[]>(`${this.hostAddress}/${suffix}${type ? '/' + type : ''}`)
+      .get<Category[]>(
+        `${this.hostAddress}/${suffix}${
+          typeof type !== 'undefined' ? '/' + type : ''
+        }`
+      )
       .pipe(
         map((data) =>
           data.map(

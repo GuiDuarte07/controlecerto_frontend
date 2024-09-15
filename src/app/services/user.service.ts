@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Createuser } from '../models/CreateUser';
 import { InfoUserResponse } from '../models/InfoUserResponse';
 import { DetailsUserResponse } from '../models/DetailsUserResponse';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +14,7 @@ export class UserService {
 
   constructor(private httpClient: HttpClient) {}
 
-  getUser() {
+  getUser(): Observable<DetailsUserResponse> {
     const rote = 'GetUser';
     return this.httpClient.get<DetailsUserResponse>(
       `${this.hostAddress}/${rote}`
@@ -43,6 +44,13 @@ export class UserService {
     return this.httpClient.post<void>(`${this.hostAddress}/${rote}`, {
       oldPassword: oldPassword,
       newPassword: newPassword,
+    });
+  }
+
+  sendForgotPasswordEmail(email: string) {
+    const rote = 'SendForgotPasswordEmail';
+    return this.httpClient.post<boolean>(`${this.hostAddress}/${rote}`, {
+      email,
     });
   }
 

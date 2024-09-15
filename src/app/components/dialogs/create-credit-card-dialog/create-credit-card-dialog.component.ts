@@ -9,6 +9,7 @@ import {
 } from '@angular/forms';
 import {
   MAT_DIALOG_DATA,
+  MatDialog,
   MatDialogActions,
   MatDialogContent,
   MatDialogModule,
@@ -29,6 +30,7 @@ import { CreditCardInfo } from '../../../models/CreditCardInfo';
 import { UpdateCreditCardRequest } from '../../../models/UpdateCreditCardRequest';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { AccountDialogComponent } from '../account-dialog/account-modal.component';
 
 interface ICreditCardForm {
   totalLimit: FormControl<number>;
@@ -78,7 +80,8 @@ export class CreateCreditCardDialogComponent implements OnInit {
     private readonly accountService: AccountService,
     private readonly creditCardService: CreditCardService,
     public dialogRef: MatDialogRef<CreateCreditCardDialogComponent>,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    public dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -111,21 +114,21 @@ export class CreateCreditCardDialogComponent implements OnInit {
           validators: [
             Validators.required,
             Validators.min(1),
-            Validators.max(21),
+            Validators.max(31),
           ],
         }
       ),
       dueDay: new FormControl<number>(
         {
-          value: this.data.newCreditCard ? 1 : this.data.creditCard.dueDay,
+          value: this.data.newCreditCard ? 8 : this.data.creditCard.dueDay,
           disabled: this.data.newCreditCard ? false : true,
         },
         {
           nonNullable: true,
           validators: [
             Validators.required,
-            Validators.min(2),
-            Validators.max(28),
+            Validators.min(1),
+            Validators.max(31),
           ],
         }
       ),
@@ -144,23 +147,30 @@ export class CreateCreditCardDialogComponent implements OnInit {
       ),
     });
 
-    this.creditCardForm.get('closeDay')?.valueChanges.subscribe((value) => {
+    this.creditCardForm.get('dueDay')?.valueChanges.subscribe((value) => {
       if (this.creditCardForm.value.oneWeekDifference) {
-        this.creditCardForm.patchValue({ dueDay: value + 7 });
+        this.creditCardForm.patchValue({ closeDay: Math.abs(value - 7) % 30 });
       }
     });
 
-    this.creditCardForm.get('dueDay')?.disable();
+    this.creditCardForm.get('closeDay')?.disable();
     this.creditCardForm
       .get('oneWeekDifference')
       ?.valueChanges.subscribe((value) => {
         if (value) {
-          this.creditCardForm.get('dueDay')?.disable();
+          this.creditCardForm.get('closeDay')?.disable();
+          this.creditCardForm.patchValue({
+            closeDay: Math.abs(this.creditCardForm.value.dueDay! - 7) % 30,
+          });
         } else {
-          this.creditCardForm.get('dueDay')?.enable();
+          this.creditCardForm.get('closeDay')?.enable();
         }
       });
 
+    this.updateAccounts();
+  }
+
+  updateAccounts() {
     if (this.data.newCreditCard) {
       this.accountService.getAccountsWithoutCreditCard().subscribe((data) => {
         this.accounts = data;
@@ -246,5 +256,17 @@ export class CreateCreditCardDialogComponent implements OnInit {
 
   cleanForm() {
     this.creditCardForm.reset();
+  }
+
+  openAccountDialog() {
+    const dialogRef = this.dialog.open(AccountDialogComponent, {
+      panelClass: 'dialog-responsive',
+      data: { newAccount: true },
+    });
+    dialogRef.afterClosed().subscribe((sucess) => {
+      if ((sucess as boolean) === true) {
+        this.updateAccounts();
+      }
+    });
   }
 }

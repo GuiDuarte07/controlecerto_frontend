@@ -4,7 +4,6 @@ import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { CreditCardInfo } from '../../models/CreditCardInfo';
 import { CommonModule } from '@angular/common';
 import { SidebarComponent } from '../../components/sidebar/sidebar.component';
-import { initFlowbite } from 'flowbite';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateCreditCardDialogComponent } from '../../components/dialogs/create-credit-card-dialog/create-credit-card-dialog.component';
 import { InvoicesDialogComponent } from '../../components/dialogs/invoices-dialog/invoices-dialog.component';

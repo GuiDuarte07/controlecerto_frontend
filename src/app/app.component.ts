@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
-import { initFlowbite } from 'flowbite';
 
 @Component({
   selector: 'app-root',
@@ -11,7 +10,7 @@ import { initFlowbite } from 'flowbite';
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
-  title = 'Finantech';
+  title = 'Controle Certo';
 
   constructor(private router: Router) {}
 

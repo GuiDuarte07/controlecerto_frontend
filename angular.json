@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "Finantech_frontend": {
+    "controlecerto": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/finantech-frontend",
+            "outputPath": "dist/controlecerto",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -70,10 +70,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "Finantech_frontend:build:production"
+              "buildTarget": "controlecerto:build:production"
             },
             "development": {
-              "buildTarget": "Finantech_frontend:build:development"
+              "buildTarget": "controlecerto:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -81,7 +81,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "Finantech_frontend:build"
+            "buildTarget": "controlecerto:build"
           }
         },
         "test": {

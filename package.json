@@ -1,5 +1,5 @@
 {
-  "name": "finantech-frontend",
+  "name": "controlecerto",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -21,10 +21,9 @@
     "@angular/platform-browser-dynamic": "^17.0.0",
     "@angular/router": "^17.0.0",
     "@popperjs/core": "^2.11.8",
-    "flowbite": "^2.3.0",
+    "flowbite": "^2.5.1",
     "material-icons": "^1.13.12",
     "ngx-cookie-service": "^17.1.0",
-    "ngx-mask": "^17.0.9",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.2"

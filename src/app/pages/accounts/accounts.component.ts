@@ -7,7 +7,6 @@ import { AccountDialogComponent } from '../../components/dialogs/account-dialog/
 import { forkJoin, Observable } from 'rxjs';
 import { Account } from '../../models/AccountRequest ';
 import { BalanceStatement } from '../../models/BalanceStatement';
-import { initFlowbite } from 'flowbite';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';

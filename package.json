@@ -21,6 +21,7 @@
     "@angular/platform-browser-dynamic": "^17.0.0",
     "@angular/router": "^17.0.0",
     "@popperjs/core": "^2.11.8",
+    "esbuild": "^0.23.1",
     "flowbite": "^2.5.1",
     "material-icons": "^1.13.12",
     "ngx-cookie-service": "^17.1.0",

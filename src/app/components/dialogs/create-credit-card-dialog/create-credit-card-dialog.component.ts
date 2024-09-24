@@ -128,7 +128,7 @@ export class CreateCreditCardDialogComponent implements OnInit {
           validators: [
             Validators.required,
             Validators.min(1),
-            Validators.max(31),
+            Validators.max(27),
           ],
         }
       ),
@@ -149,7 +149,9 @@ export class CreateCreditCardDialogComponent implements OnInit {
 
     this.creditCardForm.get('dueDay')?.valueChanges.subscribe((value) => {
       if (this.creditCardForm.value.oneWeekDifference) {
-        this.creditCardForm.patchValue({ closeDay: Math.abs(value - 7) % 30 });
+        let closeDay = value - 7;
+        closeDay = closeDay <= 0 ? closeDay + 30 : closeDay;
+        this.creditCardForm.patchValue({ closeDay });
       }
     });
 

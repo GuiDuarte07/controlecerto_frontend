@@ -128,7 +128,7 @@
           <span
             class="material-symbols-outlined text-lg"
             #tooltip="matTooltip"
-            matTooltip="Dia que sua fatura vence. Escolha um dia entre o dia 1 e o dia 31"
+            matTooltip="Dia que sua fatura vence. Escolha um dia entre o dia 1 e o dia 27"
             matTooltipPosition="right"
             matTooltipHideDelay="200"
           >
@@ -172,13 +172,17 @@
     </div>
 
     <div *ngIf="creditCardForm.get('dueDay')?.invalid && creditCardForm.get('dueDay')?.touched" class="text-sm text-red-600">
-      <small *ngIf="creditCardForm.get('dueDay')?.errors?.['min'] || creditCardForm.get('dueDay')?.errors?.['max']">Vencimento deve ser um dia entre 1 e 31.</small>
+      <small *ngIf="creditCardForm.get('dueDay')?.errors?.['min'] || creditCardForm.get('dueDay')?.errors?.['max']">Vencimento deve ser um dia entre 1 e 27.</small>
     </div>
     <div *ngIf="creditCardForm.get('closeDay')?.invalid && creditCardForm.get('closeDay')?.touched" class="text-sm text-red-600">
       <small *ngIf="creditCardForm.get('closeDay')?.errors?.['min'] || creditCardForm.get('closeDay')?.errors?.['max']">Fechamento deve ser um dia entre 1 e 31.</small>
     </div>
 
-    <div class="flex items-center gap-1">
+
+
+    <!-- PARAMETRO DE DESATIVA A DIFERENÇA DE 7 DIAS ENTRE FECHAMENTO E ENCERRAMENTO DA FATURA -->
+
+    <!-- <div class="flex items-center gap-1">
       <mat-checkbox class="!py-0" formControlName="oneWeekDifference"
         >Uma semana de diferença entre fechamento e vencimento.
       </mat-checkbox>
@@ -191,7 +195,7 @@
       >
         info
       </span>
-    </div>
+    </div> -->
 
     <!-- Nome -->
     <div>

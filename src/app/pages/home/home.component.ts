@@ -14,13 +14,14 @@ import { CreateTransactionDialogComponent } from '../../components/dialogs/creat
 import { TransactionService } from '../../services/transaction.service';
 import { InfoTransactionResponse } from '../../models/InfoTransactionResponse';
 import { DetailsUserResponse } from '../../models/DetailsUserResponse';
+import { RouterLink } from '@angular/router';
 
 type boardType = 'balance' | 'income' | 'expense' | 'invoice';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, SidebarComponent],
+  imports: [CommonModule, SidebarComponent, RouterLink],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
@@ -40,6 +41,8 @@ export class HomeComponent implements OnInit {
   invoices: InfoInvoiceResponse[] | undefined;
   transactions: InfoTransactionResponse[] | undefined;
 
+  transactionsListSize: number = 5;
+
   constructor(
     private readonly accountService: AccountService,
     private readonly userService: UserService,
@@ -50,16 +53,19 @@ export class HomeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.accountService.getBalance().subscribe((b) => {
-      this.balance = b;
-    });
-
     this.setBoardDetails('balance');
     this.userService.getUser().subscribe((user) => (this.user = user));
   }
 
+  getBalances() {
+    this.accountService.getBalance().subscribe((b) => {
+      this.balance = b;
+    });
+  }
+
   setBoardDetails(type: boardType) {
     this.boardOption = type;
+    this.transactionsListSize = 5;
 
     if (type === 'balance' /*  && this.accounts === undefined */) {
       this.accountService
@@ -89,7 +95,7 @@ export class HomeComponent implements OnInit {
           this.transactions = transactions.transactions.filter(
             (t) => t.type === TransactionTypeEnum.INCOME
           );
-          this.transactions = this.transactions.slice(0, 5);
+          this.transactions = this.transactions;
         },
       });
     }
@@ -97,19 +103,25 @@ export class HomeComponent implements OnInit {
     if (type === 'expense') {
       this.transactionService.getTransactions().subscribe({
         next: (transactions) => {
-          console.log(transactions);
           this.transactions = transactions.transactions.filter(
             (t) => t.type === TransactionTypeEnum.EXPENSE
           );
-          this.transactions = this.transactions.slice(0, 5);
-          console.log(this.transactions);
+          this.transactions = this.transactions;
         },
       });
     }
+
+    this.getBalances();
+  }
+
+  seeMoreTransactions() {
+    this.transactionsListSize += 5;
   }
 
   sumTransactions() {
-    return this.transactions?.reduce((prev, act) => prev + act.amount, 0);
+    return this.transactions
+      ?.slice(0, this.transactionsListSize)
+      ?.reduce((prev, act) => prev + act.amount, 0);
   }
 
   openCreateTransactionDialog(type: TransactionTypeEnum) {

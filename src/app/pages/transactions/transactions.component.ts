@@ -17,6 +17,7 @@ import { AccountService } from '../../services/account.service';
 import { CreditCardService } from '../../services/credit-card.service';
 import { RouterLink } from '@angular/router';
 import { InvoicePaymentDialogComponent } from '../../components/dialogs/invoice-payment-dialog/invoice-payment-dialog.component';
+import { Account } from '../../models/AccountRequest ';
 
 @Component({
   selector: 'app-transactions',
@@ -37,12 +38,25 @@ export class TransactionsComponent implements OnInit {
   invoices: InfoInvoiceResponse[] = [];
   accountBalance: number = 0;
 
+  accountSelection = signal(true);
+  accounts: Account[] | undefined;
+
   private readonly todayDate = new Date();
   filterDate: Date = new Date(
     this.todayDate.getFullYear(),
     this.todayDate.getMonth(),
     1
   );
+
+  filterOptions: {
+    dateFilterDes: boolean;
+    accountFilter: number | null;
+    textFilter: string;
+  } = {
+    dateFilterDes: true,
+    accountFilter: null,
+    textFilter: '',
+  };
 
   constructor(
     private transactionService: TransactionService,
@@ -54,6 +68,53 @@ export class TransactionsComponent implements OnInit {
 
   ngOnInit(): void {
     this.updateTransactions();
+
+    this.accountService.getAccounts().subscribe((acc) => (this.accounts = acc));
+  }
+
+  get filteredTransactions() {
+    let filtered = [...this.transactions];
+
+    // Filtrar por conta
+    if (this.filterOptions.accountFilter !== null) {
+      filtered = filtered.filter(
+        (transaction) =>
+          transaction.account.id === this.filterOptions.accountFilter
+      );
+    }
+
+    // Filtrar por texto (descrição, amount, observations)
+    if (this.filterOptions.textFilter.trim() !== '') {
+      const searchText = this.filterOptions.textFilter.toLowerCase();
+      filtered = filtered.filter(
+        (transaction) =>
+          transaction.description.toLowerCase().includes(searchText) ||
+          transaction.amount.toString().includes(searchText) ||
+          (transaction.observations &&
+            transaction.observations.toLowerCase().includes(searchText))
+      );
+    }
+
+    // Ordenar por data
+    filtered.sort((a, b) => {
+      const dateA = new Date(a.purchaseDate).getTime();
+      const dateB = new Date(b.purchaseDate).getTime();
+      return this.filterOptions.dateFilterDes ? dateB - dateA : dateA - dateB;
+    });
+
+    return filtered;
+  }
+
+  changeDateFilter() {
+    this.filterOptions.dateFilterDes = !this.filterOptions.dateFilterDes;
+  }
+
+  changeAccountFilter(accountId: number | null) {
+    this.filterOptions.accountFilter = accountId;
+  }
+
+  toggleAccountSelection() {
+    this.accountSelection.set(!this.accountSelection());
   }
 
   updateTransactions() {
@@ -182,7 +243,7 @@ export class TransactionsComponent implements OnInit {
       return;
     }
 
-    if(transaction.type === TransactionTypeEnum.INVOICEPAYMENT) {
+    if (transaction.type === TransactionTypeEnum.INVOICEPAYMENT) {
       const dialogRef = this.dialog.open(AlertDialogComponent, {
         data: {
           title: 'Deletar lançamento',

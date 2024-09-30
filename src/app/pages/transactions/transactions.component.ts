@@ -20,6 +20,7 @@ import { InvoicePaymentDialogComponent } from '../../components/dialogs/invoice-
 import { Account } from '../../models/AccountRequest ';
 import { SelectionComponent } from '../../components/selection/selection.component';
 import { TransactionExpansionPanelComponent } from '../../components/transaction-expansion-panel/transaction-expansion-panel.component';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-transactions',
@@ -33,6 +34,7 @@ import { TransactionExpansionPanelComponent } from '../../components/transaction
     RouterLink,
     SelectionComponent,
     TransactionExpansionPanelComponent,
+    FormsModule,
   ],
   templateUrl: './transactions.component.html',
   styleUrl: './transactions.component.scss',
@@ -44,6 +46,8 @@ export class TransactionsComponent implements OnInit {
 
   accountSelection = signal(true);
   accounts: Account[] | undefined;
+
+  showTransactionSearch: boolean = false;
 
   private readonly todayDate = new Date();
   filterDate: Date = new Date(
@@ -74,6 +78,14 @@ export class TransactionsComponent implements OnInit {
     this.updateTransactions();
 
     this.accountService.getAccounts().subscribe((acc) => (this.accounts = acc));
+  }
+
+  toggleTransactionSearch() {
+    this.showTransactionSearch = !this.showTransactionSearch;
+
+    if (!this.showTransactionSearch) {
+      this.filterOptions.textFilter = '';
+    }
   }
 
   get filteredTransactions() {

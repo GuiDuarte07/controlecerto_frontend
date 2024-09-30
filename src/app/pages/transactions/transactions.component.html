@@ -89,14 +89,19 @@
     <div
       class="mb-2 px-2 w-full h-10 rounded-3xl bg-teal-500 flex items-center"
     >
-      <button
-        type="button"
-        class="px-1 w-4/12 flex items-start border-r-2 border-solid border-slate-600"
+      <div
+        class="px-1 w-4/12 flex items-center gap-2 border-r-2 border-solid border-slate-600"
       >
+      <button (click)="toggleTransactionSearch()" type="button" class="">
         <span class="material-symbols-outlined text-white">
           manage_search
         </span>
-      </button>
+      </button> 
+
+        @if(showTransactionSearch) {
+          <input [(ngModel)]="filterOptions.textFilter" type="text" name="" id="" class="h-6 w-full rounded-md text-sm bg-slate-100 px-2 text-slate-800" placeholder="Pesquisar por texto">
+        }
+      </div>
 
       <button
         type="button"
@@ -115,19 +120,22 @@
             class="gap-2 flex items-center w-full overflow-hidden"
           >
             <div class="gap-2 flex items-center w-full overflow-hidden">
-              <p class="overflow-hidden text-xs text-white font-semibold">
+              <p class="overflow-hidden text-sm text-white font-semibold">
                 {{ filterOptions.accountFilter?.bank }}
               </p>
             </div>
           </div>
 
-          <ng-container placeholder-content>
-            <p
-              class="text-sm text-white w-11/12 overflow-x-hidden text-ellipsis whitespace-nowrap"
-            >
-              Todas
-            </p>
-          </ng-container>
+          <div
+            placeholder-content
+            class="gap-2 flex items-center w-full overflow-hidden"
+          >
+            <div class="gap-2 flex items-center w-full overflow-hidden">
+              <p class="overflow-hidden text-sm text-white font-semibold">
+                Todas
+              </p>
+            </div>
+          </div>
 
           <ng-container options-loop>
             @for (account of accounts; track account) {
@@ -135,7 +143,7 @@
               (click)="changeAccountFilter(account)"
               class="py-2 px-3 gap-2 flex items-center hover:bg-slate-200 transition-all duration-150 w-full"
             >
-              <p class="overflow-hidden text-xs text-slate-800 font-semibold">
+              <p class="overflow-hidden text-sm text-slate-800 font-semibold">
                 {{ account.bank }}
               </p>
             </button>
@@ -144,8 +152,8 @@
               (click)="changeAccountFilter(null)"
               class="py-2 px-3 gap-2 flex items-center hover:bg-slate-200 transition-all duration-150 w-full"
             >
-              <p class="overflow-hidden text-xs text-slate-800 font-semibold">
-                Nenhuma
+              <p class="overflow-hidden text-sm text-slate-800 font-semibold">
+                Todas
               </p>
             </button>
           </ng-container>
@@ -182,10 +190,7 @@
       </button>
       <mat-menu #filterMenu="matMenu">
         <button class="!py-1 !min-h-0" mat-menu-item>
-          <p class="text-sm text-red-600 flex items-center gap-1">
-            <span class="material-symbols-outlined text-base"> delete </span
-            >excluir
-          </p>
+          
         </button>
       </mat-menu>
     </div>

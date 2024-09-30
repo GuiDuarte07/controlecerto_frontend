@@ -8,10 +8,11 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   styleUrl: './selection.component.scss',
 })
 export class SelectionComponent {
-  @Input() label!: string;
-  @Output() itemSelected = new EventEmitter<any>();
+  @Input({ required: true }) label!: string;
+  @Input({ required: true }) placeholder!: string;
+  @Input({ required: true }) itemSelected!: boolean;
 
-  isOpen = true;
+  isOpen = false;
 
   toggleSelection(event: MouseEvent) {
     event.stopPropagation();
@@ -26,11 +27,5 @@ export class SelectionComponent {
     if (this.isOpen) {
       window.addEventListener('click', closeSelectionOnClick);
     }
-  }
-
-  // Seleciona um item e emite o evento
-  selectItem(item: any) {
-    this.isOpen = false;
-    this.itemSelected.emit(item); // Emite o item selecionado
   }
 }

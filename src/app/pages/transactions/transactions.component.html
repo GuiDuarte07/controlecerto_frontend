@@ -99,7 +99,7 @@
       </button> 
 
         @if(showTransactionSearch) {
-          <input [(ngModel)]="filterOptions.textFilter" type="text" name="" id="" class="h-6 w-full rounded-md text-sm bg-slate-100 px-2 text-slate-800" placeholder="Pesquisar por texto">
+          <input [(ngModel)]="filterOptions.textFilter" type="text" id="showTransactionSearch" class="h-6 w-full rounded-md text-sm bg-slate-100 px-2 text-slate-800" placeholder="Pesquisar por texto">
         }
       </div>
 
@@ -188,17 +188,15 @@
           more_vert
         </span>
       </button>
-      <mat-menu #filterMenu="matMenu">
-        <button class="!py-1 !min-h-0" mat-menu-item>
-          
-        </button>
+      <mat-menu #filterMenu="matMenu" class="px-2">
+        <mat-checkbox [(ngModel)]="selectMode">Selecionar transações</mat-checkbox>
       </mat-menu>
     </div>
 
     <div class="w-full">
       <!-- LISTA DE TRANSAÇÕES -->
     @for(transaction of filteredTransactions; track transaction) {
-      <app-transaction-expansion-panel [transaction]="transaction" [updateTransactions]="updateTransactions"></app-transaction-expansion-panel>
+      <app-transaction-expansion-panel [selectMode]="selectMode" (checkedEvent)="checkedTransatcionUpdate($event)" [transaction]="transaction" [updateTransactions]="updateTransactions"></app-transaction-expansion-panel>
   
       <!-- LISTA DE TRANSAÇÃO VAZIA -->
       } @if(filteredTransactions.length === 0 && invoices.length === 0) {

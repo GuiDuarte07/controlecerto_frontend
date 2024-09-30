@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { InfoTransactionResponse } from '../../models/InfoTransactionResponse';
 import { CommonModule } from '@angular/common';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -11,11 +11,19 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { CreateTransactionDialogComponent } from '../dialogs/create-transaction-dialog/create-transaction-dialog.component';
 import { AlertDialogComponent } from '../dialogs/alert-dialog/alert-dialog.component';
 import { TransactionTypeEnum } from '../../enums/TransactionTypeEnum';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-transaction-expansion-panel',
   standalone: true,
-  imports: [MatExpansionModule, CommonModule, MatTooltipModule],
+  imports: [
+    MatExpansionModule,
+    CommonModule,
+    MatTooltipModule,
+    MatCheckboxModule,
+    FormsModule,
+  ],
   templateUrl: './transaction-expansion-panel.component.html',
   styleUrl: './transaction-expansion-panel.component.scss',
 })
@@ -23,13 +31,27 @@ export class TransactionExpansionPanelComponent {
   @Input() transaction!: InfoTransactionResponse;
   @Input() updateTransactions!: () => void;
 
+  @Input() selectMode: boolean = false;
+  @Input() checked: boolean = false;
+  @Output() checkedEvent = new EventEmitter<{
+    transaction: InfoTransactionResponse;
+    checked: boolean;
+  }>();
+
   constructor(
     private transactionService: TransactionService,
     private creditCardService: CreditCardService,
-    private accountService: AccountService,
     public formaterService: FormaterService,
     public dialog: MatDialog
   ) {}
+
+  toggleCheckedStatus() {
+    this.checked = !this.checked;
+    this.checkedEvent.emit({
+      transaction: this.transaction,
+      checked: this.checked,
+    });
+  }
 
   openEditTransactionDialog(transaction: InfoTransactionResponse) {
     const dialogRef = this.dialog.open(CreateTransactionDialogComponent, {

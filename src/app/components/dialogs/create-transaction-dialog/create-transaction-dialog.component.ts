@@ -87,8 +87,6 @@ interface ITransactionForm {
 })
 export class CreateTransactionDialogComponent implements OnInit {
   transactionForm!: FormGroup<ITransactionForm>;
-  categorySelection = signal(false);
-  accountSelection = signal(false);
   datepicker = new Date();
 
   accounts: Account[] = [];
@@ -273,33 +271,6 @@ export class CreateTransactionDialogComponent implements OnInit {
   changeAmountPerInstallment() {
     this.amountPerInstallment =
       this.transactionForm.value.amount! / this.installments;
-  }
-
-  toggleSelection(event: MouseEvent, selection: 'account' | 'category') {
-    event.stopPropagation();
-
-    if (selection === 'account') {
-      this.accountSelection.set(!this.accountSelection());
-    }
-    if (selection === 'category') {
-      this.categorySelection.set(!this.categorySelection());
-    }
-
-    const closeSelectionOnClick = (event: MouseEvent) => {
-      if (selection === 'account') {
-        this.accountSelection.set(false);
-      }
-
-      if (selection === 'category') {
-        this.categorySelection.set(false);
-      }
-
-      window.removeEventListener('click', closeSelectionOnClick);
-    };
-
-    if (this.accountSelection() || this.categorySelection()) {
-      window.addEventListener('click', closeSelectionOnClick);
-    }
   }
 
   openSnackBar(message: string) {

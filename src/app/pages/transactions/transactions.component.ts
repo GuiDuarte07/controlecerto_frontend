@@ -18,6 +18,8 @@ import { CreditCardService } from '../../services/credit-card.service';
 import { RouterLink } from '@angular/router';
 import { InvoicePaymentDialogComponent } from '../../components/dialogs/invoice-payment-dialog/invoice-payment-dialog.component';
 import { Account } from '../../models/AccountRequest ';
+import { SelectionComponent } from '../../components/selection/selection.component';
+import { TransactionExpansionPanelComponent } from '../../components/transaction-expansion-panel/transaction-expansion-panel.component';
 
 @Component({
   selector: 'app-transactions',
@@ -29,6 +31,8 @@ import { Account } from '../../models/AccountRequest ';
     MatTooltipModule,
     MatMenuModule,
     RouterLink,
+    SelectionComponent,
+    TransactionExpansionPanelComponent,
   ],
   templateUrl: './transactions.component.html',
   styleUrl: './transactions.component.scss',
@@ -50,7 +54,7 @@ export class TransactionsComponent implements OnInit {
 
   filterOptions: {
     dateFilterDes: boolean;
-    accountFilter: number | null;
+    accountFilter: Account | null;
     textFilter: string;
   } = {
     dateFilterDes: true,
@@ -79,7 +83,7 @@ export class TransactionsComponent implements OnInit {
     if (this.filterOptions.accountFilter !== null) {
       filtered = filtered.filter(
         (transaction) =>
-          transaction.account.id === this.filterOptions.accountFilter
+          transaction.account.id === this.filterOptions.accountFilter?.id
       );
     }
 
@@ -109,8 +113,8 @@ export class TransactionsComponent implements OnInit {
     this.filterOptions.dateFilterDes = !this.filterOptions.dateFilterDes;
   }
 
-  changeAccountFilter(accountId: number | null) {
-    this.filterOptions.accountFilter = accountId;
+  changeAccountFilter(account: Account | null) {
+    this.filterOptions.accountFilter = account;
   }
 
   toggleAccountSelection() {

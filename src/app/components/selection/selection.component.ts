@@ -1,15 +1,17 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-selection',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './selection.component.html',
   styleUrl: './selection.component.scss',
 })
 export class SelectionComponent {
-  @Input({ required: true }) label!: string;
-  @Input({ required: true }) placeholder!: string;
+  @Input() customClass?: string;
+  @Input() label?: string;
+  @Input() placeholder?: string;
   @Input({ required: true }) itemSelected!: boolean;
 
   isOpen = false;

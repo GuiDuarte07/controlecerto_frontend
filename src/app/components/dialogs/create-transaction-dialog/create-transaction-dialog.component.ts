@@ -115,7 +115,9 @@ export class CreateTransactionDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<CreateTransactionDialogComponent>,
     private snackBar: MatSnackBar,
     public dialog: MatDialog
-  ) {}
+  ) {
+    console.log(this.data);
+  }
 
   dateOptions = {
     today: true,

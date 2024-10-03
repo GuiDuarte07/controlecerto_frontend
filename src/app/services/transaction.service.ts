@@ -32,7 +32,12 @@ export class TransactionService {
     return this.http.delete(`${this.hostAddress}/${suffix}/${transactionId}`);
   }
 
-  getTransactions(startDate?: Date, endDate?: Date, accountId?: number) {
+  getTransactions(
+    startDate?: Date,
+    endDate?: Date,
+    seeInvoices?: boolean,
+    accountId?: number
+  ) {
     const suffix = 'GetTransactions';
 
     let params: any = {};
@@ -58,6 +63,8 @@ export class TransactionService {
     }
 
     if (accountId) params.accountId = accountId;
+
+    if (seeInvoices) params.seeInvoices = seeInvoices;
 
     return this.http.get<TransactionList>(`${this.hostAddress}/${suffix}`, {
       params: params,

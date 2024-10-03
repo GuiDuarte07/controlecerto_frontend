@@ -64,10 +64,12 @@ export class TransactionsComponent implements OnInit {
     dateFilterDes: boolean;
     accountFilter: Account | null;
     textFilter: string;
+    seeInvoices: boolean;
   } = {
     dateFilterDes: true,
     accountFilter: null,
     textFilter: '',
+    seeInvoices: true,
   };
 
   constructor(
@@ -114,6 +116,12 @@ export class TransactionsComponent implements OnInit {
     });
 
     return filtered;
+  }
+
+  setSeeInvoice() {
+    this.filterOptions.seeInvoices = !this.filterOptions.seeInvoices;
+    console.log(this.filterOptions.seeInvoices);
+    this.updateTransactions();
   }
 
   toggleTransactionSearch() {
@@ -186,7 +194,11 @@ export class TransactionsComponent implements OnInit {
     );
 
     this.transactionService
-      .getTransactions(firstDayOfMonthUTC, lastDayOfMonthUTC)
+      .getTransactions(
+        firstDayOfMonthUTC,
+        lastDayOfMonthUTC,
+        this.filterOptions.seeInvoices
+      )
       .subscribe((result) => {
         this.transactions = result.transactions;
         this.invoices = result.invoices;

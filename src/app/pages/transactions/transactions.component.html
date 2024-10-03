@@ -190,6 +190,7 @@
       </button>
       <mat-menu #filterMenu="matMenu" class="px-2">
         <mat-checkbox [(ngModel)]="selectMode">Selecionar transações</mat-checkbox>
+        <mat-checkbox (change)="setSeeInvoice()">Despesas de cartão como transações</mat-checkbox>
       </mat-menu>
     </div>
 
@@ -208,10 +209,10 @@
       }
     </div>
 
-    <div class="w-full h-[2px] rounded-2xl bg-slate-200 my-1"></div>
-
     <!-- LISTA DE FATURAS -->
-    @if(invoices.length) { @for(invoice of invoices; track invoice) {
+    @if(invoices.length) { 
+      <div class="w-full h-[2px] rounded-2xl bg-slate-200 my-1"></div>
+      @for(invoice of invoices; track invoice) {
     @if(invoice.totalAmount > 0) {
     <mat-expansion-panel
       [expanded]="false"

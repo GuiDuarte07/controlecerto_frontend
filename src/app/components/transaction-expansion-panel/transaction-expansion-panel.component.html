@@ -57,11 +57,11 @@
       <!-- ícone, descrição e quantia -->
       <div class="w-10/12 flex flex-col gap-2 items-center">
         <div
-          [ngStyle]="{ 'background-color': transaction.category!.color }"
+          [ngStyle]="{ 'background-color': transaction.category?.color || '#057a55' }"
           class="text-white rounded-full w-14 h-14 flex items-center justify-center p-2"
         >
           <span class="material-symbols-outlined text-3xl">
-            {{ transaction.category!.icon }}
+            {{ transaction.category?.icon || "payments" }}
           </span>
         </div>
 
@@ -85,11 +85,12 @@
       <!-- Botões de Editar e Excluir -->
       <div class="flex flex-col gap-4 items-center justify-evenly">
         <button
+          [disabled]="transaction.type === 4"
           (click)="openEditTransactionDialog(transaction)"
           aria-label="Editar lançamento"
           [matTooltipPosition]="'right'"
           mat-raised-button
-          matTooltip="Editar Lançamento"
+          [matTooltip]="transaction.type === 4 ? 'Não Disponível para pagamento de fatura': 'Editar Lançamento'"
           type="button"
           class="flex items-center justify-center size-8 bg-slate-400 rounded-full"
         >
@@ -127,7 +128,7 @@
         <div class="flex flex-col gap-1 sm:w-4/12 w-6/12 justify-center">
           <p class="text-sm text-slate-400">Categoria</p>
           <p class="text-sm text-slate-800">
-            {{ transaction.category!.name }}
+            {{ transaction.category?.name || 'Pagamento Fatura' }}
           </p>
         </div>
       </div>

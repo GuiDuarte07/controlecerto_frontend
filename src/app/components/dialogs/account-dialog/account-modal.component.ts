@@ -112,7 +112,6 @@ export class AccountDialogComponent implements OnInit {
         ...this.accountForm.getRawValue(),
         balance: this.accountForm.value.balance!,
       });
-      console.log(accountToCreate);
       this.accountService.createAccount(accountToCreate).subscribe({
         next: () => {
           this.openSnackBar('Conta criada com sucesso!');
@@ -128,7 +127,6 @@ export class AccountDialogComponent implements OnInit {
         id: this.data.account.id!,
         ...this.accountForm.getRawValue(),
       });
-      console.log(accountToUpdate);
       this.accountService.updateAccount(accountToUpdate).subscribe({
         next: () => {
           this.openSnackBar('Conta editada com sucesso!');

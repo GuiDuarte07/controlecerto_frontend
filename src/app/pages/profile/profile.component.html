@@ -35,6 +35,21 @@
     </div>
     } @else {
     <div class="flex flex-col gap-2">
+
+      @if(!user!.emailConfirmed && !closeConfirmEmailAlert) {
+        <div class="w-full py-2 px-4 bg-yellow-300 border-2 border-solid border-yellow-500 flex items-center justify-start rounded-2xl">
+          <div class="flex-1 flex gap-4 items-center">
+            <p class="text-slate-800 text-sm">Seu e-mail ainda não foi confirmado</p>
+            <button (click)="sendConfirmEmail()" type="button" class="text-sm px-2 py-1 rounded-lg bg-teal-500 text-white">enviar e-mail</button>
+          </div>
+          <button type="button" (click)="sendCloseConfirmEmailAlert()" class="pointer flex items-center justify-center">
+            <span class="material-symbols-outlined">
+              close
+              </span>
+          </button>
+        </div>
+      }
+
       <!-- NOME -->
       <div class="mb-3">
           <label for="name" class="text-slate-500 pb-3 text-sm font-semibold"
@@ -51,7 +66,7 @@
               [disabled]="!editName"
               [(ngModel)]="newNameString"
             />
-            <!-- <button
+            <button
               (click)="setEditName()"
               type="button"
               class="absolute top-1/2 right-2 transform -translate-y-1/2 cursor-pointer flex justify-center items-center"
@@ -65,7 +80,7 @@
                 edit_square
               </span>
               }
-            </button> -->
+            </button>
           </div>
         </div>
 
@@ -85,7 +100,7 @@
             [disabled]="!editEmail"
             [(ngModel)]="newEmailString"
           />
-          <!-- <button
+          <button
             (click)="setEditEmail()"
             type="button"
             class="absolute top-1/2 right-2 transform -translate-y-1/2 cursor-pointer flex justify-center items-center"
@@ -99,7 +114,7 @@
               edit_square
             </span>
             }
-          </button> -->
+          </button>
         </div>
       </div>
 

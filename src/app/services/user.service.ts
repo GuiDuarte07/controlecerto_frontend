@@ -1,3 +1,4 @@
+import { UpdateUserRequest } from './../models/UpdateUserRequest';
 import { Injectable } from '@angular/core';
 import { serverConnectionString } from '../config/server';
 import { HttpClient } from '@angular/common/http';
@@ -65,5 +66,15 @@ export class UserService {
       password,
       confirmPassword,
     });
+  }
+
+  updateUser(
+    updateUserRequest: UpdateUserRequest
+  ): Observable<DetailsUserResponse> {
+    const rote = 'Update';
+    return this.httpClient.patch<DetailsUserResponse>(
+      `${this.hostAddress}/${rote}`,
+      updateUserRequest
+    );
   }
 }

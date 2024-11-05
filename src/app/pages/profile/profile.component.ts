@@ -14,6 +14,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DetailsUserResponse } from '../../models/DetailsUserResponse';
 import { CommonModule } from '@angular/common';
+import { UpdateUserRequest } from '../../models/UpdateUserRequest';
 
 interface IChangePasswordForm {
   oldPassword: FormControl<string>;
@@ -47,6 +48,8 @@ export class ProfileComponent implements OnInit {
   passwordVisibility = false;
   changePasswordError = '';
   changePasswordForm!: FormGroup<IChangePasswordForm>;
+
+  closeConfirmEmailAlert: boolean = false;
 
   user!: DetailsUserResponse | null;
 
@@ -99,6 +102,16 @@ export class ProfileComponent implements OnInit {
     });
   }
 
+  sendConfirmEmail() {
+    this.userService
+      .sendConfirmEmail()
+      .subscribe((_) => this.sendCloseConfirmEmailAlert());
+  }
+
+  sendCloseConfirmEmailAlert() {
+    this.closeConfirmEmailAlert = true;
+  }
+
   updatePassword() {
     if (!this.changePasswordForm.valid) {
       return;
@@ -139,9 +152,20 @@ export class ProfileComponent implements OnInit {
       this.editEmail = !this.editEmail;
       this.newEmailString = '';
     } else {
-      //Enviar requisição para backend
-      if (this.newEmailString == this.user!.email) {
+      if (this.newEmailString !== this.user!.email) {
         this.editEmail = !this.editEmail;
+
+        const request = new UpdateUserRequest(
+          this.user!.id,
+          undefined,
+          this.newEmailString
+        );
+
+        this.userService.updateUser(request).subscribe({
+          next: (response) => {
+            this.user = response;
+          },
+        });
       }
     }
   }
@@ -151,9 +175,19 @@ export class ProfileComponent implements OnInit {
       this.editName = !this.editName;
       this.newNameString = '';
     } else {
-      //Enviar requisição para backend
-      if (this.newNameString == this.user!.name) {
+      if (this.newNameString !== this.user!.name) {
         this.editName = !this.editName;
+
+        const request = new UpdateUserRequest(
+          this.user!.id,
+          this.newNameString
+        );
+
+        this.userService.updateUser(request).subscribe({
+          next: (response) => {
+            this.user = response;
+          },
+        });
       }
     }
   }

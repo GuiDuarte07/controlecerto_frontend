@@ -217,7 +217,7 @@
               <p class="md:w-6/12 text-sm text-slate-700">
                 {{ formaterService.getMonthYearString(invoice.invoiceDate) }}
               </p>
-              <a class="md:w-2/12 text-sm text-slate-600">ver fatura</a>
+              <a [routerLink]="['/invoices', invoice.id]" class="md:w-2/12 text-sm text-slate-600">ver fatura</a>
             </div>
           </li>
           }
@@ -240,7 +240,7 @@
 
         @if(transactions && transactions.length > 0) {
         <ul class="">
-          @for (transaction of transactions; track $index) {
+          @for (transaction of transactions.slice(0, transactionsListSize); track $index) {
           <li
             class="flex flex-col md:flex-row md:gap-5 md:justify-between md:items-center py-2 border-b border-slate-300"
           >
@@ -264,6 +264,13 @@
             </div>
           </li>
           }
+          @if(transactions && transactions.length > 0 && transactions.length > transactionsListSize) {
+            <button type="button" (click)="seeMoreTransactions()" aria-label="Ver mais transações" class="mt-2 py-2 px-1 rounded-lg w-full bg-teal-400 shadow flex justify-center items-center">
+              <p class="text-sm font-medium text-white">
+                Ver mais transações
+              </p>
+            </button>
+          }
           <li class="py-2">
             <p class="text-sm font-medium text-slate-700">
               Total
@@ -274,6 +281,7 @@
         } @else {
         <p class="">Nenhuma receita localizada no mês atual</p>
         }
+        
       </div>
 
       <!-- Expense option -->
@@ -284,7 +292,7 @@
         </div>
         @if(transactions && transactions.length > 0) {
           <ul class="">
-            @for (transaction of transactions; track $index) {
+            @for (transaction of transactions.slice(0, transactionsListSize); track $index) {
             <li
               class="flex flex-col md:flex-row md:gap-5 md:justify-between md:items-center py-2 border-b border-slate-300"
             >
@@ -308,6 +316,14 @@
               </div>
             </li>
             }
+            @if(transactions && transactions.length > 0 && transactions.length > transactionsListSize) {
+              <button type="button" (click)="seeMoreTransactions()" aria-label="Ver mais transações" class="mt-2 py-2 px-1 rounded-lg w-full bg-teal-400 shadow flex justify-center items-center">
+                <p class="text-sm font-medium text-white">
+                  Ver mais transações
+                </p>
+              </button>
+            }
+
             <li class="py-2">
               <p class="text-sm font-medium text-slate-700">
                 Total

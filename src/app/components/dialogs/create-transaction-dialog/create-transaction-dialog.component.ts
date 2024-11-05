@@ -48,6 +48,7 @@ import { UpdateTransactionRequest } from '../../../models/UpdateTransaction';
 import { UpdateCreditPurchaseRequest } from '../../../models/UpdateCreditPurchaseRequest';
 import { AccountDialogComponent } from '../account-dialog/account-modal.component';
 import { CreateCreditCardDialogComponent } from '../create-credit-card-dialog/create-credit-card-dialog.component';
+import { SelectionComponent } from '../../selection/selection.component';
 
 interface ITransactionForm {
   amount: FormControl<number>;
@@ -78,6 +79,7 @@ interface ITransactionForm {
     CurrencyMaskDirective,
     MatDatepickerModule,
     MatCheckboxModule,
+    SelectionComponent,
   ],
   providers: [provideNativeDateAdapter(), CurrencyMaskDirective],
   templateUrl: './create-transaction-dialog.component.html',
@@ -85,8 +87,6 @@ interface ITransactionForm {
 })
 export class CreateTransactionDialogComponent implements OnInit {
   transactionForm!: FormGroup<ITransactionForm>;
-  categorySelection = signal(false);
-  accountSelection = signal(false);
   datepicker = new Date();
 
   accounts: Account[] = [];
@@ -115,7 +115,9 @@ export class CreateTransactionDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<CreateTransactionDialogComponent>,
     private snackBar: MatSnackBar,
     public dialog: MatDialog
-  ) {}
+  ) {
+    console.log(this.data);
+  }
 
   dateOptions = {
     today: true,
@@ -271,33 +273,6 @@ export class CreateTransactionDialogComponent implements OnInit {
   changeAmountPerInstallment() {
     this.amountPerInstallment =
       this.transactionForm.value.amount! / this.installments;
-  }
-
-  toggleSelection(event: MouseEvent, selection: 'account' | 'category') {
-    event.stopPropagation();
-
-    if (selection === 'account') {
-      this.accountSelection.set(!this.accountSelection());
-    }
-    if (selection === 'category') {
-      this.categorySelection.set(!this.categorySelection());
-    }
-
-    const closeSelectionOnClick = (event: MouseEvent) => {
-      if (selection === 'account') {
-        this.accountSelection.set(false);
-      }
-
-      if (selection === 'category') {
-        this.categorySelection.set(false);
-      }
-
-      window.removeEventListener('click', closeSelectionOnClick);
-    };
-
-    if (this.accountSelection() || this.categorySelection()) {
-      window.addEventListener('click', closeSelectionOnClick);
-    }
   }
 
   openSnackBar(message: string) {

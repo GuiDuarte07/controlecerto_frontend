@@ -1,6 +1,8 @@
 <section class="registration-container">
   <div class="flex w-full justify-between items-center mb-4">
-    <h2 class="text-lg md:text-2xl font-bold text-slate-700 tracking-wide">Contas</h2>
+    <h2 class="text-lg md:text-2xl font-bold text-slate-700 tracking-wide">
+      Contas
+    </h2>
 
     <button
       (click)="openAccountDialog()"
@@ -69,11 +71,27 @@
         <button
           class="text-slate-600 flex items-center justify-center"
           [matMenuTriggerFor]="menu"
-          aria-label="Example icon-button with a menu"
+          aria-label="Abrir menu"
         >
           <span class="material-symbols-outlined text-xl"> more_vert </span>
         </button>
         <mat-menu #menu="matMenu">
+          <button
+            (click)="openAccountDialog(account)"
+            class="!py-1 !min-h-0"
+            mat-menu-item
+          >
+            <p class="text-sm text-slate-600 flex items-center gap-1">
+              <span
+                aria-label="Editar conta"
+                class="material-symbols-outlined text-base"
+              >
+                edit_square
+              </span>
+              editar
+            </p>
+          </button>
+          
           <button
             (click)="openDeleteAlertDialog(account)"
             class="!py-1 !min-h-0"

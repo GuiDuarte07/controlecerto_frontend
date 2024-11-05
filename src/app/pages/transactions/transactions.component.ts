@@ -17,6 +17,11 @@ import { AccountService } from '../../services/account.service';
 import { CreditCardService } from '../../services/credit-card.service';
 import { RouterLink } from '@angular/router';
 import { InvoicePaymentDialogComponent } from '../../components/dialogs/invoice-payment-dialog/invoice-payment-dialog.component';
+import { Account } from '../../models/AccountRequest ';
+import { SelectionComponent } from '../../components/selection/selection.component';
+import { TransactionExpansionPanelComponent } from '../../components/transaction-expansion-panel/transaction-expansion-panel.component';
+import { FormsModule } from '@angular/forms';
+import { MatCheckbox } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-transactions',
@@ -28,6 +33,10 @@ import { InvoicePaymentDialogComponent } from '../../components/dialogs/invoice-
     MatTooltipModule,
     MatMenuModule,
     RouterLink,
+    SelectionComponent,
+    TransactionExpansionPanelComponent,
+    FormsModule,
+    MatCheckbox,
   ],
   templateUrl: './transactions.component.html',
   styleUrl: './transactions.component.scss',
@@ -37,6 +46,13 @@ export class TransactionsComponent implements OnInit {
   invoices: InfoInvoiceResponse[] = [];
   accountBalance: number = 0;
 
+  accountSelection = signal(true);
+  accounts: Account[] | undefined;
+
+  showTransactionSearch: boolean = false;
+  selectMode: boolean = false;
+  selectedTransactions: InfoTransactionResponse[] = [];
+
   private readonly todayDate = new Date();
   filterDate: Date = new Date(
     this.todayDate.getFullYear(),
@@ -44,9 +60,20 @@ export class TransactionsComponent implements OnInit {
     1
   );
 
+  filterOptions: {
+    dateFilterDes: boolean;
+    accountFilter: Account | null;
+    textFilter: string;
+    seeInvoices: boolean;
+  } = {
+    dateFilterDes: true,
+    accountFilter: null,
+    textFilter: '',
+    seeInvoices: true,
+  };
+
   constructor(
     private transactionService: TransactionService,
-    private creditCardService: CreditCardService,
     private accountService: AccountService,
     public formaterService: FormaterService,
     public dialog: MatDialog
@@ -54,6 +81,85 @@ export class TransactionsComponent implements OnInit {
 
   ngOnInit(): void {
     this.updateTransactions();
+
+    this.accountService.getAccounts().subscribe((acc) => (this.accounts = acc));
+  }
+
+  get filteredTransactions() {
+    let filtered = [...this.transactions];
+
+    // Filtrar por conta
+    if (this.filterOptions.accountFilter !== null) {
+      filtered = filtered.filter(
+        (transaction) =>
+          transaction.account.id === this.filterOptions.accountFilter?.id
+      );
+    }
+
+    // Filtrar por texto (descrição, amount, observations)
+    if (this.filterOptions.textFilter.trim() !== '') {
+      const searchText = this.filterOptions.textFilter.toLowerCase();
+      filtered = filtered.filter(
+        (transaction) =>
+          transaction.description.toLowerCase().includes(searchText) ||
+          transaction.amount.toString().includes(searchText) ||
+          (transaction.observations &&
+            transaction.observations.toLowerCase().includes(searchText))
+      );
+    }
+
+    // Ordenar por data
+    filtered.sort((a, b) => {
+      const dateA = new Date(a.purchaseDate).getTime();
+      const dateB = new Date(b.purchaseDate).getTime();
+      return this.filterOptions.dateFilterDes ? dateB - dateA : dateA - dateB;
+    });
+
+    return filtered;
+  }
+
+  setSeeInvoice() {
+    this.filterOptions.seeInvoices = !this.filterOptions.seeInvoices;
+    console.log(this.filterOptions.seeInvoices);
+    this.updateTransactions();
+  }
+
+  toggleTransactionSearch() {
+    this.showTransactionSearch = !this.showTransactionSearch;
+
+    if (!this.showTransactionSearch) {
+      this.filterOptions.textFilter = '';
+    }
+  }
+
+  changeDateFilter() {
+    this.filterOptions.dateFilterDes = !this.filterOptions.dateFilterDes;
+  }
+
+  changeAccountFilter(account: Account | null) {
+    this.filterOptions.accountFilter = account;
+  }
+
+  toggleAccountSelection() {
+    this.accountSelection.set(!this.accountSelection());
+  }
+
+  checkedTransatcionUpdate({
+    transaction,
+    checked,
+  }: {
+    transaction: InfoTransactionResponse;
+    checked: boolean;
+  }) {
+    if (checked) {
+      this.selectedTransactions.push(transaction);
+    } else {
+      this.selectedTransactions = this.selectedTransactions.filter(
+        (t) => t.id !== transaction.id
+      );
+    }
+
+    console.log(this.selectedTransactions);
   }
 
   updateTransactions() {
@@ -88,7 +194,11 @@ export class TransactionsComponent implements OnInit {
     );
 
     this.transactionService
-      .getTransactions(firstDayOfMonthUTC, lastDayOfMonthUTC)
+      .getTransactions(
+        firstDayOfMonthUTC,
+        lastDayOfMonthUTC,
+        this.filterOptions.seeInvoices
+      )
       .subscribe((result) => {
         this.transactions = result.transactions;
         this.invoices = result.invoices;
@@ -127,7 +237,12 @@ export class TransactionsComponent implements OnInit {
 
   expensesTotal() {
     let expenseValue = 0;
-    this.transactions.forEach((t) => {
+
+    const transactions = this.selectMode
+      ? this.selectedTransactions
+      : this.filteredTransactions;
+
+    transactions.forEach((t) => {
       if (
         t.type === TransactionTypeEnum.EXPENSE ||
         t.type === TransactionTypeEnum.INVOICEPAYMENT
@@ -141,7 +256,12 @@ export class TransactionsComponent implements OnInit {
 
   incomesTotal() {
     let incomeValue = 0;
-    this.transactions.forEach((t) => {
+
+    const transactions = this.selectMode
+      ? this.selectedTransactions
+      : this.filteredTransactions;
+
+    transactions.forEach((t) => {
       if (t.type === TransactionTypeEnum.INCOME) {
         incomeValue += t.amount;
       }
@@ -157,95 +277,11 @@ export class TransactionsComponent implements OnInit {
     );
   }
 
-  openDeleteAlertDialog(transaction: InfoTransactionResponse) {
-    if (transaction.type === TransactionTypeEnum.CREDITEXPENSE) {
-      const dialogRef = this.dialog.open(AlertDialogComponent, {
-        data: {
-          title: 'Deletar lançamento',
-          message: `Você tem certeza que deseja deletar esse lançamento?
-                    ${transaction.description}
-                     \n* Lembrando que esse processo irá deletar todas as parcelas dessa compra, mas só será possível se nenhuma fatura tiver sido paga ainda.
-          `,
-          successMessage: 'Lançamento deletado com sucesso!',
-          actionButtonMessage: 'Deletar',
-          confirmObservable: this.creditCardService.deleteCreditPurchase(
-            transaction.creditPurchase!.id!
-          ),
-        },
-      });
-      dialogRef.afterClosed().subscribe((sucess) => {
-        if ((sucess as boolean) === true) {
-          this.updateTransactions();
-        }
-      });
-
-      return;
-    }
-
-    if(transaction.type === TransactionTypeEnum.INVOICEPAYMENT) {
-      const dialogRef = this.dialog.open(AlertDialogComponent, {
-        data: {
-          title: 'Deletar lançamento',
-          message: `Você tem certeza que deseja excluir esse pagamento de fatura?
-                    \n${transaction.description}
-          `,
-          successMessage: 'Pagamento deletado com sucesso!',
-          actionButtonMessage: 'Deletar',
-          confirmObservable: this.creditCardService.deleteInvoicePayment(
-            transaction.id
-          ),
-        },
-      });
-      dialogRef.afterClosed().subscribe((sucess) => {
-        if ((sucess as boolean) === true) {
-          this.updateTransactions();
-        }
-      });
-
-      return;
-    }
-
-    const dialogRef = this.dialog.open(AlertDialogComponent, {
-      data: {
-        title: 'Deletar lançamento',
-        message: `Você tem certeza que deseja deletar esse lançamento?
-                  ${transaction.description}
-        `,
-        successMessage: 'Lançamento deletado com sucesso!',
-        actionButtonMessage: 'Deletar',
-        confirmObservable: this.transactionService.deleteTransaction(
-          transaction.id
-        ),
-      },
-    });
-    dialogRef.afterClosed().subscribe((sucess) => {
-      if ((sucess as boolean) === true) {
-        this.updateTransactions();
-      }
-    });
-  }
-
   openCreateTransactionDialog(type: TransactionTypeEnum) {
     const dialogRef = this.dialog.open(CreateTransactionDialogComponent, {
       data: {
         transactionType: type,
         newTransaction: true,
-      },
-    });
-
-    dialogRef.afterClosed().subscribe((sucess) => {
-      if ((sucess as boolean) === true) {
-        this.updateTransactions();
-      }
-    });
-  }
-
-  openEditTransactionDialog(transaction: InfoTransactionResponse) {
-    const dialogRef = this.dialog.open(CreateTransactionDialogComponent, {
-      data: {
-        transactionType: transaction.type,
-        newTransaction: false,
-        transaction,
       },
     });
 

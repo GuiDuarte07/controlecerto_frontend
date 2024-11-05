@@ -111,50 +111,29 @@
     <div class="flex gap-4 md:flex-row flex-col">
       <!-- CATEGORY SELECTION -->
       <div class="w-full">
-        <p
-          class="block mb-1 text-sm font-medium text-slate-600 dark:text-white"
+        <app-selection
+          label="Categoria"
+          placeholder="Selecione uma categoria"
+          [itemSelected]="!!selectedCategory"
         >
-          Categoria
-        </p>
-
-        <div
-          role="button"
-          tabindex="0"
-          (click)="toggleSelection($event, 'category')"
-          class="relative bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-700 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-        >
-          <div class="w-full flex items-center">
-            @if (selectedCategory) {
-            <div class="gap-2 flex items-center w-full overflow-hidden">
-              <div
-                [ngStyle]="{ 'background-color': selectedCategory.color }"
-                class="h-6 w-7 rounded-lg flex justify-center items-center"
-              >
-                <span class="material-symbols-outlined text-base text-white">
-                  {{ selectedCategory.icon }}
-                </span>
-              </div>
-              <p class="overflow-hidden text-xs text-slate-800 font-semibold">
-                {{ selectedCategory.name }}
-              </p>
-            </div>
-            } @else {
-            <p
-              class="text-sm text-slate-500 w-11/12 overflow-x-hidden text-ellipsis whitespace-nowrap"
+          <div
+            selected-item-content
+            class="gap-2 flex items-center w-full overflow-hidden"
+          >
+            <div
+              [ngStyle]="{ 'background-color': selectedCategory?.color }"
+              class="h-6 w-7 rounded-lg flex justify-center items-center"
             >
-              Selecione uma categoria
+              <span class="material-symbols-outlined text-base text-white">
+                {{ selectedCategory?.icon }}
+              </span>
+            </div>
+            <p class="overflow-hidden text-xs text-slate-800 font-semibold">
+              {{ selectedCategory?.name }}
             </p>
-            }
-
-            <span class="ml-2 material-symbols-outlined text-slate-500">
-              arrow_drop_down
-            </span>
           </div>
 
-          <div
-            *ngIf="categorySelection()"
-            class="w-52 max-h-52 z-50 bg-white absolute top-full left-0 overflow-y-scroll rounded shadow"
-          >
+          <ng-container options-loop>
             @for (category of categories; track category) {
             <button
               (click)="changeSelectedItem(category)"
@@ -173,31 +152,27 @@
               </p>
             </button>
             }
-          </div>
-        </div>
+          </ng-container>
+        </app-selection>
       </div>
 
       <!-- ACCOUNT/CREDIT CARD SELECTION -->
-      <div class="w-full relative">
-        <p
-          class="block mb-1 text-sm font-medium text-slate-600 dark:text-white"
-        >
-          {{ data.transactionType === 2 ? "Cartão" : "Conta" }}
-        </p>
 
-        <div
-          role="button"
-          tabindex="0"
-          (click)="toggleSelection($event, 'account')"
-          class="relative bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-700 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+      <div class="w-full relative">
+        @if(data.transactionType === 2) {
+        <app-selection
+          label="Cartão"
+          placeholder="Selecione um cartão"
+          [itemSelected]="!!selectedCreditCard"
         >
-          <div class="w-full flex items-center">
-            @if (selectedAccount || selectedCreditCard) {
+          <div
+            selected-item-content
+            class="gap-2 flex items-center w-full overflow-hidden"
+          >
             <div class="gap-2 flex items-center w-full overflow-hidden">
               <div
                 [ngStyle]="{
-                  'background-color':
-                    selectedCreditCard?.account?.color || selectedAccount?.color
+                  'background-color': selectedCreditCard?.account?.color
                 }"
                 class="h-6 w-7 rounded-lg flex justify-center items-center"
               >
@@ -206,32 +181,13 @@
                 </span>
               </div>
               <p class="overflow-hidden text-xs text-slate-800 font-semibold">
-                {{ selectedAccount?.bank || selectedCreditCard?.description }}
+                {{ selectedCreditCard?.description }}
               </p>
             </div>
-            } @else {
-            <p
-              class="text-sm text-slate-500 w-11/12 overflow-x-hidden text-ellipsis whitespace-nowrap"
-            >
-              {{
-                data.transactionType === 2
-                  ? "Selecione um cartão"
-                  : "Selecione uma conta"
-              }}
-            </p>
-            }
-
-            <span class="ml-2 material-symbols-outlined text-slate-500">
-              arrow_drop_down
-            </span>
           </div>
 
-          <div
-            *ngIf="accountSelection()"
-            class="w-52 max-h-52 z-50 bg-white absolute top-full left-0 overflow-y-scroll rounded shadow"
-          >
-            @if(data.transactionType === 2) { @for (creditCard of creditCards;
-            track creditCard) {
+          <ng-container options-loop>
+            @for (creditCard of creditCards; track creditCard) {
             <button
               (click)="changeSelectedItem(creditCard)"
               class="py-2 px-3 gap-2 flex items-center hover:bg-slate-200 transition-all duration-150 w-full"
@@ -249,21 +205,70 @@
               </p>
             </button>
             } @empty {
-              <button
-                (click)="openCreditCardDialog()"
-                class="py-2 px-3 gap-2 flex items-center hover:bg-slate-200 transition-all duration-150 w-full"
+            <button
+              (click)="openCreditCardDialog()"
+              class="py-2 px-3 gap-2 flex items-center hover:bg-slate-200 transition-all duration-150 w-full"
+            >
+              <div
+                class="h-6 w-7 rounded-lg flex justify-center items-center bg-white"
               >
-                <div class="h-6 w-7 rounded-lg flex justify-center items-center bg-white">
-                  <span class="material-symbols-outlined text-base text-green-600">
-                    add
-                  </span>
-                </div>
-                <p class="overflow-hidden text-xs text-slate-800 font-semibold">
-                  Criar um cartão
-                </p>
-              </button>
-              }  
-          } @else { @for (account of accounts; track account) {
+                <span
+                  class="material-symbols-outlined text-base text-green-600"
+                >
+                  add
+                </span>
+              </div>
+              <p class="overflow-hidden text-xs text-slate-800 font-semibold">
+                Criar um cartão
+              </p>
+            </button>
+            }
+          </ng-container>
+        </app-selection>
+        @if (selectedCreditCard) {
+        <p
+          [ngClass]="{
+            '!text-red-500':
+              transactionForm.value.amount! >
+              selectedCreditCard!.totalLimit - selectedCreditCard!.usedLimit
+          }"
+          class="text-green-500 absolute top-full left-0 mt-1 text-xs font-medium"
+        >
+          Limite:
+          {{
+            selectedCreditCard!.totalLimit - selectedCreditCard!.usedLimit
+              | currency : "BRL" : "symbol"
+          }}
+        </p>
+        } } @else {
+        <app-selection
+          label="Conta"
+          placeholder="Selecione uma conta"
+          [itemSelected]="!!selectedAccount"
+        >
+          <div
+            selected-item-content
+            class="gap-2 flex items-center w-full overflow-hidden"
+          >
+            <div class="gap-2 flex items-center w-full overflow-hidden">
+              <div
+                [ngStyle]="{
+                  'background-color': selectedAccount?.color
+                }"
+                class="h-6 w-7 rounded-lg flex justify-center items-center"
+              >
+                <span class="material-symbols-outlined text-base text-white">
+                  account_balance
+                </span>
+              </div>
+              <p class="overflow-hidden text-xs text-slate-800 font-semibold">
+                {{ selectedAccount?.bank }}
+              </p>
+            </div>
+          </div>
+
+          <ng-container options-loop>
+            @for (account of accounts; track account) {
             <button
               (click)="changeSelectedItem(account)"
               class="py-2 px-3 gap-2 flex items-center hover:bg-slate-200 transition-all duration-150 w-full"
@@ -285,8 +290,12 @@
               (click)="openAccountDialog()"
               class="py-2 px-3 gap-2 flex items-center hover:bg-slate-200 transition-all duration-150 w-full"
             >
-              <div class="h-6 w-7 rounded-lg flex justify-center items-center bg-white">
-                <span class="material-symbols-outlined text-base text-green-600">
+              <div
+                class="h-6 w-7 rounded-lg flex justify-center items-center bg-white"
+              >
+                <span
+                  class="material-symbols-outlined text-base text-green-600"
+                >
                   add
                 </span>
               </div>
@@ -294,25 +303,9 @@
                 Criar uma conta
               </p>
             </button>
-            } }
-          </div>
-        </div>
-
-        @if (selectedCreditCard) {
-        <p
-          [ngClass]="{
-            '!text-red-500':
-              transactionForm.value.amount! >
-              selectedCreditCard!.totalLimit - selectedCreditCard!.usedLimit
-          }"
-          class="text-green-500 absolute top-full left-0 mt-1 text-xs font-medium"
-        >
-          Limite:
-          {{
-            selectedCreditCard!.totalLimit - selectedCreditCard!.usedLimit
-              | currency : "BRL" : "symbol"
-          }}
-        </p>
+            }
+          </ng-container>
+        </app-selection>
         }
       </div>
     </div>

@@ -1,0 +1,48 @@
+<div class="w-full">
+  @if(label) {
+  <p class="block mb-1 text-sm font-medium text-slate-600 dark:text-white">
+    {{ label }}
+  </p>
+  }
+
+  <div
+    role="button"
+    tabindex="0"
+    (click)="toggleSelection($event)"
+    [ngClass]="
+      customClass
+        ? customClass 
+        : 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5'
+    "
+    class="relative"
+  >
+    <div class="w-full flex items-center">
+      @if(itemSelected) {
+      <ng-content select="[selected-item-content]"></ng-content>
+      } @else {
+        @if(placeholder) {
+          <p
+          class="text-sm text-slate-500 w-11/12 overflow-x-hidden text-ellipsis whitespace-nowrap"
+        >
+          {{ placeholder }}
+        </p>
+        } @else {
+          <ng-content select="[placeholder-content]"></ng-content>
+        }
+      
+      }
+
+      <span class="ml-2 material-symbols-outlined text-slate-500"
+        >arrow_drop_down</span
+      >
+    </div>
+
+    @if(isOpen){
+    <div
+      class="w-52 max-h-52 z-50 bg-white absolute top-full left-0 overflow-y-scroll rounded shadow"
+    >
+      <ng-content select="[options-loop]"></ng-content>
+    </div>
+    }
+  </div>
+</div>

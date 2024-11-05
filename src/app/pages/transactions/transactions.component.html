@@ -90,13 +90,13 @@
       class="mb-2 px-2 w-full h-10 rounded-3xl bg-teal-500 flex items-center"
     >
       <div
-        class="px-1 w-4/12 flex items-center gap-2 border-r-2 border-solid border-slate-600"
+        class="px-1 w-4/12 flex items-center gap-2 border-r-2 border-solid border-slate-200"
       >
       <button (click)="toggleTransactionSearch()" type="button" class="">
         <span class="material-symbols-outlined text-white">
           manage_search
         </span>
-      </button> 
+      </button>
 
         @if(showTransactionSearch) {
           <input [(ngModel)]="filterOptions.textFilter" type="text" id="showTransactionSearch" class="h-6 w-full rounded-md text-sm bg-slate-100 px-2 text-slate-800" placeholder="Pesquisar por texto">
@@ -105,7 +105,7 @@
 
       <button
         type="button"
-        class="px-1 w-4/12 flex items-center justify-start border-r-2 gap-3 border-solid border-slate-600"
+        class="px-1 w-4/12 flex items-center justify-start border-r-2 gap-3 border-solid border-slate-200"
       >
         <span class="material-symbols-outlined text-white text-xl">
           account_balance
@@ -163,7 +163,7 @@
       <button
         type="button"
         (click)="changeDateFilter()"
-        class="px-1 w-2/12 flex items-start justify-center border-r-2 border-solid border-slate-600"
+        class="px-1 w-2/12 flex items-start justify-center border-r-2 border-solid border-slate-200"
       >
         <span class="material-symbols-outlined text-white text-xl">
           calendar_month

@@ -20,7 +20,7 @@
         </h3>
       </div>
 
-      <div class="w-4/12 flex items-center justify-start">
+      <div class="w-4/12 flex items-center justify-end md:justify-start">
         <p
           class="whitespace-nowrap overflow-hidden text-ellipsis text-base text-slate-500"
         >
@@ -33,7 +33,7 @@
       <p class="text-sm tracking-wide text-slate-500 sm:w-6/12 w-8/12">
         {{ transaction.purchaseDate | date : "dd/MM/yyyy" }}
       </p>
-      <p class="text-sm tracking-wide text-black sm:w-6/12 w-4/12">
+      <p class="text-sm tracking-wide text-black sm:w-6/12 w-4/12 md:block flex justify-end">
         <span class=" ">{{ transaction.type === 1 ? "+" : "-" }}</span>
         {{ formaterService.formatCurrency(transaction.amount) }}
       </p>
@@ -66,7 +66,7 @@
         </div>
 
         <h3
-          class="max-w-full text-sm text-slate-900 font-medium whitespace-nowrap overflow-hidden text-ellipsis"
+          class="max-w-full text-sm text-pretty text-slate-900 font-medium whitespace-nowrap overflow-hidden text-ellipsis"
         >
           {{ transaction.description }}
         </h3>

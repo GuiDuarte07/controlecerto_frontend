@@ -15,6 +15,7 @@ import { TransactionService } from '../../services/transaction.service';
 import { InfoTransactionResponse } from '../../models/InfoTransactionResponse';
 import { DetailsUserResponse } from '../../models/DetailsUserResponse';
 import { RouterLink } from '@angular/router';
+import { TransferDialogComponent } from '../../components/dialogs/transfer-dialog/transfer-dialog.component';
 
 type boardType = 'balance' | 'income' | 'expense' | 'invoice';
 
@@ -132,8 +133,20 @@ export class HomeComponent implements OnInit {
       },
     });
 
-    dialogRef.afterClosed().subscribe((sucess) => {
-      if ((sucess as boolean) === true) {
+    dialogRef.afterClosed().subscribe((sucess: boolean) => {
+      if (sucess === true) {
+        this.setBoardDetails(this.boardOption);
+      }
+    });
+  }
+
+  openTranferDialog() {
+    const dialogRef = this.dialog.open(TransferDialogComponent, {
+      panelClass: 'dialog-responsive',
+    });
+
+    dialogRef.afterClosed().subscribe((sucess: boolean) => {
+      if (sucess === true) {
         this.setBoardDetails(this.boardOption);
       }
     });

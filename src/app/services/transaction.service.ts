@@ -8,6 +8,10 @@ import { serverConnectionString } from '../config/server';
 import { map } from 'rxjs';
 import { InfoInvoiceResponse } from '../models/InfoInvoiceResponse';
 import { InfoInvoicePaymentResponse } from '../models/InfoInvoicePaymentResponse ';
+import {
+  CreateTransferenceRequest,
+  InfoTransferenceResponse,
+} from '../models/CreateTransferenceRequest';
 
 @Injectable({
   providedIn: 'root',
@@ -16,6 +20,14 @@ export class TransactionService {
   private hostAddress = `${serverConnectionString}/Transaction`;
 
   constructor(private http: HttpClient) {}
+
+  createTransference(transfer: CreateTransferenceRequest) {
+    const suffix = 'CreateTransference';
+    return this.http.post<InfoTransferenceResponse>(
+      `${this.hostAddress}/${suffix}`,
+      transfer
+    );
+  }
 
   createTransaction(transaction: CreateTransactionRequest) {
     const suffix = 'CreateTransaction';

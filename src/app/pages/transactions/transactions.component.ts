@@ -22,6 +22,7 @@ import { SelectionComponent } from '../../components/selection/selection.compone
 import { TransactionExpansionPanelComponent } from '../../components/transaction-expansion-panel/transaction-expansion-panel.component';
 import { FormsModule } from '@angular/forms';
 import { MatCheckbox } from '@angular/material/checkbox';
+import { TransferDialogComponent } from '../../components/dialogs/transfer-dialog/transfer-dialog.component';
 
 @Component({
   selector: 'app-transactions',
@@ -289,6 +290,12 @@ export class TransactionsComponent implements OnInit {
       if ((sucess as boolean) === true) {
         this.updateTransactions();
       }
+    });
+  }
+
+  openTranferDialog() {
+    this.dialog.open(TransferDialogComponent, {
+      panelClass: 'dialog-responsive',
     });
   }
 

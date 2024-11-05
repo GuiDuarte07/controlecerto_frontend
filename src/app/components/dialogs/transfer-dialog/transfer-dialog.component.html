@@ -1,0 +1,246 @@
+<h2
+  class="!ml-6 !mb-4 !mt-4 !text-xl !font-normal !tracking-wide !text-slate-700"
+  mat-dialog-title
+>
+  Transferência Entre Contas
+</h2>
+
+<mat-dialog-content class="w-full md:min-w-[500px] !m-0 !p-0">
+  @if (loadingAccounts) {
+  <div class="d">{{loadingAccounts}}</div>
+  } @else {
+  <form [formGroup]="transferForm" class="m-8 flex flex-col gap-4">
+    <!-- FIRST COLUMN -->
+    <div class="flex items-center gap-4 md:flex-row flex-col">
+      <!-- AMOUNT INPUT -->
+      <div class="w-full md:w-6/12">
+        <label
+          for="amount"
+          class="block mb-1 text-sm font-medium text-slate-600 dark:text-white"
+          >Valor</label
+        >
+        <input
+          formControlName="amount"
+          appCurrencyMask
+          prefix="R$ "
+          thousandSeparator="."
+          id="amount"
+          class="text-blue-700 bg-gray-50 border border-gray-300 text-sm rounded-lg focus:!ring-blue-500 focus:!border-blue-500 block w-full p-2.5"
+          required
+        />
+      </div>
+
+      <!-- DATEPICKER -->
+      <div class="w-full md:w-6/12">
+        <label
+          for="purchaseDatePicker"
+          class="block mb-1 text-sm font-medium text-slate-600 dark:text-white"
+          >Data</label
+        >
+        <div class="relative">
+          <mat-datepicker-toggle
+            class="absolute top-1/2 transform -translate-y-1/2"
+            matIconSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
+          <input
+            id="purchaseDatePicker"
+            formControlName="purchaseDate"
+            (click)="picker.open()"
+            class="pl-10 w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-700 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            [matDatepicker]="picker"
+          />
+          <mat-datepicker #picker></mat-datepicker>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECOND COLUMN -->
+    <!-- SELECTIONS -->
+    <div class="flex gap-4 md:flex-row flex-col">
+      <!-- ORIGIN ACCOUNT SELECTION -->
+      <div class="w-full relative">
+        <app-selection
+          label="Conta Origem"
+          placeholder="Selecione uma conta"
+          [itemSelected]="!!selectedAccountOrigin"
+        >
+          <div
+            selected-item-content
+            class="gap-2 flex items-center w-full overflow-hidden"
+          >
+            <div class="gap-2 flex items-center w-full overflow-hidden">
+              <div
+                [ngStyle]="{
+                  'background-color': selectedAccountOrigin?.color
+                }"
+                class="h-6 w-7 rounded-lg flex justify-center items-center"
+              >
+                <span class="material-symbols-outlined text-base text-white">
+                  account_balance
+                </span>
+              </div>
+              <p class="overflow-hidden text-xs text-slate-800 font-semibold">
+                {{ selectedAccountOrigin?.bank }}
+              </p>
+            </div>
+          </div>
+
+          <ng-container options-loop>
+            @for (account of
+            accountsFilteringId(transferForm.value.accountDestinyId); track
+            accounts) {
+            <button
+              (click)="changeSelectedItem(account, 'origin')"
+              class="py-2 px-3 gap-2 flex items-center hover:bg-slate-200 transition-all duration-150 w-full"
+            >
+              <div
+                [ngStyle]="{ 'background-color': account?.color }"
+                class="h-6 w-7 rounded-lg flex justify-center items-center"
+              >
+                <span class="material-symbols-outlined text-base text-white">
+                  account_balance
+                </span>
+              </div>
+              <p class="overflow-hidden text-xs text-slate-800 font-semibold">
+                {{ account.bank }}
+              </p>
+            </button>
+            }
+            <button
+              (click)="openAccountDialog()"
+              class="py-2 px-3 gap-2 flex items-center hover:bg-slate-200 transition-all duration-150 w-full"
+            >
+              <div
+                class="h-6 w-7 rounded-lg flex justify-center items-center bg-white"
+              >
+                <span
+                  class="material-symbols-outlined text-base text-green-600"
+                >
+                  add
+                </span>
+              </div>
+              <p class="overflow-hidden text-xs text-slate-800 font-semibold">
+                Criar Conta
+              </p>
+            </button>
+          </ng-container>
+        </app-selection>
+        @if (selectedAccountOrigin) {
+        <p
+          [ngClass]="{
+            '!text-red-500': selectedAccountOrigin.balance - (transferForm.value.amount ?? 0) < 0
+          }"
+          class="text-green-500 absolute top-full left-0 mt-1 text-xs font-medium"
+        >
+          Depois:
+          {{ selectedAccountOrigin.balance - (transferForm.value.amount ?? 0) | currency : "BRL" : "symbol" }}
+        </p>
+        }
+      </div>
+
+      <!-- DESTINY ACCOUNT SELECTION -->
+      <div class="w-full relative">
+        <app-selection
+          label="Conta Destino"
+          placeholder="Selecione uma conta"
+          [itemSelected]="!!selectedAccountDestiny"
+        >
+          <div
+            selected-item-content
+            class="gap-2 flex items-center w-full overflow-hidden"
+          >
+            <div class="gap-2 flex items-center w-full overflow-hidden">
+              <div
+                [ngStyle]="{
+                  'background-color': selectedAccountDestiny?.color
+                }"
+                class="h-6 w-7 rounded-lg flex justify-center items-center"
+              >
+                <span class="material-symbols-outlined text-base text-white">
+                  account_balance
+                </span>
+              </div>
+              <p class="overflow-hidden text-xs text-slate-800 font-semibold">
+                {{ selectedAccountDestiny?.bank }}
+              </p>
+            </div>
+          </div>
+
+          <ng-container options-loop>
+            @for (account of
+            accountsFilteringId(transferForm.value.accountOriginId); track
+            accounts) {
+            <button
+              (click)="changeSelectedItem(account, 'destiny')"
+              class="py-2 px-3 gap-2 flex items-center hover:bg-slate-200 transition-all duration-150 w-full"
+            >
+              <div
+                [ngStyle]="{ 'background-color': account?.color }"
+                class="h-6 w-7 rounded-lg flex justify-center items-center"
+              >
+                <span class="material-symbols-outlined text-base text-white">
+                  account_balance
+                </span>
+              </div>
+              <p class="overflow-hidden text-xs text-slate-800 font-semibold">
+                {{ account.bank }}
+              </p>
+            </button>
+            }
+            <button
+              (click)="openAccountDialog()"
+              class="py-2 px-3 gap-2 flex items-center hover:bg-slate-200 transition-all duration-150 w-full"
+            >
+              <div
+                class="h-6 w-7 rounded-lg flex justify-center items-center bg-white"
+              >
+                <span
+                  class="material-symbols-outlined text-base text-green-600"
+                >
+                  add
+                </span>
+              </div>
+              <p class="overflow-hidden text-xs text-slate-800 font-semibold">
+                Criar um cartão
+              </p>
+            </button>
+          </ng-container>
+        </app-selection>
+        @if (selectedAccountDestiny) {
+        <p
+          [ngClass]="{
+            '!text-red-500': selectedAccountDestiny.balance - (transferForm.value.amount ?? 0) < 0
+          }"
+          class="text-green-500 absolute top-full left-0 mt-1 text-xs font-medium"
+        >
+          Depois:
+          {{ selectedAccountDestiny.balance + (transferForm.value.amount ?? 0) | currency : "BRL" : "symbol" }}
+        </p>
+        }
+      </div>
+    </div>
+
+    <!-- FOUR COLUMN -->
+    <!-- DESCRIPTION TEXTAREA -->
+    <div class=" mt-2">
+      <label
+        for="description"
+        class="block mb-1 text-sm font-medium text-slate-600 dark:text-white"
+        >Descrição</label
+      >
+      <input
+        formControlName="description"
+        id="description"
+        class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-700 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        placeholder="Insira uma descrição para esse registro..."
+      />
+    </div>
+  </form>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="closeDialog(false)">Cancelar</button>
+  <button [disabled]="!transferForm.valid" mat-button (click)="createTransference()">Criar</button>
+</mat-dialog-actions>

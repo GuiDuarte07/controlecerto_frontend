@@ -12,7 +12,5 @@ import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 export class AppComponent {
   title = 'Controle Certo';
 
-  constructor(private router: Router) {}
-
   ngOnInit(): void {}
 }

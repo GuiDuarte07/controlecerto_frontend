@@ -18,10 +18,10 @@
   <div class="flex flex-col w-full gap-2">
     <mat-tab-group>
       <mat-tab label="Despesas">
-        <ul class="flex flex-col gap-3 mt-2">
+        <ul class="overflow-x-hidden">
           @for(category of expenseCategories; track category) {
-          <li class="px-2 py-2 w-full border-b border-solid border-slate-200">
-            <button (click)="openEditCategoryDialog(category)" class="flex items-center gap-4 group">
+          <li class="w-full border-b border-solid border-slate-200">
+            <button (click)="toggleSideBarCategory(category)" class="relative px-2 py-2 flex items-center gap-4 group">
               <div
                 [ngStyle]="{ 'background-color': category.color }"
                 class="text-white rounded-full w-8 h-8 flex items-center justify-center relative group-hover:!bg-slate-400 transition duration-100"
@@ -40,6 +40,31 @@
 
               <p class="text-sm text-slate-800 group-hover:font-medium">{{ category.name }}</p>
             </button>
+
+            <div class=".sub-category-list-container">
+              @for(subCategory of category.subCategories; track subCategory) {
+                <button (click)="openEditCategoryDialog(subCategory)" class="ml-10 pb-2 py-2 flex items-center gap-4 group">
+                  <div
+                    [ngStyle]="{ 'background-color': subCategory.color }"
+                    class="text-white rounded-full w-8 h-8 flex items-center justify-center relative group-hover:!bg-slate-400 transition duration-100"
+                  >
+                    <!-- HOVER EDIT ICON -->
+                    <span
+                      aria-label="Editar conta"
+                      class="material-symbols-outlined hidden group-hover:block text-xl text-slate-800 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                    >
+                      edit_square
+                    </span>
+                    <span class="material-symbols-outlined !text-base group-hover:hidden">
+                      {{ subCategory.icon }}
+                    </span>
+                  </div>
+    
+                  <p class="text-sm text-slate-800 group-hover:font-medium">{{ subCategory.name }}</p>
+                </button>
+              }
+            </div>
+
           </li>
           }
         </ul>
@@ -71,3 +96,26 @@
     </mat-tab-group>
   </div>
 </section>
+
+
+<p-sidebar [(visible)]="categorySideBarOpen" position="bottom" styleClass="h-[300px] px-40">
+  <div class="grid grid-cols-2">
+    <div class="flex flex-col gap-2 items-center">
+      <div
+      [ngStyle]="{ 'background-color': selectedCategory?.color }"
+      class="text-white rounded-full w-20 h-20 flex items-center justify-center relative group-hover:!bg-slate-400 transition duration-100"
+    >
+      <span class="material-symbols-outlined !text-3xl">
+        {{ selectedCategory?.icon }}
+      </span>
+    </div>
+
+    <p class="text-slate-800 text-xl font-medium">{{ selectedCategory?.name }}</p>
+
+    <p-button label="Submit" />
+    </div>
+
+    <div class="">teste</div>
+  </div>
+
+</p-sidebar>

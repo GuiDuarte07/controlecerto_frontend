@@ -1,0 +1,397 @@
+@if(data) {
+<p-dialog
+  [header]="getDialogTitle()"
+  [modal]="true"
+  [(visible)]="visible"
+  [style]="{ width: '40rem' }"
+>
+
+  <ng-template pTemplate="body" class="bg-slate-300">
+    <form [formGroup]="transactionForm" class="dForm-dialog-container">
+      <!-- FIRST COLUMN -->
+      <div class="two-side-form-section">
+        <!-- AMOUNT INPUT -->
+        <div class="w-full">
+          <label for="amount" class=".dlabel-text">Valor</label>
+          <input
+            pInputText
+            formControlName="amount"
+            appCurrencyMask
+            prefix="R$ "
+            thousandSeparator="."
+            (change)="changeAmountPerInstallment()"
+            id="amount"
+            [ngClass]="{
+              'text-red': data.transactionType === 0,
+              'text-green': data.transactionType === 1,
+              'text-yellow': data.transactionType === 2
+            }"
+            class="block w-full"
+            required
+          />
+        </div>
+
+        <!-- DATEPICKER -->
+        <div class="w-full md:w-6/12">
+          <label
+            for="purchaseDatePicker"
+            class="block mb-1 text-sm font-medium text-slate-600 dark:text-white"
+            >Data</label
+          >
+          <p-calendar
+            id="purchaseDatePicker"
+            formControlName="purchaseDate"
+            [iconDisplay]="'input'"
+            [showIcon]="true"
+            inputId="icondisplay"
+            [style]="{ width: '100%' }"
+            appendTo="body"
+            dateFormat="dd/mm/yy"
+            [touchUI]="false"
+          />
+          <!-- <div class="relative">
+            <mat-datepicker-toggle
+              class="absolute top-1/2 transform -translate-y-1/2"
+              matIconSuffix
+              [for]="picker"
+            ></mat-datepicker-toggle>
+            <input
+              id="purchaseDatePicker"
+              formControlName="purchaseDate"
+              (click)="picker.open()"
+              class="pl-10 w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-700 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              [matDatepicker]="picker"
+            />
+            <mat-datepicker #picker></mat-datepicker>
+          </div> -->
+        </div>
+      </div>
+
+      <!-- SECOND COLUMN (CREDIT CARD) INSTALLMENT INPUT TO CREDIT -->
+      @if(data.transactionType === 2){
+      <div class="flex items-center gap-4">
+        <div class="md:w-6/12 w-4/12">
+          <label
+            class="block mb-1 text-sm font-medium text-slate-600 dark:text-white"
+            for="installment"
+            >Parcelas</label
+          >
+          <input
+            pInputText
+            id="installment"
+            aria-describedby="installments-help"
+            [(ngModel)]="installments"
+            [ngModelOptions]="{ standalone: true }"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-700 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            required
+          />
+          <!-- <small id="installments-help">
+                Enter your installments to reset your password.
+            </small> -->
+        </div>
+
+        <div class="md:w-6/12 w-8/12">
+          <label
+            for="installmentValue"
+            class="block mb-1 text-sm font-medium text-slate-500 dark:text-white"
+            >Valor por Fatura</label
+          >
+          <p
+            type="string"
+            id="installment"
+            class="cursor-not-allowed bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-lg w-full p-2.5 dark:text-white"
+          >
+            {{ amountPerInstallment | currency : "BRL" : "symbol" }}
+          </p>
+        </div>
+      </div>
+      }
+
+      <!-- SECOND COLUMN -->
+      <!-- SELECTIONS -->
+      <div class="two-side-form-section">
+        <!-- CATEGORY SELECTION -->
+        <div class="w-full">
+          <label for="dlabel-text" for="categories">Categoria</label>
+          <p-dropdown
+            id="categories"
+            [options]="categories"
+            [formControl]="transactionForm.controls.categoryId"
+            optionLabel="name"
+            optionValue="id"
+            [showClear]="true"
+            placeholder="Selecione uma Categoria"
+            [filter]="true"
+            filterBy="name"
+            [style]="{ width: '100%' }"
+            appendTo="body"
+          >
+            <!-- Template para o item selecionado -->
+            <ng-template pTemplate="selectedItem">
+              <div
+                style="height: 20px"
+                class="flex items-center gap-2"
+                *ngIf="selectedCategory"
+              >
+                <div
+                  [ngStyle]="{ 'background-color': selectedCategory.color }"
+                  class="dRounded-selection-item"
+                >
+                  <span
+                    class="material-symbols-outlined"
+                    style="font-size: 1rem; color: white"
+                  >
+                    {{ selectedCategory.icon }}
+                  </span>
+                </div>
+                <p class="dCustom-text-style">
+                  {{ selectedCategory.name }}
+                </p>
+              </div>
+            </ng-template>
+
+            <!-- Template para cada item na lista -->
+            <ng-template let-category pTemplate="item">
+              <div style="height: 20px" class="flex items-center gap-2">
+                <div
+                  [ngStyle]="{ 'background-color': category.color }"
+                  class="dRounded-selection-item"
+                >
+                  <span
+                    class="material-symbols-outlined"
+                    style="font-size: 1rem; color: white"
+                  >
+                    {{ category.icon }}
+                  </span>
+                </div>
+                <p class="dCustom-text-style">
+                  {{ category.name }}
+                </p>
+              </div>
+            </ng-template>
+          </p-dropdown>
+        </div>
+
+        <!-- ACCOUNT/CREDIT CARD SELECTION -->
+
+        <div class="w-full relative">
+          @if(data.transactionType === 2) {
+          <app-selection
+            label="Cartão"
+            placeholder="Selecione um cartão"
+            [itemSelected]="!!selectedCreditCard"
+          >
+            <div
+              selected-item-content
+              class="gap-2 flex items-center w-full overflow-hidden"
+            >
+              <div class="gap-2 flex items-center w-full overflow-hidden">
+                <div
+                  [ngStyle]="{
+                    'background-color': selectedCreditCard?.account?.color
+                  }"
+                  class="h-6 w-7 rounded-lg flex justify-center items-center"
+                >
+                  <span
+                    class="material-symbols-outlined"
+                    style="font-size: 1rem; color: white"
+                  >
+                    account_balance
+                  </span>
+                </div>
+                <p class="overflow-hidden dCustom-text-style">
+                  {{ selectedCreditCard?.description }}
+                </p>
+              </div>
+            </div>
+
+            <ng-container options-loop>
+              @for (creditCard of creditCards; track creditCard) {
+              <button
+                (click)="changeSelectedItem(creditCard)"
+                class="border-none py-2 px-3 gap-2 flex items-center hover:bg-slate-200 transition-all duration-150 w-full"
+              >
+                <div
+                  [ngStyle]="{ 'background-color': creditCard?.account?.color }"
+                  class="h-6 w-7 rounded-lg flex justify-center items-center"
+                >
+                  <span
+                    class="material-symbols-outlined"
+                    style="font-size: 1rem; color: white"
+                  >
+                    account_balance
+                  </span>
+                </div>
+                <p class="overflow-hidden dCustom-text-style">
+                  {{ creditCard.description }}
+                </p>
+              </button>
+              } @empty {
+              <button
+                (click)="openCreditCardDialog()"
+                class="border-none py-2 px-3 gap-2 flex items-center hover:bg-slate-200 transition-all duration-150 w-full"
+              >
+                <div
+                  class="h-6 w-7 rounded-lg flex justify-center items-center bg-white"
+                >
+                  <span
+                    class="material-symbols-outlined text-base text-green-600"
+                  >
+                    add
+                  </span>
+                </div>
+                <p class="overflow-hidden dCustom-text-style">
+                  Criar um cartão
+                </p>
+              </button>
+              }
+            </ng-container>
+          </app-selection>
+          @if (selectedCreditCard) {
+          <p
+            [ngClass]="{
+              '!text-red-500':
+                transactionForm.value.amount! >
+                selectedCreditCard!.totalLimit - selectedCreditCard!.usedLimit
+            }"
+            class="text-green-500 absolute top-full left-0 mt-1 text-xs font-medium"
+          >
+            Limite:
+            {{
+              selectedCreditCard!.totalLimit - selectedCreditCard!.usedLimit
+                | currency : "BRL" : "symbol"
+            }}
+          </p>
+          } } @else {
+            <label for="dlabel-text" for="accounts">Conta</label>
+          <p-dropdown
+            id="accounts"
+            [options]="accounts"
+            [formControl]="transactionForm.controls.accountId"
+            optionLabel="name"
+            optionValue="id"
+            [showClear]="true"
+            placeholder="Selecione uma conta"
+            [style]="{ width: '100%' }"
+            appendTo="body"
+          >
+            <!-- Template para o item selecionado -->
+            <ng-template pTemplate="selectedItem">
+              <div
+                style="height: 20px"
+                class="flex items-center gap-2"
+                *ngIf="selectedAccount"
+              >
+                <div
+                  [ngStyle]="{ 'background-color': selectedAccount.color }"
+                  class="dRounded-selection-item"
+                >
+                  <span
+                    class="material-symbols-outlined"
+                    style="font-size: 1rem; color: white"
+                  >
+                    account_balance
+                  </span>
+                </div>
+                <p class="dCustom-text-style">
+                  {{ selectedAccount.bank }}
+                </p>
+              </div>
+            </ng-template>
+
+            <!-- Template para cada item na lista -->
+            <ng-template let-account pTemplate="item">
+              <div style="height: 20px" class="flex items-center gap-2">
+                <div
+                  [ngStyle]="{ 'background-color': account.color }"
+                  class="dRounded-selection-item"
+                >
+                  <span
+                    class="material-symbols-outlined"
+                    style="font-size: 1rem; color: white"
+                  >
+                    account_balance
+                  </span>
+                </div>
+                <p class="dCustom-text-style">
+                  {{ account.bank }}
+                </p>
+              </div>
+            </ng-template>
+          </p-dropdown>
+          }
+        </div>
+      </div>
+
+      <!-- FOUR COLUMN -->
+      <!-- DESCRIPTION TEXTAREA -->
+      <div class="">
+        <label for="description" class=".dlabel-text">Descrição</label>
+        <input
+          pInputText
+          formControlName="description"
+          id="description"
+          class="block w-full"
+          placeholder="Insira uma descrição."
+        />
+      </div>
+
+      <!-- THIRD COLUMN -->
+      <!-- DESTINATION INPUT -->
+      <div>
+        <label
+          for="destination"
+          class="block mb-1 text-sm font-medium text-slate-600 dark:text-white"
+          >{{ data.transactionType === 1 ? "Origem" : "Destino" }}</label
+        >
+        <input
+          pInputText
+          formControlName="destination"
+          type="text"
+          id="destination"
+          class="block w-full"
+          [placeholder]="
+            data.transactionType === 1
+              ? 'Origem da Receita'
+              : 'Destino do Gasto'
+          "
+          required
+        />
+      </div>
+
+      @if(data.transactionType !== 2) {
+      <div>
+        <p-checkbox
+          formControlName="justForRecord"
+          label="Não tirar ou adicionar o valor a conta"
+          name="justForRecord"
+          [binary]="true"
+        />
+      </div>
+      }
+    </form>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      label="Fechar"
+      icon="pi pi-times"
+      size="small"
+      severity="danger"
+      (click)="closeDialog(false)"
+    ></button>
+    <button
+      pButton
+      label="Confirmar"
+      icon="pi pi-check"
+      size="small"
+      severity="primary"
+      (click)="createTransaction()"
+      [disabled]="isFormInvalid()"
+    ></button>
+
+  </ng-template>
+</p-dialog>
+
+}

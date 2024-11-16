@@ -4,21 +4,10 @@
       Contas
     </h2>
 
-    <button
-      (click)="openAccountDialog()"
-      class="flex items-center sm:gap-2 bg-teal-200 rounded-lg px-2 py-1"
-    >
-      <span
-        aria-label="sinal de mais"
-        class="material-symbols-outlined text-base text-teal-700"
-      >
-        add_circle
-      </span>
-      <p class="text-sm text-teal-700">Adicionar Conta</p>
-    </button>
+    <app-register-button title="Adicionar Conta" (clickEvent)="openAccountDialog()" ></app-register-button>
   </div>
 
-  <ul class="w-full">
+  <ul class="w-full p-0">
     @if (loading) {
     <div class="flex w-full items-center justify-center min-h-32">
       <mat-spinner diameter="60"></mat-spinner>
@@ -31,12 +20,12 @@
     </div>
     } @for(account of accounts; track account) {
     <li
-      class="my-4 py-4 flex gap-2 flex-col sm:flex-row justify-between w-full sm:items-center border-b border-solid border-slate-200"
+      class="my-4 py-4 flex gap-2 flex-col sm:flex-row justify-between w-full sm:items-center border-0 border-b border-solid border-slate-200"
     >
       <button
         type="button"
         (click)="openAccountDialog(account)"
-        class="flex items-center gap-3 group"
+        class="reset-button flex items-center gap-3 group"
       >
         <!-- ICON -->
         <div
@@ -46,7 +35,7 @@
           <!-- HOVER EDIT ICON -->
           <span
             aria-label="Editar conta"
-            class="material-symbols-outlined hidden group-hover:block text-xl text-slate-800 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+            class="material-symbols-outlined !hidden group-hover:!block text-xl text-slate-800 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
           >
             edit_square
           </span>
@@ -69,7 +58,7 @@
           {{ account.balance | currency : "BRL" : "symbol" }}
         </p>
         <button
-          class="text-slate-600 flex items-center justify-center"
+          class="reset-button text-slate-600 flex items-center justify-center"
           [matMenuTriggerFor]="menu"
           aria-label="Abrir menu"
         >
@@ -81,7 +70,7 @@
             class="!py-1 !min-h-0"
             mat-menu-item
           >
-            <p class="text-sm text-slate-600 flex items-center gap-1">
+            <p class="reset-button text-sm text-slate-600 flex items-center gap-1">
               <span
                 aria-label="Editar conta"
                 class="material-symbols-outlined text-base"
@@ -94,7 +83,7 @@
           
           <button
             (click)="openDeleteAlertDialog(account)"
-            class="!py-1 !min-h-0"
+            class="reset-button !py-1 !min-h-0"
             mat-menu-item
           >
             <p class="text-sm text-red-600 flex items-center gap-1">

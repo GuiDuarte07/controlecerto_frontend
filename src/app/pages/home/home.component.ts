@@ -1,5 +1,5 @@
 import { UserService } from './../../services/user.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 import { AccountService } from '../../services/account.service';
 import { BalanceStatement } from '../../models/BalanceStatement';
@@ -16,17 +16,41 @@ import { InfoTransactionResponse } from '../../models/InfoTransactionResponse';
 import { DetailsUserResponse } from '../../models/DetailsUserResponse';
 import { RouterLink } from '@angular/router';
 import { TransferDialogComponent } from '../../components/dialogs/transfer-dialog/transfer-dialog.component';
+import {
+  TransactionDialogComponent,
+  TransactionDialogDataType,
+} from '../../components/dialogs/transaction-dialog/transaction-dialog.component';
 
 type boardType = 'balance' | 'income' | 'expense' | 'invoice';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, SidebarComponent, RouterLink],
+  imports: [
+    CommonModule,
+    SidebarComponent,
+    RouterLink,
+    TransactionDialogComponent,
+  ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
 export class HomeComponent implements OnInit {
+  @ViewChild('transactionDialog')
+  transactionDialog!: TransactionDialogComponent;
+
+  openDialog() {
+    const dialogData: TransactionDialogDataType = {
+      newTransaction: true,
+      transactionType: TransactionTypeEnum.EXPENSE,
+    };
+
+    this.transactionDialog.openDialog(dialogData);
+    this.transactionDialog.closeEvent.subscribe((success: boolean) => {
+      alert('fechou');
+    });
+  }
+
   balance: BalanceStatement = {
     balance: 0,
     expenses: 0,

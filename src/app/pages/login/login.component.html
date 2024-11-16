@@ -27,7 +27,13 @@
           </p>
 
           <div>
-            <div class="mb-3">
+            
+            <p-dropdown 
+            [options]="cities" 
+            [(ngModel)]="selectedCity"
+            [style]="{'width':'100%'}"
+            placeholder="Select a City" />
+                    <div class="mb-3">
               <label
                 for="email"
                 class="text-slate-500 pb-1 text-sm font-semibold"

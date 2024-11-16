@@ -1,0 +1,11 @@
+@import '../../../../styles.scss'; 
+
+.two-side-form-section {
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+
+  @media (min-width: 713px) {
+    flex-direction: row;
+  }
+}

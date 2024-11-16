@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -9,18 +9,29 @@ import { BillTypeEnum } from '../../../enums/BillTypeEnum';
 import { iconsOptions } from '../../../utils/material_options_icons';
 import { CategoryService } from '../../../services/category.service';
 import { Category } from '../../../models/Category';
-import {
-  MAT_DIALOG_DATA,
-  MatDialogModule,
-  MatDialogRef,
-} from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatButton } from '@angular/material/button';
 import { UpdateCategoryRequest } from '../../../models/UpdateCategoryRequest';
 import { colorOptions } from '../../../utils/color_options';
+import { DialogModule } from 'primeng/dialog';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { SelectButtonModule } from 'primeng/selectbutton';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { SpeedDialModule } from 'primeng/speeddial';
+import { ColorPickerModule } from 'primeng/colorpicker';
+import { TabViewModule } from 'primeng/tabview';
+import { TooltipModule } from 'primeng/tooltip';
 
-type Color = { code: string; selected: boolean };
+export type CategoryDialogDataType =
+  | {
+      newCategory: true;
+    }
+  | {
+      newCategory: false;
+      category: Category;
+    };
 
 interface ICateogryForm {
   name: FormControl<string>;
@@ -32,79 +43,110 @@ interface ICateogryForm {
 @Component({
   selector: 'app-category-dialog',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatDialogModule, MatButton],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    DialogModule,
+    ButtonModule,
+    InputTextModule,
+    SelectButtonModule,
+    OverlayPanelModule,
+    SpeedDialModule,
+    ColorPickerModule,
+    TabViewModule,
+    TooltipModule,
+  ],
   templateUrl: './category-dialog.component.html',
   styleUrl: './category-dialog.component.scss',
 })
 export class CategoryDialogComponent implements OnInit {
+  members = [
+    {
+      name: 'Amy Elsner',
+      image: 'amyelsner.png',
+      email: 'amy@email.com',
+      role: 'Owner',
+    },
+    {
+      name: 'Bernardo Dominic',
+      image: 'bernardodominic.png',
+      email: 'bernardo@email.com',
+      role: 'Editor',
+    },
+    {
+      name: 'Ioni Bowcher',
+      image: 'ionibowcher.png',
+      email: 'ioni@email.com',
+      role: 'Viewer',
+    },
+  ];
   categoryForm!: FormGroup<ICateogryForm>;
-  defaultColors: Color[] = colorOptions.map(color => ({
-    code: color, selected: false
-  }));
 
+  data: CategoryDialogDataType | null = null;
+  visible = false;
+  closeEvent = new EventEmitter<boolean>();
+
+  categoriesTypeOptions = [
+    { label: 'Despesa', value: BillTypeEnum.EXPENSE },
+    { label: 'Receita', value: BillTypeEnum.INCOME },
+  ];
   collapsedIcons: boolean = true;
 
   icons: string[] = iconsOptions;
   selectedIcon = this.icons[0];
 
+  defaultColors: string[] = colorOptions;
+
   constructor(
-    @Inject(MAT_DIALOG_DATA)
-    public data:
-      | {
-          newCategory: true;
-        }
-      | {
-          newCategory: false;
-          category: Category;
-        },
     private categoryService: CategoryService,
-    public dialogRef: MatDialogRef<CategoryDialogComponent>,
     private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
     this.categoryForm = new FormGroup({
-      name: new FormControl<string>(
-        this.data.newCategory ? '' : this.data.category.name,
-        {
-          nonNullable: true,
-          validators: [
-            Validators.required,
-            Validators.minLength(3),
-            Validators.maxLength(100),
-          ],
-        }
-      ),
-      icon: new FormControl<string>(
-        this.data.newCategory ? this.icons[0] : this.data.category.icon,
-        {
-          nonNullable: true,
-          validators: [Validators.required],
-        }
-      ),
-      billType: new FormControl<BillTypeEnum>(
-        this.data.newCategory
-          ? BillTypeEnum.EXPENSE
-          : this.data.category.billType,
-        {
-          nonNullable: true,
-          validators: [Validators.required],
-        }
-      ),
-      color: new FormControl<string>(
-        this.data.newCategory ? '' : this.data.category.icon,
-        {
-          nonNullable: true,
-          validators: [Validators.required],
-        }
-      ),
+      name: new FormControl<string>('', {
+        nonNullable: true,
+        validators: [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(100),
+        ],
+      }),
+      icon: new FormControl<string>(this.icons[0], {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+      billType: new FormControl<BillTypeEnum>(BillTypeEnum.EXPENSE, {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+      color: new FormControl<string>('', {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
     });
-
-    this.setRandomDefaultColor();
   }
 
-  closeDialog(sucess: boolean) {
-    this.dialogRef.close(sucess);
+  openDialog(data: CategoryDialogDataType) {
+    this.data = data;
+    this.visible = true;
+
+    this.categoryForm.patchValue({
+      name: this.data.newCategory ? '' : this.data.category.name,
+      icon: this.data.newCategory ? this.icons[0] : this.data.category.icon,
+      billType: this.data.newCategory
+        ? BillTypeEnum.EXPENSE
+        : this.data.category.billType,
+      color: this.data.newCategory
+        ? this.defaultColors[0]
+        : this.data.category.color,
+    });
+  }
+
+  closeDialog(success: boolean) {
+    this.cleanForm();
+    this.visible = false;
+    this.closeEvent.emit(success);
   }
 
   openSnackBar(message: string) {
@@ -117,7 +159,7 @@ export class CategoryDialogComponent implements OnInit {
   }
 
   createNewCategory() {
-    if (this.data.newCategory) {
+    if (this.data!.newCategory) {
       const createdCategory = new Category(
         undefined,
         this.categoryForm.value.name!,
@@ -137,7 +179,7 @@ export class CategoryDialogComponent implements OnInit {
       });
     } else {
       const updatedCategory = new UpdateCategoryRequest({
-        id: this.data.category.id!,
+        id: this.data!.category.id!,
         ...this.categoryForm.getRawValue(),
       });
 
@@ -171,37 +213,7 @@ export class CategoryDialogComponent implements OnInit {
     this.categoryForm.patchValue({ icon: this.selectedIcon });
   }
 
-  setDefaultColor(color: Color) {
-    this.defaultColors.forEach((c) => {
-      c.selected = false;
-      if (c.code === color.code) {
-        c.selected = true;
-      }
-    });
-
-    this.categoryForm.patchValue({ color: color.code });
-  }
-
-  setRandomDefaultColor() {
-    if (this.data.newCategory) {
-      const indiceAleatorio = Math.floor(
-        Math.random() * this.defaultColors.length
-      );
-
-      this.defaultColors[indiceAleatorio].selected = true;
-      this.categoryForm.patchValue({
-        color: this.defaultColors[indiceAleatorio].code,
-      });
-    } else {
-      for (let i = 0; i < this.defaultColors.length; i++) {
-        if (this.defaultColors[i].code === this.data.category.color) {
-          this.defaultColors[i].selected = true;
-          this.categoryForm.patchValue({
-            color: this.defaultColors[i].code,
-          });
-          break;
-        }
-      }
-    }
+  setDefaultColor(color: string) {
+    this.categoryForm.patchValue({ color });
   }
 }

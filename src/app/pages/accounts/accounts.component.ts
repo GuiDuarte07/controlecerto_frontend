@@ -13,6 +13,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AlertDialogComponent } from '../../components/dialogs/alert-dialog/alert-dialog.component';
 import { MediaMatcher } from '@angular/cdk/layout';
+import { RegisterButtonComponent } from '../../components/ui/register-button/register-button.component';
 
 @Component({
   selector: 'app-accounts',
@@ -24,6 +25,7 @@ import { MediaMatcher } from '@angular/cdk/layout';
     MatButtonModule,
     MatMenuModule,
     MatProgressSpinnerModule,
+    RegisterButtonComponent,
   ],
   templateUrl: './accounts.component.html',
   styleUrl: './accounts.component.scss',

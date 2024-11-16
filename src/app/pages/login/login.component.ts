@@ -12,6 +12,8 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { ButtonModule } from 'primeng/button';
+import { DropdownModule } from 'primeng/dropdown';
 
 interface ILoginForm {
   email: FormControl<string>;
@@ -27,6 +29,8 @@ interface ILoginForm {
     RouterLink,
     MatProgressSpinnerModule,
     FormsModule,
+    ButtonModule,
+    DropdownModule,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
@@ -36,6 +40,9 @@ export class LoginComponent implements OnInit {
   passwordVisibility = false;
   loading = false;
   fromServerError?: string;
+
+  cities = ['nova yourk', 'adeunsf', 'sao pauo', 'eio dejaneiro'];
+  selectedCity: string | null = null;
 
   forgotMyPassword = false;
   emailToForgotPassword: string = '';

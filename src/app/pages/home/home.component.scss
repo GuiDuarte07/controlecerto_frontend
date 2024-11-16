@@ -1,0 +1,349 @@
+.board-button-option {
+  @apply border-none md:w-3/12 bg-slate-50 shadow h-20 rounded-lg flex justify-between items-center px-4 py-2 gap-2;
+}
+
+.board-button-option-focused {
+  @apply border-2 border-solid border-gray-500 shadow-lg bg-white;
+}
+
+.board-button-option .board-button-container {
+  @apply h-full max-w-full flex flex-col justify-between w-8/12;
+}
+
+.board-button-option .board-button-container .board-button-text {
+  @apply text-slate-600 text-sm text-start m-0;
+}
+
+.board-button-option .board-button-container .board-button-amount {
+  @apply text-start w-full p-0 m-0 font-medium text-sm overflow-hidden text-ellipsis whitespace-normal;
+}
+
+
+
+/* @import "../../../styles.scss";
+
+.section-home-container {
+  width: 100vw;
+  margin-bottom: 2rem;
+  margin-top: 1rem;
+
+  @media (min-width: $lg-breakpoint) {
+    width: 900px;
+  }
+
+  @media (min-width: $lg-breakpoint) {
+    width: 100%;
+  }
+}
+
+.welcome-container {
+    width: 100vw;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    margin-bottom: 0.25rem;
+
+    @media (min-width: $md-breakpoint) {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+}
+
+.welcome-high-title {
+  font-weight: 600;
+  color: rgb(51 65 85 / 1);
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+
+.welcome-low-text {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: rgb(71 85 105 / 1);
+}
+
+.transactions-launch-container {
+  display: flex;
+  width: 100%;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+  margin-top: 0.5rem;
+  flex-wrap: wrap;
+
+  @media (min-width: $md-breakpoint) {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+.launch-options-box {
+  font-size: 0.875rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  height: 20%;
+  border-radius: 0.375rem;
+  background-color: white;
+  display: flex;
+  align-items: center;
+}
+
+.summary-text {
+  font-size: 0.875rem;
+  color: #475569;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  padding-bottom: 0.5rem;
+
+  @media (min-width: 768px) {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+.indicators-buttons-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  flex: 1;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    flex-wrap: nowrap;
+  }
+
+  @media (min-width: 1024px) {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+
+.focused-indicator-button {
+  border-width: 2px;
+  border-color: #6b7280;
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+  background-color: white;
+}
+
+.indicator-button-style {
+  @media (min-width: 768px) {
+    width: 25%;
+  }
+  background-color: #f8fafc;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  height: 5rem;
+  border-radius: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  gap: 0.5rem;
+}
+
+.indicator-button-box {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 66.6%;
+}
+
+.indicator-button-text-element {
+  padding-top: 1rem;
+  color: #475569;
+  font-size: 0.875rem;
+  text-align: start;
+}
+
+
+
+.indicator-circle {
+  border-radius: 50%;
+  width: 2rem;
+  height: 2rem;
+}
+
+.px-2 {
+  padding-left: 0.5rem
+  padding-right: 0.5rem 
+}
+
+
+
+
+.indicators-table-container-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 1.25rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+
+  @media (min-width: 768px) {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+.indicators-table-container {
+  width: 100%;
+  border-radius: 0.375rem;
+  background-color: #f8fafc;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.max-w-full {
+  max-width: 100%;
+}
+
+.indicators-table-text-container {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.indicator-table-circle {
+  border-radius: 50%;
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.indicator-table-account-list {
+  display: flex;
+  gap: 1.25rem;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #d1d5db;
+}
+
+.indicator-table-account-list-circle {
+  border-radius: 50%;
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
+.indicator-table-account-list-text-container {
+  display: flex;
+  gap: 1rem;
+
+  @media (min-width: 768px) {
+    gap: 4rem;
+  }
+}
+
+.indicator-table-invoice-list {
+  display: flex;
+  flex-direction: column;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #d1d5db;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+    gap: 1.25rem;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.indicator-table-invoice-list-text-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: space-between;
+
+  @media (min-width: 768px) {
+    justify-content: flex-start;
+  }
+}
+
+.indicator-table-invoice-list-amount-container {
+  display: flex;
+  justify-content: space-between;
+
+  @media (min-width: 768px) {
+    width: 58.333333%;
+    justify-content: flex-start;
+  }
+}
+
+
+.indicator-table-invoice-list-amount-container-text {
+  display: none;
+
+  @media (min-width: 768px) {
+    display: block;
+    width: 33.333333%;
+  }
+}
+
+.indicator-table-invoice-list-amount-container-amount {
+  @media (min-width: 768px) {
+    width: 50%;
+  }
+
+  font-size: 0.875rem;
+  color: #374151;
+}
+
+.indicator-table-invoice-list-amount-container-a {
+  @media (min-width: 768px) {
+    width: 16.666667%;
+  }
+
+  font-size: 0.875rem;
+  color: #475569;
+}
+
+
+
+
+
+
+
+
+.indicator-table-balance-container {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+
+  p > {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+@media (min-width: $md-breakpoint) {
+  .md\:hidden {
+    display: none;
+  }
+} */

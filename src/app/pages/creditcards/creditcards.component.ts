@@ -8,11 +8,17 @@ import { MatDialog } from '@angular/material/dialog';
 import { CreateCreditCardDialogComponent } from '../../components/dialogs/create-credit-card-dialog/create-credit-card-dialog.component';
 import { InvoicesDialogComponent } from '../../components/dialogs/invoices-dialog/invoices-dialog.component';
 import { RouterModule } from '@angular/router';
+import { RegisterButtonComponent } from '../../components/ui/register-button/register-button.component';
 
 @Component({
   selector: 'app-creditcards',
   standalone: true,
-  imports: [CommonModule, SidebarComponent, RouterModule],
+  imports: [
+    CommonModule,
+    SidebarComponent,
+    RouterModule,
+    RegisterButtonComponent,
+  ],
   templateUrl: './creditcards.component.html',
   styleUrl: './creditcards.component.scss',
 })

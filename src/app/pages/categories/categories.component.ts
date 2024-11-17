@@ -31,10 +31,10 @@ import { OrderListModule } from 'primeng/orderlist';
     SidebarModule,
     ButtonModule,
     StepperModule,
-    RegisterButtonComponent,
-    CategoryDialogComponent,
     ButtonGroupModule,
     OrderListModule,
+    RegisterButtonComponent,
+    CategoryDialogComponent,
   ],
   templateUrl: './categories.component.html',
   styleUrl: './categories.component.scss',
@@ -44,7 +44,7 @@ export class CategoriesComponent implements OnInit {
   incomeCategories: InfoParentCategoryResponse[] = [];
   categoriesType: 'expense' | 'income' = 'expense';
 
-  categorySideBarOpen = true;
+  categorySideBarOpen = false;
   selectedCategory: Category | InfoParentCategoryResponse | null = null;
 
   @ViewChild('categoryDialog')
@@ -56,17 +56,27 @@ export class CategoriesComponent implements OnInit {
     this.updateCategories();
   }
 
-  openCategoryDialog(category?: Category) {
+  openCategoryDialog(category?: Category, parentCategory: boolean = false) {
     let dialogData: CategoryDialogDataType;
 
     if (category) {
-      dialogData = {
-        newCategory: false,
-        category,
-      };
+      if (parentCategory) {
+        dialogData = {
+          newCategory: true,
+          parentCategory,
+          category,
+        };
+      } else {
+        dialogData = {
+          newCategory: false,
+          category,
+          parentCategory: undefined,
+        };
+      }
     } else {
       dialogData = {
         newCategory: true,
+        category: undefined,
       };
     }
 
@@ -88,8 +98,6 @@ export class CategoriesComponent implements OnInit {
         this.incomeCategories = value.filter(
           (x) => x.billType === BillTypeEnum.INCOME
         );
-
-        this.selectedCategory = this.expenseCategories[0];
       },
     });
   }
@@ -99,11 +107,25 @@ export class CategoriesComponent implements OnInit {
     this.selectedCategory = category;
   }
 
-  listSubCategories(
-    category: Category | InfoParentCategoryResponse | null
-  ): string[] {
+  getSelectedCategoryParent(): InfoParentCategoryResponse | null {
+    if (!this.selectedCategory) return null;
+
+    if (this.selectedCategory instanceof InfoParentCategoryResponse) {
+      return null;
+    } else {
+      return this.categoriesType === 'expense'
+        ? this.expenseCategories.find(
+            (c) => c.id === (this.selectedCategory as Category).parentId
+          )!
+        : this.incomeCategories.find(
+            (c) => c.id === (this.selectedCategory as Category).parentId
+          )!;
+    }
+  }
+
+  listSubCategories(category: Category | InfoParentCategoryResponse | null) {
     if (category === null || category instanceof Category) return [];
 
-    return category.subCategories.map((sb) => sb.name);
+    return category.subCategories!;
   }
 }

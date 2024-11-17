@@ -4,9 +4,11 @@
   [modal]="true"
   [(visible)]="visible"
   [style]="{ width: '40rem' }"
+  [dismissableMask]="true"
+  (onHide)="closeDialog(false)"
 >
   <ng-template pTemplate="body" class="bg-slate-300">
-    <form [formGroup]="categoryForm" class="m-4 flex flex-col gap-2">
+    <form [formGroup]="categoryForm" class="m-4 flex flex-col gap-4">
       <!-- NOVO DA CATEGORIA -->
       <div class="">
         <label for="name" class="label">Nome e Ícone da Categoria</label>
@@ -15,10 +17,7 @@
           <button
             pTooltip="Escolha o ícone e a cor da categoria"
             tooltipPosition="right"
-            class="border-none bg-inherit flex justify-center items-center p-2"
-            [ngClass]="{
-              'rounded-md text-white': selectedIcon === selectedIcon
-            }"
+            class="'rounded-md text-white' border-none bg-inherit flex justify-center items-center p-2"
             [ngStyle]="{
               'background-color': categoryForm.value.color
             }"
@@ -29,7 +28,6 @@
               {{ selectedIcon }}
             </span>
           </button>
-
 
           <!-- NOME DA CATEGORIA -->
           <input
@@ -109,7 +107,7 @@
       </div>
 
       <!-- TIPO DA CATEGORIA (APENAS PARA CRIAÇÃO) -->
-      @if(data.newCategory) {
+      @if(data.newCategory && !data.parentCategory) {
       <div class="">
         <p class="label">Tipo da Categoria</p>
         <div class="flex w-full gap-2">
@@ -122,6 +120,70 @@
         </div>
       </div>
       }
+
+      <!-- CATEGORIA PAI -->
+      <div class="w-full">
+        <label for="label" class="label" for="categories">Sub-Categoria de</label>
+        <p-dropdown
+          id="categories"
+          [options]="categories || []"
+          [formControl]="categoryForm.controls.parentId"
+          optionLabel="name"
+          optionValue="id"
+          [showClear]="true"
+          placeholder="Selecionar (opcional)"
+          [filter]="true"
+          filterBy="name"
+          [style]="{ width: '50%' }"
+          appendTo="body"
+        >
+          <!-- Template para o item selecionado -->
+          <ng-template pTemplate="selectedItem">
+            <div
+              style="height: 20px"
+              class="flex items-center gap-2"
+              *ngIf="selectedParentCategory"
+            >
+              <div
+                [ngStyle]="{ 'background-color': selectedParentCategory.color }"
+                class="rounded-selection-item"
+              >
+                <span
+                  class="material-symbols-outlined"
+                  style="font-size: 1rem; color: white"
+                >
+                  {{ selectedParentCategory.icon }}
+                </span>
+              </div>
+              <p class="custom-text-style">
+                {{ selectedParentCategory.name }}
+              </p>
+            </div>
+          </ng-template>
+
+          <!-- Template para cada item na lista -->
+          <ng-template let-category pTemplate="item">
+            <div style="height: 20px" class="flex items-center gap-2">
+              <div
+                [ngStyle]="{ 'background-color': category.color }"
+                class="rounded-selection-item"
+              >
+                <span
+                  class="material-symbols-outlined"
+                  style="font-size: 1rem; color: white"
+                >
+                  {{ category.icon }}
+                </span>
+              </div>
+              <p class="custom-text-style">
+                {{ category.name }}
+              </p>
+            </div>
+          </ng-template>
+        </p-dropdown>
+      </div>
+
+
     </form>
   </ng-template>
 

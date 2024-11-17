@@ -23,14 +23,26 @@ import { SpeedDialModule } from 'primeng/speeddial';
 import { ColorPickerModule } from 'primeng/colorpicker';
 import { TabViewModule } from 'primeng/tabview';
 import { TooltipModule } from 'primeng/tooltip';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
+import { DropdownModule } from 'primeng/dropdown';
+import { InfoParentCategoryResponse } from '../../../models/InfoParentCategoryResponse';
 
 export type CategoryDialogDataType =
   | {
       newCategory: true;
+      category: undefined;
+      parentCategory?: undefined;
+    }
+  | {
+      newCategory: true;
+      category: Category;
+      parentCategory: true;
     }
   | {
       newCategory: false;
       category: Category;
+      parentCategory?: undefined;
     };
 
 interface ICateogryForm {
@@ -38,6 +50,7 @@ interface ICateogryForm {
   icon: FormControl<string>;
   billType: FormControl<BillTypeEnum>;
   color: FormControl<string>;
+  parentId: FormControl<number | null>;
 }
 
 @Component({
@@ -55,6 +68,9 @@ interface ICateogryForm {
     ColorPickerModule,
     TabViewModule,
     TooltipModule,
+    IconFieldModule,
+    InputIconModule,
+    DropdownModule,
   ],
   templateUrl: './category-dialog.component.html',
   styleUrl: './category-dialog.component.scss',
@@ -92,10 +108,14 @@ export class CategoryDialogComponent implements OnInit {
   ];
   collapsedIcons: boolean = true;
 
+  categories: Category[] | null = null;
+
   icons: string[] = iconsOptions;
   selectedIcon = this.icons[0];
 
   defaultColors: string[] = colorOptions;
+
+  selectedParentCategory?: InfoParentCategoryResponse;
 
   constructor(
     private categoryService: CategoryService,
@@ -120,9 +140,12 @@ export class CategoryDialogComponent implements OnInit {
         nonNullable: true,
         validators: [Validators.required],
       }),
-      color: new FormControl<string>('', {
+      color: new FormControl<string>(this.defaultColors[0], {
         nonNullable: true,
         validators: [Validators.required],
+      }),
+      parentId: new FormControl<number | null>(null, {
+        nonNullable: false,
       }),
     });
   }
@@ -131,16 +154,41 @@ export class CategoryDialogComponent implements OnInit {
     this.data = data;
     this.visible = true;
 
-    this.categoryForm.patchValue({
-      name: this.data.newCategory ? '' : this.data.category.name,
-      icon: this.data.newCategory ? this.icons[0] : this.data.category.icon,
-      billType: this.data.newCategory
-        ? BillTypeEnum.EXPENSE
-        : this.data.category.billType,
-      color: this.data.newCategory
-        ? this.defaultColors[0]
-        : this.data.category.color,
+    if (
+      this.data.newCategory === false &&
+      this.data.parentCategory === undefined
+    ) {
+      this.categoryForm.patchValue({
+        name: this.data.newCategory ? '' : this.data.category.name,
+        icon: this.data.newCategory ? this.icons[0] : this.data.category.icon,
+        billType: this.data.newCategory
+          ? BillTypeEnum.EXPENSE
+          : this.data.category.billType,
+        color: this.data.newCategory
+          ? this.defaultColors[0]
+          : this.data.category.color,
+      });
+    } else {
+      if (this.data.parentCategory) {
+        this.categoryForm.patchValue({
+          parentId: this.data.category.id!,
+        });
+        this.selectedParentCategory = this.data
+          .category as InfoParentCategoryResponse;
+
+        const parentIdControl = this.categoryForm.controls.parentId;
+        parentIdControl.addValidators(Validators.required);
+        parentIdControl.updateValueAndValidity();
+      }
+    }
+
+    this.categoryForm.get('parentId')?.valueChanges.subscribe((id) => {
+      this.selectedParentCategory = this.categories?.find(
+        (category) => category.id === id
+      ) as InfoParentCategoryResponse;
     });
+
+    this.updateCategories();
   }
 
   closeDialog(success: boolean) {
@@ -165,8 +213,12 @@ export class CategoryDialogComponent implements OnInit {
         this.categoryForm.value.name!,
         this.categoryForm.value.icon!,
         this.categoryForm.value.billType!,
-        this.categoryForm.value.color!
+        this.categoryForm.value.color!,
+        this.categoryForm.value.parentId!
       );
+
+      console.log(createdCategory);
+
       this.categoryService.createCategory(createdCategory).subscribe({
         next: () => {
           this.openSnackBar('Categoria criada com sucesso!');
@@ -215,5 +267,13 @@ export class CategoryDialogComponent implements OnInit {
 
   setDefaultColor(color: string) {
     this.categoryForm.patchValue({ color });
+  }
+
+  updateCategories() {
+    const categoryType = this.categoryForm.value.billType;
+
+    this.categoryService.GetCategories(categoryType).subscribe((categories) => {
+      this.categories = categories.filter((c) => c.billType === categoryType);
+    });
   }
 }

@@ -30,7 +30,7 @@ import { CreditCardInfo } from '../../../models/CreditCardInfo';
 import { UpdateCreditCardRequest } from '../../../models/UpdateCreditCardRequest';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { AccountDialogComponent } from '../account-dialog/account-modal.component';
+import { AccountDialogComponent } from '../account-dialog/account-dialog.component';
 
 interface ICreditCardForm {
   totalLimit: FormControl<number>;

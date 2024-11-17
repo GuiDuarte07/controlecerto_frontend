@@ -1,18 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AccountModalComponent } from './account-modal.component';
+import { AccountDialogComponent } from './account-dialog.component';
 
 describe('AccountModalComponent', () => {
-  let component: AccountModalComponent;
-  let fixture: ComponentFixture<AccountModalComponent>;
+  let component: AccountDialogComponent;
+  let fixture: ComponentFixture<AccountDialogComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AccountModalComponent]
-    })
-    .compileComponents();
-    
-    fixture = TestBed.createComponent(AccountModalComponent);
+      imports: [AccountDialogComponent],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(AccountDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

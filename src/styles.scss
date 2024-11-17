@@ -109,20 +109,7 @@ html, body {
   display: inline-block;
 }
 
-.dRounded-selection-item {
-  height: 1.5rem;
-  width: 1.75rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 0.5rem;
-}
 
-.dCustom-text-style {
-  font-size: 0.75rem;
-  color: #1e293b; 
-  font-weight: 600; 
-}
 
 .dForm-dialog-container {
   margin: 0 2rem;
@@ -189,7 +176,7 @@ body {
 }
 
 .label {
-  @apply block mb-2 text-sm font-medium text-gray-900;
+  @apply block p-0 m-0 mb-2 text-base font-normal text-gray-900 font-["Inter"];
 }
 
 .input {
@@ -224,6 +211,14 @@ body {
   @apply flex items-center gap-2 font-light text-white text-xl w-60 h-36 justify-center rounded-2xl shadow transition-transform transform hover:scale-105
 }
 
+.rounded-selection-item {
+  @apply h-6 w-7 flex justify-center items-center rounded-md;
+}
+
+
+.custom-text-style {
+  @apply text-xs text-slate-800 font-semibold
+}
 
 
 html, body { height: 100%; }

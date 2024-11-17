@@ -46,7 +46,7 @@ import { BillTypeEnum } from '../../../enums/BillTypeEnum';
 import { InfoTransactionResponse } from '../../../models/InfoTransactionResponse';
 import { UpdateTransactionRequest } from '../../../models/UpdateTransaction';
 import { UpdateCreditPurchaseRequest } from '../../../models/UpdateCreditPurchaseRequest';
-import { AccountDialogComponent } from '../account-dialog/account-modal.component';
+import { AccountDialogComponent } from '../account-dialog/account-dialog.component';
 import { CreateCreditCardDialogComponent } from '../create-credit-card-dialog/create-credit-card-dialog.component';
 import { SelectionComponent } from '../../selection/selection.component';
 

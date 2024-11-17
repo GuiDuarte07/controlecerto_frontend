@@ -41,7 +41,7 @@ import { BillTypeEnum } from '../../../enums/BillTypeEnum';
 import { InfoTransactionResponse } from '../../../models/InfoTransactionResponse';
 import { UpdateTransactionRequest } from '../../../models/UpdateTransaction';
 import { UpdateCreditPurchaseRequest } from '../../../models/UpdateCreditPurchaseRequest';
-import { AccountDialogComponent } from '../account-dialog/account-modal.component';
+import { AccountDialogComponent } from '../account-dialog/account-dialog.component';
 import { CreateCreditCardDialogComponent } from '../create-credit-card-dialog/create-credit-card-dialog.component';
 import { SelectionComponent } from '../../selection/selection.component';
 import { DialogModule } from 'primeng/dialog';
@@ -171,31 +171,15 @@ export class TransactionDialogComponent implements OnInit {
     });
 
     this.transactionForm.get('categoryId')?.valueChanges.subscribe((id) => {
-      this.checkInvalidFields(this.transactionForm);
       this.selectedCategory = this.categories.find(
         (category) => category.id === id
       );
     });
 
     this.transactionForm.get('accountId')?.valueChanges.subscribe((id) => {
-      this.checkInvalidFields(this.transactionForm);
       this.selectedAccount = this.accounts.find(
         (category) => category.id === id
       );
-    });
-  }
-
-  checkInvalidFields(form: FormGroup): void {
-    Object.keys(form.controls).forEach((key) => {
-      const control = form.get(key);
-
-      if (control && control.invalid) {
-        console.log(`Campo "${key}" está inválido.`);
-
-        if (control.errors) {
-          console.log(`Erros para o campo "${key}":`, control.errors);
-        }
-      }
     });
   }
 

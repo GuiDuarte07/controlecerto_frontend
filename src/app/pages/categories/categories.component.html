@@ -30,52 +30,51 @@
 </section>
 
 <ng-template #categoriesList let-categoriesType="categoriesType">
-  <ul class="overflow-x-hidden">
+  <ul class="overflow-x-hidden m-0 p-0">
     @for(category of categoriesType === "expense" ? expenseCategories :
     incomeCategories; track category) {
-    <li class="w-full border-0 border-b border-solid border-slate-200">
-      <button
-        (click)="toggleSideBarCategory(category)"
-        class="border-none bg-transparent relative px-2 py-2 flex items-center gap-4 group"
-      >
-        <div
-          [ngStyle]="{ 'background-color': category.color }"
-          class="text-white rounded-full w-8 h-8 flex items-center justify-center"
-        >
-          <span class="material-symbols-outlined !text-base">
-            {{ category.icon }}
-          </span>
-        </div>
+    <ng-container
+      *ngTemplateOutlet="categoryItem; context: { category: category }"
+    ></ng-container>
 
-        <p class="text-sm text-slate-800 group-hover:font-medium">
-          {{ category.name }}
-        </p>
-      </button>
-
-      <div class=".sub-category-list-container">
-        @for(subCategory of category.subCategories; track subCategory) {
-        <button
-          (click)="openCategoryDialog(subCategory)"
-          class="!ml-10 border-none bg-transparent !pb-2 !py-2 flex items-center gap-4 group"
-        >
-          <div
-            [ngStyle]="{ 'background-color': subCategory.color }"
-            class="text-white rounded-full w-8 h-8 flex items-center justify-center"
-          >
-            <span class="material-symbols-outlined !text-base">
-              {{ subCategory.icon }}
-            </span>
-          </div>
-
-          <p class="text-sm text-slate-800 group-hover:font-medium">
-            {{ subCategory.name }}
-          </p>
-        </button>
-        }
-      </div>
-    </li>
-    }
+    @for(subCategory of category.subCategories; track subCategory) {
+    <ng-container
+      *ngTemplateOutlet="
+        categoryItem;
+        context: { category: subCategory, subCategory: true }
+      "
+    ></ng-container>
+    } }
   </ul>
+</ng-template>
+
+<ng-template
+  #categoryItem
+  let-category="category"
+  let-subCategory="subCategory"
+>
+  <li
+    class="w-full border-0 border-b border-solid border-slate-200"
+    [ngClass]="{ 'pl-8': !!subCategory }"
+  >
+    <button
+      (click)="toggleSideBarCategory(category)"
+      class="border-none bg-transparent relative px-2 py-2 flex items-center gap-4 group"
+    >
+      <div
+        [ngStyle]="{ 'background-color': category.color }"
+        class="text-white rounded-full w-8 h-8 flex items-center justify-center"
+      >
+        <span class="material-symbols-outlined !text-base">
+          {{ category.icon }}
+        </span>
+      </div>
+
+      <p class="text-sm text-slate-800 group-hover:font-medium">
+        {{ category.name }}
+      </p>
+    </button>
+  </li>
 </ng-template>
 
 <p-sidebar
@@ -103,27 +102,64 @@
 
     <div class="flex flex-col gap-3">
       <div class="">
-        <p class="">Limite mensal <span>R$ 434.00</span></p>
-        <p class="">Total gasto esse mês <span>R$ 434.00</span></p>
+        <p class="">Limite mensal <span>será implementado</span></p>
+        <p class="">Total gasto esse mês <span>será implementado</span></p>
       </div>
       <p-buttonGroup>
         <p-button
           label="Editar"
           icon="pi pi-pen-to-square"
-          (onClick)="openCategoryDialog(this.selectedCategory!)"
+          (onClick)="openCategoryDialog(selectedCategory!)"
         />
-        <p-button label="Deletar" icon="pi pi-trash" />
-        <p-button label="Cancelar" icon="pi pi-times" />
+        <p-button
+          label="Criar Sub-Categoria"
+          icon="pi pi-plus"
+          (onClick)="openCategoryDialog(selectedCategory!, true)"
+          [disabled]="getSelectedCategoryParent()"
+        />
+        <p-button label="Deletar" icon="pi pi-trash" severity="danger" />
       </p-buttonGroup>
     </div>
 
-    <div class="">
+    <div class="max-w-full">
+      @if(getSelectedCategoryParent() !== null) {
+        <p class="">Categoria Pai</p>
+        <div class="w-full border-0 bg-transparent flex items-center gap-4">
+          <div
+            [ngStyle]="{ 'background-color': getSelectedCategoryParent()?.color }"
+            class="text-white rounded-full w-8 h-8 flex items-center justify-center"
+          >
+            <span class="material-symbols-outlined !text-base">
+              {{ getSelectedCategoryParent()?.icon }}
+            </span>
+          </div>
+
+          <p class="text-sm text-slate-800">
+            {{ getSelectedCategoryParent()?.name }}
+          </p>
+        </div>
+       } @else {
       <p class="">Sub-Categorias</p>
-      <ul class="p-0 ml-12 list-disc">
-        @for(sb of listSubCategories(selectedCategory); track sb) {
-          <li>{{sb}}</li>
+      <ul class="p-0 m-0 ml-2">
+        @for(subCategory of listSubCategories(selectedCategory); track
+        subCategory) {
+        <li class="w-full border-0 bg-transparent flex items-center gap-4">
+          <div
+            [ngStyle]="{ 'background-color': subCategory.color }"
+            class="text-white rounded-full w-8 h-8 flex items-center justify-center"
+          >
+            <span class="material-symbols-outlined !text-base">
+              {{ subCategory.icon }}
+            </span>
+          </div>
+
+          <p class="text-sm text-slate-800">
+            {{ subCategory.name }}
+          </p>
+        </li>
         }
       </ul>
+      }
     </div>
   </div>
 </p-sidebar>

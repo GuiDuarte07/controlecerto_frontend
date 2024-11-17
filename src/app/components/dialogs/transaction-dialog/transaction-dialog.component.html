@@ -4,6 +4,8 @@
   [modal]="true"
   [(visible)]="visible"
   [style]="{ width: '40rem' }"
+  [dismissableMask]="true"
+  (onHide)="closeDialog(false)"
 >
 
   <ng-template pTemplate="body" class="bg-slate-300">
@@ -135,7 +137,7 @@
               >
                 <div
                   [ngStyle]="{ 'background-color': selectedCategory.color }"
-                  class="dRounded-selection-item"
+                  class="rounded-selection-item"
                 >
                   <span
                     class="material-symbols-outlined"
@@ -144,7 +146,7 @@
                     {{ selectedCategory.icon }}
                   </span>
                 </div>
-                <p class="dCustom-text-style">
+                <p class="custom-text-style">
                   {{ selectedCategory.name }}
                 </p>
               </div>
@@ -155,7 +157,7 @@
               <div style="height: 20px" class="flex items-center gap-2">
                 <div
                   [ngStyle]="{ 'background-color': category.color }"
-                  class="dRounded-selection-item"
+                  class="rounded-selection-item"
                 >
                   <span
                     class="material-symbols-outlined"
@@ -164,7 +166,7 @@
                     {{ category.icon }}
                   </span>
                 </div>
-                <p class="dCustom-text-style">
+                <p class="custom-text-style">
                   {{ category.name }}
                 </p>
               </div>
@@ -199,7 +201,7 @@
                     account_balance
                   </span>
                 </div>
-                <p class="overflow-hidden dCustom-text-style">
+                <p class="overflow-hidden custom-text-style">
                   {{ selectedCreditCard?.description }}
                 </p>
               </div>
@@ -222,7 +224,7 @@
                     account_balance
                   </span>
                 </div>
-                <p class="overflow-hidden dCustom-text-style">
+                <p class="overflow-hidden custom-text-style">
                   {{ creditCard.description }}
                 </p>
               </button>
@@ -240,7 +242,7 @@
                     add
                   </span>
                 </div>
-                <p class="overflow-hidden dCustom-text-style">
+                <p class="overflow-hidden custom-text-style">
                   Criar um cartão
                 </p>
               </button>
@@ -284,7 +286,7 @@
               >
                 <div
                   [ngStyle]="{ 'background-color': selectedAccount.color }"
-                  class="dRounded-selection-item"
+                  class="rounded-selection-item"
                 >
                   <span
                     class="material-symbols-outlined"
@@ -293,7 +295,7 @@
                     account_balance
                   </span>
                 </div>
-                <p class="dCustom-text-style">
+                <p class="custom-text-style">
                   {{ selectedAccount.bank }}
                 </p>
               </div>
@@ -304,7 +306,7 @@
               <div style="height: 20px" class="flex items-center gap-2">
                 <div
                   [ngStyle]="{ 'background-color': account.color }"
-                  class="dRounded-selection-item"
+                  class="rounded-selection-item"
                 >
                   <span
                     class="material-symbols-outlined"
@@ -313,7 +315,7 @@
                     account_balance
                   </span>
                 </div>
-                <p class="dCustom-text-style">
+                <p class="custom-text-style">
                   {{ account.bank }}
                 </p>
               </div>

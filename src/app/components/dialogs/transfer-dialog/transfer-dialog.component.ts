@@ -20,7 +20,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { SelectionComponent } from '../../selection/selection.component';
 import { Account } from '../../../models/AccountRequest ';
-import { AccountDialogComponent } from '../account-dialog/account-modal.component';
+import { AccountDialogComponent } from '../account-dialog/account-dialog.component';
 import { CreateTransferenceRequest } from '../../../models/CreateTransferenceRequest';
 import { HttpErrorResponse } from '@angular/common/http';
 

@@ -13,6 +13,10 @@ import { AlertDialogComponent } from '../dialogs/alert-dialog/alert-dialog.compo
 import { TransactionTypeEnum } from '../../enums/TransactionTypeEnum';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { FormsModule } from '@angular/forms';
+import { SidebarModule } from 'primeng/sidebar';
+import { ButtonModule } from 'primeng/button';
+import { ButtonGroupModule } from 'primeng/buttongroup';
+import { transactionTypeToText } from '../../utils/formaters';
 
 @Component({
   selector: 'app-transaction-expansion-panel',
@@ -23,6 +27,9 @@ import { FormsModule } from '@angular/forms';
     MatTooltipModule,
     MatCheckboxModule,
     FormsModule,
+    SidebarModule,
+    ButtonModule,
+    ButtonGroupModule,
   ],
   templateUrl: './transaction-expansion-panel.component.html',
   styleUrl: './transaction-expansion-panel.component.scss',
@@ -38,6 +45,8 @@ export class TransactionExpansionPanelComponent {
     checked: boolean;
   }>();
 
+  sidebarVisible: boolean = false;
+
   constructor(
     private transactionService: TransactionService,
     private creditCardService: CreditCardService,
@@ -51,6 +60,10 @@ export class TransactionExpansionPanelComponent {
       transaction: this.transaction,
       checked: this.checked,
     });
+  }
+
+  toggleSidebarVisible() {
+    this.sidebarVisible = !this.sidebarVisible;
   }
 
   openEditTransactionDialog(transaction: InfoTransactionResponse) {
@@ -135,5 +148,9 @@ export class TransactionExpansionPanelComponent {
         this.updateTransactions();
       }
     });
+  }
+
+  transactionTypeToText(transactionType: TransactionTypeEnum) {
+    return transactionTypeToText(transactionType);
   }
 }

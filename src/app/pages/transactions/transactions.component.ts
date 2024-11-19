@@ -24,6 +24,17 @@ import { FormsModule } from '@angular/forms';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { TransferDialogComponent } from '../../components/dialogs/transfer-dialog/transfer-dialog.component';
 
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { ButtonModule } from 'primeng/button';
+import { InputGroupModule } from 'primeng/inputgroup';
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { InputTextModule } from 'primeng/inputtext';
+import { DropdownModule } from 'primeng/dropdown';
+import { ToggleButtonModule } from 'primeng/togglebutton';
+import { SelectButtonModule } from 'primeng/selectbutton';
+import { AccordionModule } from 'primeng/accordion';
+import { CheckboxModule } from 'primeng/checkbox';
+
 @Component({
   selector: 'app-transactions',
   standalone: true,
@@ -38,6 +49,16 @@ import { TransferDialogComponent } from '../../components/dialogs/transfer-dialo
     TransactionExpansionPanelComponent,
     FormsModule,
     MatCheckbox,
+    OverlayPanelModule,
+    ButtonModule,
+    InputGroupModule,
+    InputGroupAddonModule,
+    InputTextModule,
+    DropdownModule,
+    ToggleButtonModule,
+    SelectButtonModule,
+    AccordionModule,
+    CheckboxModule,
   ],
   templateUrl: './transactions.component.html',
   styleUrl: './transactions.component.scss',
@@ -72,6 +93,11 @@ export class TransactionsComponent implements OnInit {
     textFilter: '',
     seeInvoices: true,
   };
+
+  dataOptionsLabel: any[] = [
+    { label: 'Descrecente', value: true },
+    { label: 'Crescente', value: false },
+  ];
 
   constructor(
     private transactionService: TransactionService,

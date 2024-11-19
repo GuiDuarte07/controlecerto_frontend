@@ -91,7 +91,7 @@
 }
 
 html, body {
-	font-size: 14px;
+	font-size: 16px;
 }
 
 .dlabel-text {
@@ -241,4 +241,8 @@ input::-webkit-outer-spin-button {
 .p-selectbutton .p-button.p-highlight::before {
   background: transparent;
   box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.02), 0px 1px 2px 0px rgba(0, 0, 0, 0.04);
+}
+
+.p-selectbutton .p-button.p-highlight:hover {
+  background: white !important;
 }

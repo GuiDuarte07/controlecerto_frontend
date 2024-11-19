@@ -31,6 +31,11 @@ import { UpdateCreditCardRequest } from '../../../models/UpdateCreditCardRequest
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AccountDialogComponent } from '../account-dialog/account-dialog.component';
+import {
+  DialogService,
+  DynamicDialogConfig,
+  DynamicDialogRef,
+} from 'primeng/dynamicdialog';
 
 interface ICreditCardForm {
   totalLimit: FormControl<number>;
@@ -58,7 +63,7 @@ interface ICreditCardForm {
     MatCheckboxModule,
     MatTooltipModule,
   ],
-  providers: [CurrencyMaskDirective],
+  providers: [CurrencyMaskDirective, DialogService],
   templateUrl: './create-credit-card-dialog.component.html',
   styleUrl: './create-credit-card-dialog.component.scss',
 })
@@ -81,7 +86,9 @@ export class CreateCreditCardDialogComponent implements OnInit {
     private readonly creditCardService: CreditCardService,
     public dialogRef: MatDialogRef<CreateCreditCardDialogComponent>,
     private snackBar: MatSnackBar,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    public ref: DynamicDialogRef,
+    public config: DynamicDialogConfig
   ) {}
 
   ngOnInit(): void {

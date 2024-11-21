@@ -3,18 +3,17 @@
   [header]="getDialogTitle()"
   [modal]="true"
   [(visible)]="visible"
-  [style]="{ width: '40rem' }"
+  [style]="{ width: '42rem' }"
   [dismissableMask]="true"
   (onHide)="closeDialog(false)"
 >
-
   <ng-template pTemplate="body" class="bg-slate-300">
     <form [formGroup]="transactionForm" class="dForm-dialog-container">
       <!-- FIRST COLUMN -->
       <div class="two-side-form-section">
         <!-- AMOUNT INPUT -->
-        <div class="w-full">
-          <label for="amount" class=".dlabel-text">Valor</label>
+        <div class="w-full md:w-6/12">
+          <label for="amount" class="label">Valor</label>
           <input
             pInputText
             formControlName="amount"
@@ -28,18 +27,14 @@
               'text-green': data.transactionType === 1,
               'text-yellow': data.transactionType === 2
             }"
-            class="block w-full"
+            class="block w-full font-semibold"
             required
           />
         </div>
 
         <!-- DATEPICKER -->
         <div class="w-full md:w-6/12">
-          <label
-            for="purchaseDatePicker"
-            class="block mb-1 text-sm font-medium text-slate-600 dark:text-white"
-            >Data</label
-          >
+          <label for="purchaseDatePicker" class="label">Data</label>
           <p-calendar
             id="purchaseDatePicker"
             formControlName="purchaseDate"
@@ -51,21 +46,6 @@
             dateFormat="dd/mm/yy"
             [touchUI]="false"
           />
-          <!-- <div class="relative">
-            <mat-datepicker-toggle
-              class="absolute top-1/2 transform -translate-y-1/2"
-              matIconSuffix
-              [for]="picker"
-            ></mat-datepicker-toggle>
-            <input
-              id="purchaseDatePicker"
-              formControlName="purchaseDate"
-              (click)="picker.open()"
-              class="pl-10 w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-700 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              [matDatepicker]="picker"
-            />
-            <mat-datepicker #picker></mat-datepicker>
-          </div> -->
         </div>
       </div>
 
@@ -73,19 +53,18 @@
       @if(data.transactionType === 2){
       <div class="flex items-center gap-4">
         <div class="md:w-6/12 w-4/12">
-          <label
-            class="block mb-1 text-sm font-medium text-slate-600 dark:text-white"
-            for="installment"
-            >Parcelas</label
-          >
-          <input
-            pInputText
+          <label class="label" for="installment">Parcelas</label>
+          <p-inputNumber
+            mode="decimal" 
             id="installment"
+            [min]="0" 
+            [max]="100"
             aria-describedby="installments-help"
             [(ngModel)]="installments"
             [ngModelOptions]="{ standalone: true }"
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-700 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            class="w-full"
             required
+            styleClass="w-full"
           />
           <!-- <small id="installments-help">
                 Enter your installments to reset your password.
@@ -93,15 +72,11 @@
         </div>
 
         <div class="md:w-6/12 w-8/12">
-          <label
-            for="installmentValue"
-            class="block mb-1 text-sm font-medium text-slate-500 dark:text-white"
-            >Valor por Fatura</label
-          >
+          <label for="installmentValue" class="label">Valor por Fatura</label>
           <p
             type="string"
             id="installment"
-            class="cursor-not-allowed bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-lg w-full p-2.5 dark:text-white"
+            class="cursor-not-allowed bg-gray-50 border border-gray-200 !text-gray-700 text-sm rounded-lg w-full p-2.5 m-0 dark:text-white"
           >
             {{ amountPerInstallment | currency : "BRL" : "symbol" }}
           </p>
@@ -114,7 +89,7 @@
       <div class="two-side-form-section">
         <!-- CATEGORY SELECTION -->
         <div class="w-full">
-          <label for="dlabel-text" for="categories">Categoria</label>
+          <p class="label" for="categories">Categoria</p>
           <p-dropdown
             id="categories"
             [options]="categories"
@@ -175,24 +150,32 @@
         </div>
 
         <!-- ACCOUNT/CREDIT CARD SELECTION -->
-
         <div class="w-full relative">
           @if(data.transactionType === 2) {
-          <app-selection
-            label="Cartão"
+          <p class="label" for="accounts">Cartão</p>
+          <p-dropdown
+            id="accounts"
+            [options]="creditCards"
+            [formControl]="transactionForm.controls.creditCardId"
+            optionLabel="description"
+            optionValue="id"
+            [showClear]="true"
             placeholder="Selecione um cartão"
-            [itemSelected]="!!selectedCreditCard"
+            [style]="{ width: '100%' }"
+            appendTo="body"
           >
-            <div
-              selected-item-content
-              class="gap-2 flex items-center w-full overflow-hidden"
-            >
-              <div class="gap-2 flex items-center w-full overflow-hidden">
+            <!-- Template para o item selecionado -->
+            <ng-template pTemplate="selectedItem">
+              <div
+                style="height: 20px"
+                class="flex items-center gap-2"
+                *ngIf="selectedCreditCard"
+              >
                 <div
                   [ngStyle]="{
-                    'background-color': selectedCreditCard?.account?.color
+                    'background-color': selectedCreditCard.account.color
                   }"
-                  class="h-6 w-7 rounded-lg flex justify-center items-center"
+                  class="rounded-selection-item"
                 >
                   <span
                     class="material-symbols-outlined"
@@ -201,21 +184,18 @@
                     account_balance
                   </span>
                 </div>
-                <p class="overflow-hidden custom-text-style">
-                  {{ selectedCreditCard?.description }}
+                <p class="custom-text-style">
+                  {{ selectedCreditCard.description }}
                 </p>
               </div>
-            </div>
+            </ng-template>
 
-            <ng-container options-loop>
-              @for (creditCard of creditCards; track creditCard) {
-              <button
-                (click)="changeSelectedItem(creditCard)"
-                class="border-none py-2 px-3 gap-2 flex items-center hover:bg-slate-200 transition-all duration-150 w-full"
-              >
+            <!-- Template para cada item na lista -->
+            <ng-template let-creditCard pTemplate="item">
+              <div style="height: 20px" class="flex items-center gap-2">
                 <div
-                  [ngStyle]="{ 'background-color': creditCard?.account?.color }"
-                  class="h-6 w-7 rounded-lg flex justify-center items-center"
+                  [ngStyle]="{ 'background-color': creditCard.account.color }"
+                  class="rounded-selection-item"
                 >
                   <span
                     class="material-symbols-outlined"
@@ -224,31 +204,12 @@
                     account_balance
                   </span>
                 </div>
-                <p class="overflow-hidden custom-text-style">
+                <p class="custom-text-style">
                   {{ creditCard.description }}
                 </p>
-              </button>
-              } @empty {
-              <button
-                (click)="openCreditCardDialog()"
-                class="border-none py-2 px-3 gap-2 flex items-center hover:bg-slate-200 transition-all duration-150 w-full"
-              >
-                <div
-                  class="h-6 w-7 rounded-lg flex justify-center items-center bg-white"
-                >
-                  <span
-                    class="material-symbols-outlined text-base text-green-600"
-                  >
-                    add
-                  </span>
-                </div>
-                <p class="overflow-hidden custom-text-style">
-                  Criar um cartão
-                </p>
-              </button>
-              }
-            </ng-container>
-          </app-selection>
+              </div>
+            </ng-template>
+          </p-dropdown>
           @if (selectedCreditCard) {
           <p
             [ngClass]="{
@@ -265,7 +226,7 @@
             }}
           </p>
           } } @else {
-            <label for="dlabel-text" for="accounts">Conta</label>
+          <p class="label" for="accounts">Conta</p>
           <p-dropdown
             id="accounts"
             [options]="accounts"
@@ -328,7 +289,7 @@
       <!-- FOUR COLUMN -->
       <!-- DESCRIPTION TEXTAREA -->
       <div class="">
-        <label for="description" class=".dlabel-text">Descrição</label>
+        <label for="description" class="label">Descrição</label>
         <input
           pInputText
           formControlName="description"
@@ -341,11 +302,9 @@
       <!-- THIRD COLUMN -->
       <!-- DESTINATION INPUT -->
       <div>
-        <label
-          for="destination"
-          class="block mb-1 text-sm font-medium text-slate-600 dark:text-white"
-          >{{ data.transactionType === 1 ? "Origem" : "Destino" }}</label
-        >
+        <label for="destination" class="label">{{
+          data.transactionType === 1 ? "Origem" : "Destino"
+        }}</label>
         <input
           pInputText
           formControlName="destination"
@@ -392,7 +351,6 @@
       (click)="createTransaction()"
       [disabled]="isFormInvalid()"
     ></button>
-
   </ng-template>
 </p-dialog>
 

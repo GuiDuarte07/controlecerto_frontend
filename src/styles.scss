@@ -120,19 +120,19 @@ html, body {
 
 
 .text-red {
-  color: rgb(185 28 28 / 1) /* #b91c1c */;
+  @apply text-red-600;
 }
 
 .text-green {
-  color: rgb(22 163 74 / 1) /* #16a34a */;
+  @apply text-green-500;
 }
 
 .text-yellow {
-  color: rgb(250 204 21 / 1) /* #facc15 */;
+  @apply text-yellow-600;
 }
 
 .text-blue {
-  color: rgb(37 99 235 / 1) /* #2563eb */;
+  @apply text-blue-700;
 }
 
 

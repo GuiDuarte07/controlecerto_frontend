@@ -188,6 +188,15 @@
                 optionValue="value"
               />
             </div>
+            {{filterOptions.type}}
+            <div class="">
+              <p-checkbox
+                [(ngModel)]="filterOptions.type"
+                [binary]="true"
+                inputId="typeFilter"
+                label="Ordenar por tipo"
+              />
+            </div>
 
             <div class="">
               <p-checkbox
@@ -206,6 +215,8 @@
                 label="Despesas de cartão como transações"
               />
             </div>
+
+            
           </div>
         </p-overlayPanel>
       </div>
@@ -269,7 +280,7 @@
 
       <!-- DETALHES DA FATURA -->
       <div
-        class="w-full flex gap-4 pt-2 pb-3 px-1 items-center border-b border-b-slate-300 border-solid"
+        class="w-full flex gap-4 pt-2 pb-3 px-1 items-center border-0 border-b border-b-slate-300 border-solid"
       >
         <div class="w-6/12">
           <div *ngIf="invoice.isPaid" class="font-medium">Fatura Paga</div>
@@ -295,7 +306,7 @@
             *ngIf="!invoice.isPaid"
             (click)="openPaymentInvoiceDialog(invoice)"
             type="button"
-            class="text-center sm:px-3 sm:py-1 px-1 bg-green-600 text-white sm:rounded-2xl rounded-lg text-sm sm:text-base cursor-pointer"
+            class="border-none text-center sm:px-3 sm:py-1 px-1 bg-green-600 text-white sm:rounded-2xl rounded-lg text-sm sm:text-base cursor-pointer"
           >
             Pagar Fatura
           </button>
@@ -323,24 +334,24 @@
         </p>
       </div>
 
-      <div class="sm:px-4 sm:w-8/12 w-full flex">
+      <div class="sm:px-4 sm:w-8/12 w-full flex gap-2">
         <div class="sm:pl-7 flex flex-col w-full">
-          <div class="flex items-center justify-between">
-            <p class="text-sm text-slate-600">receita</p>
+          <div class="flex items-center justify-between h-8">
+            <p class="p-text-balance">receita</p>
             <p class="sm:mr-4 mr-1 text-sm font-medium text-green-600">
               {{ incomesTotal() | currency : "BRL" : "" }}
             </p>
           </div>
 
-          <div class="flex items-center justify-between">
-            <p class="text-sm text-slate-600">despesa</p>
+          <div class="flex items-center justify-between h-8">
+            <p class="p-text-balance">despesa</p>
             <p class="sm:mr-4 mr-1 text-sm font-medium text-red-600">
               {{ expensesTotal() | currency : "BRL" : "" }}
             </p>
           </div>
 
-          <div class="flex items-center justify-between">
-            <p class="text-sm text-slate-600">fatura</p>
+          <div class="flex items-center justify-between h-8">
+            <p class="p-text-balance">fatura</p>
             <p class="sm:mr-4 mr-1 text-sm font-medium text-slate-700">
               {{ invoiceTotal() | currency : "BRL" : "" }}
             </p>
@@ -348,8 +359,8 @@
         </div>
 
         <div class="sm:pl-7 flex flex-col w-full">
-          <div class="flex items-center justify-between">
-            <p class="text-sm text-slate-600">saldo anterior</p>
+          <div class="flex items-center justify-between h-8">
+            <p class="p-text-balance">saldo anterior</p>
             <p class="sm:mr-4 mr-1 text-sm font-medium text-amber-600">
               {{
                 accountBalance + expensesTotal() - incomesTotal()
@@ -358,15 +369,15 @@
             </p>
           </div>
 
-          <div class="flex items-center justify-between">
-            <p class="text-sm text-slate-600">saldo atual</p>
+          <div class="flex items-center justify-between h-8">
+            <p class="p-text-balance">saldo atual</p>
             <p class="sm:mr-4 mr-1 text-sm font-medium text-blue-600">
               {{ accountBalance | currency : "BRL" : "" }}
             </p>
           </div>
 
-          <div class="flex items-center justify-between">
-            <p class="text-sm text-slate-600">saldo previsto</p>
+          <div class="flex items-center justify-between h-8">
+            <p class="p-text-balance">saldo previsto</p>
             <p class="sm:mr-4 mr-1 text-sm font-medium text-indigo-700">
               {{ accountBalance - invoiceTotal() | currency : "BRL" : "" }}
             </p>

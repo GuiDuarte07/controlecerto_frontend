@@ -87,11 +87,13 @@ export class TransactionsComponent implements OnInit {
     accountFilter: Account | null;
     textFilter: string;
     seeInvoices: boolean;
+    type: boolean;
   } = {
     dateFilterDes: true,
     accountFilter: null,
     textFilter: '',
     seeInvoices: true,
+    type: false,
   };
 
   dataOptionsLabel: any[] = [
@@ -141,6 +143,11 @@ export class TransactionsComponent implements OnInit {
       const dateB = new Date(b.purchaseDate).getTime();
       return this.filterOptions.dateFilterDes ? dateB - dateA : dateA - dateB;
     });
+
+    // Ordenar pro tipo
+    if (this.filterOptions.type) {
+      filtered.sort((a, b) => a.type - b.type);
+    }
 
     return filtered;
   }

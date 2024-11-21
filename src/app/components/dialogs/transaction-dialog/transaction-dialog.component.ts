@@ -50,6 +50,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { CalendarModule } from 'primeng/calendar';
 import { CheckboxModule } from 'primeng/checkbox';
+import { InputNumberModule } from 'primeng/inputnumber';
 
 export type TransactionDialogDataType =
   | { newTransaction: true; transactionType: TransactionTypeEnum }
@@ -86,6 +87,7 @@ interface ITransactionForm {
     InputTextModule,
     CalendarModule,
     CheckboxModule,
+    InputNumberModule,
   ],
   providers: [provideNativeDateAdapter(), CurrencyMaskDirective],
   templateUrl: './transaction-dialog.component.html',
@@ -109,8 +111,8 @@ export class TransactionDialogComponent implements OnInit {
   categories: Category[] = [];
   selectedCategory?: Category;
 
-  installments = 1;
-  amountPerInstallment = 0;
+  installments!: number;
+  amountPerInstallment!: number;
 
   constructor(
     private transactionService: TransactionService,
@@ -177,8 +179,12 @@ export class TransactionDialogComponent implements OnInit {
     });
 
     this.transactionForm.get('accountId')?.valueChanges.subscribe((id) => {
-      this.selectedAccount = this.accounts.find(
-        (category) => category.id === id
+      this.selectedAccount = this.accounts.find((account) => account.id === id);
+    });
+
+    this.transactionForm.get('creditCardId')?.valueChanges.subscribe((id) => {
+      this.selectedCreditCard = this.creditCards.find(
+        (creditCard) => creditCard.id === id
       );
     });
   }
@@ -186,6 +192,8 @@ export class TransactionDialogComponent implements OnInit {
   openDialog(data: TransactionDialogDataType) {
     this.data = data;
     this.visible = true;
+    this.installments = 1;
+    this.amountPerInstallment = 0;
 
     this.transactionForm.patchValue({
       amount: this.data.newTransaction
@@ -229,6 +237,7 @@ export class TransactionDialogComponent implements OnInit {
 
   closeDialog(success: boolean) {
     this.visible = false;
+    this.transactionForm.reset();
     this.closeEvent.emit(success);
   }
 

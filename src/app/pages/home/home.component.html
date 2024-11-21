@@ -8,7 +8,7 @@
 
   <div class="flex w-full md:!px-6 !px-2 gap-6 !mb-6 !mt-2 flex-wrap">
     <button
-      (click)="openDialog()"
+      (click)="openTransactionDialog(0)"
       class="border-none text-red-700 text-sm !px-4 !py-1 h-1/5 rounded-md bg-white flex items-center"
       mat-menu-item
     >
@@ -16,7 +16,7 @@
       <span class="text-sm">Gasto</span>
     </button>
     <button
-      (click)="openCreateTransactionDialog(1)"
+      (click)="openTransactionDialog(1)"
       class="border-none text-green-600 text-sm !px-4 !py-1 !h-1/5 rounded-md bg-white flex items-center"
       mat-menu-item
     >
@@ -24,7 +24,7 @@
       <span class="text-sm">Receita</span>
     </button>
     <button
-      (click)="openCreateTransactionDialog(2)"
+      (click)="openTransactionDialog(2)"
       class="border-none text-yellow-400 text-sm !px-4 !py-1 h-1/5 rounded-md bg-white flex items-center"
       mat-menu-item
     >

@@ -39,18 +39,6 @@ export class HomeComponent implements OnInit {
   @ViewChild('transactionDialog')
   transactionDialog!: TransactionDialogComponent;
 
-  openDialog() {
-    const dialogData: TransactionDialogDataType = {
-      newTransaction: true,
-      transactionType: TransactionTypeEnum.EXPENSE,
-    };
-
-    this.transactionDialog.openDialog(dialogData);
-    this.transactionDialog.closeEvent.subscribe((success: boolean) => {
-      alert('fechou');
-    });
-  }
-
   balance: BalanceStatement = {
     balance: 0,
     expenses: 0,
@@ -80,6 +68,32 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.setBoardDetails('balance');
     this.userService.getUser().subscribe((user) => (this.user = user));
+  }
+
+  openTransactionDialog(type: TransactionTypeEnum) {
+    const dialogData: TransactionDialogDataType = {
+      newTransaction: true,
+      transactionType: type,
+    };
+
+    this.transactionDialog.openDialog(dialogData);
+    this.transactionDialog.closeEvent.subscribe((success: boolean) => {
+      if (success === true) {
+        this.setBoardDetails(this.boardOption);
+      }
+    });
+  }
+
+  openTranferDialog() {
+    const dialogRef = this.dialog.open(TransferDialogComponent, {
+      panelClass: 'dialog-responsive',
+    });
+
+    dialogRef.afterClosed().subscribe((sucess: boolean) => {
+      if (sucess === true) {
+        this.setBoardDetails(this.boardOption);
+      }
+    });
   }
 
   getBalances() {
@@ -147,32 +161,5 @@ export class HomeComponent implements OnInit {
     return this.transactions
       ?.slice(0, this.transactionsListSize)
       ?.reduce((prev, act) => prev + act.amount, 0);
-  }
-
-  openCreateTransactionDialog(type: TransactionTypeEnum) {
-    const dialogRef = this.dialog.open(CreateTransactionDialogComponent, {
-      data: {
-        transactionType: type,
-        newTransaction: true,
-      },
-    });
-
-    dialogRef.afterClosed().subscribe((sucess: boolean) => {
-      if (sucess === true) {
-        this.setBoardDetails(this.boardOption);
-      }
-    });
-  }
-
-  openTranferDialog() {
-    const dialogRef = this.dialog.open(TransferDialogComponent, {
-      panelClass: 'dialog-responsive',
-    });
-
-    dialogRef.afterClosed().subscribe((sucess: boolean) => {
-      if (sucess === true) {
-        this.setBoardDetails(this.boardOption);
-      }
-    });
   }
 }

@@ -86,13 +86,13 @@ export class TransactionsComponent implements OnInit {
     dateFilterDes: boolean;
     accountFilter: Account | null;
     textFilter: string;
-    seeInvoices: boolean;
+    hideInvoices: boolean;
     type: boolean;
   } = {
     dateFilterDes: true,
     accountFilter: null,
     textFilter: '',
-    seeInvoices: true,
+    hideInvoices: false,
     type: false,
   };
 
@@ -146,15 +146,25 @@ export class TransactionsComponent implements OnInit {
 
     // Ordenar pro tipo
     if (this.filterOptions.type) {
-      filtered.sort((a, b) => a.type - b.type);
+      const transactionOrder = {
+        [TransactionTypeEnum.INCOME]: 0,
+        [TransactionTypeEnum.EXPENSE]: 1,
+        [TransactionTypeEnum.CREDITEXPENSE]: 2,
+        [TransactionTypeEnum.INVOICEPAYMENT]: 3,
+        [TransactionTypeEnum.TRANSFERENCE]: 4,
+      };
+
+      filtered.sort(
+        (a, b) => transactionOrder[a.type] - transactionOrder[b.type]
+      );
     }
 
     return filtered;
   }
 
   setSeeInvoice() {
-    this.filterOptions.seeInvoices = !this.filterOptions.seeInvoices;
-    console.log(this.filterOptions.seeInvoices);
+    /* this.filterOptions.hideInvoices = !this.filterOptions.hideInvoices;
+    console.log(this.filterOptions.hideInvoices); */
     this.updateTransactions();
   }
 
@@ -231,7 +241,7 @@ export class TransactionsComponent implements OnInit {
       .getTransactions(
         firstDayOfMonthUTC,
         lastDayOfMonthUTC,
-        this.filterOptions.seeInvoices
+        !this.filterOptions.hideInvoices
       )
       .subscribe((result) => {
         this.transactions = result.transactions;

@@ -14,6 +14,8 @@ import { InfoUserResponse } from '../../models/InfoUserResponse';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { InputTextModule } from 'primeng/inputtext';
+import { PasswordModule } from 'primeng/password';
 
 interface IRegisterForm {
   email: FormControl<string>;
@@ -29,6 +31,8 @@ interface IRegisterForm {
     ReactiveFormsModule,
     RouterLink,
     MatProgressSpinnerModule,
+    InputTextModule,
+    PasswordModule,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',

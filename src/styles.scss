@@ -15,6 +15,11 @@
     box-sizing: border-box;
   }
 
+  p, h1, h2, h3, h4, h5, h6 {
+    padding: 0;
+    margin:  0;
+  }
+
   body {
     font-family: Arial, sans-serif; 
     font-size: 1rem; 
@@ -245,4 +250,8 @@ input::-webkit-outer-spin-button {
 
 .p-selectbutton .p-button.p-highlight:hover {
   background: white !important;
+}
+
+.p-inputtext.p-component.p-element.p-password-input {
+  width: 100%;
 }

@@ -1,5 +1,5 @@
 <div
-  class="w-screen h-screen flex justify-center overflow-hidden items-center bg-gradient-to-r from-teal-400 to-teal-700"
+  class="w-screen h-screen flex justify-center overflow-hidden items-center bg-gradient-to-r from-teal-400 to-teal-700 bg-teal-700"
 >
   <div class="flex items-center flex-col h-full w-full">
     <div class="flex-1 flex items-center h-full justify-center w-full">
@@ -7,14 +7,14 @@
         <form (submit)="register()" [formGroup]="registerForm" class="">
           <div class="text-center">
             <span
-              class="material-symbols-outlined text-teal-600 text-5xl"
+              class="material-symbols-outlined text-teal-600 !text-5xl"
               style="font-variation-settings: 'FILL' 1"
             >
               account_circle
             </span>
           </div>
           <h2
-            class="text-center text-2xl font-bold text-gray-600 mb-4 mt-2 block dark:text-white"
+            class="text-center text-2xl font-bold !text-gray-600 mb-4 mt-2 block dark:text-white"
           >
             Cadastre-se
           </h2>
@@ -28,19 +28,20 @@
               >
               <div class="relative">
                 <input
+                  class="w-full"
+                  pInputText
                   formControlName="name"
                   type="text"
                   id="name"
-                  class="input"
                   style="padding-right: 2.25rem"
                   placeholder="Seu nome"
                   required
                 />
-                <span
+                <!-- <span
                   class="material-symbols-outlined text-slate-400 absolute top-1/2 right-2 transform -translate-y-1/2 pointer-events-none"
                 >
                   person
-                </span>
+                </span> -->
               </div>
             </div>
             <div *ngIf="registerForm.get('name')?.errors && registerForm.get('name')?.touched">
@@ -61,18 +62,19 @@
               <div class="relative">
                 <input
                   formControlName="email"
-                  type="text"
+                  pInputText
+                  type="email"
                   id="email"
-                  class="input"
                   style="padding-right: 2.25rem"
                   placeholder="user@email.com"
                   required
+                  class="w-full"
                 />
-                <span
+                <!-- <span
                   class="material-symbols-outlined text-slate-400 absolute top-1/2 right-2 transform -translate-y-1/2 pointer-events-none"
                 >
                   mail
-                </span>
+                </span> -->
               </div>
 
               
@@ -93,16 +95,16 @@
                 >Senha</label
               >
               <div class="relative">
-                <input
-                  formControlName="password"
-                  [type]="passwordVisibility ? 'text' : 'password'"
+                <p-password
+                  class="w-full inline-block"
+                  styleClass="w-full inline-block"
+                  [feedback]="true"
                   id="password"
-                  class="input"
-                  style="padding-right: 2.25rem"
-                  placeholder="•••••••••"
+                  formControlName="password"
+                  [toggleMask]="true"
                   required
                 />
-                <button
+                <!-- <button
                   (click)="setPasswordVisibility()"
                   type="button"
                   class="absolute top-1/2 right-2 transform -translate-y-1/2 cursor-pointer flex justify-center items-center"
@@ -116,7 +118,7 @@
                     visibility
                   </span>
                   }
-                </button>
+                </button> -->
               </div>
               
             </div>
@@ -135,14 +137,14 @@
             <button
               [disabled]="!registerForm.valid || loading"
               type="submit"
-              class="disabled:bg-slate-400 px-9 py-2 bg-teal-600 text-white font-semibold text-sm rounded-lg flex gap-2 items-center"
+              class="disabled:bg-slate-400 border-none px-9 py-2 bg-teal-600 text-white font-semibold text-sm rounded-lg flex gap-2 items-center"
             >
             @if (loading) {
               <div class="px-8 py-1">
                 <mat-spinner diameter="20"></mat-spinner>
               </div>
             }  @else {
-              Registar
+              Registra-se
               <span
                 class="text-white text-lg font-bold material-symbols-outlined"
               >

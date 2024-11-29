@@ -62,7 +62,7 @@
   type="button"
   (click)="toggleCheckedStatus()"
   [ngClass]="{ 'bg-slate-300': checked }"
-  class="w-full flex m-1 rounded-sm"
+  class="w-full flex m-1 rounded-sm border-0 bg-inherit items-center"
 >
   <mat-checkbox [checked]="checked" class="inline-block"> </mat-checkbox>
   <ng-container *ngTemplateOutlet="headerContent"></ng-container>
@@ -70,13 +70,13 @@
 }
 
 <p-sidebar
-  [style]="{ height: '24rem' }"
+  [style]="{ height: 'fit-content' }"
   [style.display]="sidebarVisible ? 'inherit' : 'none'"
   position="bottom"
   class="mx-12"
   [(visible)]="sidebarVisible"
 >
-  <div class="sm:px-80 flex w-full flex-col sm:flex-row">
+  <div class="sm:px-80 py-4 flex w-full flex-col sm:flex-row">
     <!-- Primeira parte (icone, botoes, etc) -->
     <div class="w-full sm:w-6/12 flex">
       <!-- ícone, descrição e quantia -->

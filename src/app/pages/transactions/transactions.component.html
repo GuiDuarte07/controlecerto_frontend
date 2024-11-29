@@ -209,8 +209,9 @@
 
             <div class="">
               <p-checkbox
-                [value]="filterOptions.seeInvoices"
+                [(ngModel)]="filterOptions.hideInvoices"
                 (onChange)="setSeeInvoice()"
+                [binary]="true"
                 inputId="seeInvoice"
                 label="Despesas de cartão como transações"
               />

@@ -151,10 +151,10 @@
         </div>
 
         @if(accounts) {
-        <ul class="">
+        <ul class="p-1">
           @for (account of accounts; track $index) {
           <li
-            class="flex gap-5 justify-between items-center !py-2 border-b border-slate-300"
+            class="flex gap-5 justify-between items-center !py-2 border-0 border-b border-solid border-slate-300"
           >
             <div class="flex items-center gap-2">
               <p class="">{{ account.bank }}</p>
@@ -191,7 +191,7 @@
         </div>
 
         @if(invoices) {
-        <ul class="">
+        <ul class="p-1">
           @for (invoice of invoices; track $index) {
           <li
             class="flex md:flex-row flex-col md:gap-5 md:justify-between md:items-center !py-2 border-b border-slate-300"
@@ -240,7 +240,7 @@
         </div>
 
         @if(transactions && transactions.length > 0) {
-        <ul class="">
+        <ul class="p-1">
           @for (transaction of transactions.slice(0, transactionsListSize); track $index) {
           <li
             class="flex flex-col md:flex-row md:gap-5 md:justify-between md:items-center py-2 border-b border-slate-300"
@@ -292,10 +292,10 @@
           <div class="rounded-full w-5 h-5 bg-red-600"></div>
         </div>
         @if(transactions && transactions.length > 0) {
-          <ul class="">
+          <ul class="p-1">
             @for (transaction of transactions.slice(0, transactionsListSize); track $index) {
             <li
-              class="flex flex-col md:flex-row md:gap-5 md:justify-between md:items-center !py-2 border-b border-slate-300"
+              class="flex flex-col md:flex-row md:gap-5 md:justify-between md:items-center !py-2 border-0 border-b border-solid border-slate-300"
             >
               <div class="flex overflow-hidden max-w-full md:w-8/12">
                 <p class="w-8/12 truncate">

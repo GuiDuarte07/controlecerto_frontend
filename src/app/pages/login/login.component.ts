@@ -14,6 +14,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
+import { InputTextModule } from 'primeng/inputtext';
+import { PasswordModule } from 'primeng/password';
 
 interface ILoginForm {
   email: FormControl<string>;
@@ -31,6 +33,8 @@ interface ILoginForm {
     FormsModule,
     ButtonModule,
     DropdownModule,
+    InputTextModule,
+    PasswordModule,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',

@@ -4,8 +4,13 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CommonModule } from '@angular/common';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { passwordsMatchValidator } from '../../validators/passwordsMatchValidator'
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { passwordsMatchValidator } from '../../validators/passwordsMatchValidator';
 
 interface IForgotPasswordForm {
   password: FormControl<string>;
@@ -15,7 +20,12 @@ interface IForgotPasswordForm {
 @Component({
   selector: 'app-forgot-password',
   standalone: true,
-  imports: [RouterModule, MatProgressSpinnerModule, CommonModule, ReactiveFormsModule],
+  imports: [
+    RouterModule,
+    MatProgressSpinnerModule,
+    CommonModule,
+    ReactiveFormsModule,
+  ],
   templateUrl: './forgot-password.component.html',
   styleUrl: './forgot-password.component.scss',
 })
@@ -30,7 +40,6 @@ export class ForgotPasswordComponent implements OnInit {
   fromServerError: string | null = null;
   successToUpdatePassword = false;
 
-
   passwordVisibility = false;
 
   constructor(
@@ -41,27 +50,29 @@ export class ForgotPasswordComponent implements OnInit {
   ngOnInit(): void {
     this.token = this.activatedRoute.snapshot.paramMap.get('token') ?? '';
 
-    this.forgotPasswordForm = new FormGroup({
-      password: new FormControl<string>('', {
-        nonNullable: true,
-        validators: [
-          Validators.required,
-          Validators.minLength(3),
-          Validators.maxLength(100),
-        ],
-      }),
-      confirmPassword: new FormControl<string>('', {
-        nonNullable: true,
-        validators: [
-          Validators.required,
-          Validators.minLength(3),
-          Validators.maxLength(100),
-        ],
-      }),
-    }, {
-      validators:
-        passwordsMatchValidator()
-    });
+    this.forgotPasswordForm = new FormGroup(
+      {
+        password: new FormControl<string>('', {
+          nonNullable: true,
+          validators: [
+            Validators.required,
+            Validators.minLength(3),
+            Validators.maxLength(100),
+          ],
+        }),
+        confirmPassword: new FormControl<string>('', {
+          nonNullable: true,
+          validators: [
+            Validators.required,
+            Validators.minLength(3),
+            Validators.maxLength(100),
+          ],
+        }),
+      },
+      {
+        validators: passwordsMatchValidator(),
+      }
+    );
 
     this.userService.verifyForgotPasswordToken(this.token).subscribe({
       next: () => {
@@ -73,30 +84,32 @@ export class ForgotPasswordComponent implements OnInit {
         this.pageLoading = false;
         this.invalidToken = true;
         this.fromServerError = error.error;
-      }
+      },
     });
   }
 
   sendForgotPassword() {
-    if(!this.forgotPasswordForm.valid) return;
+    if (!this.forgotPasswordForm.valid) return;
 
     const password = this.forgotPasswordForm.value.password!;
     const confirmPassword = this.forgotPasswordForm.value.confirmPassword!;
 
     this.sendForgotPasswordLoading = true;
 
-    this.userService.sendForgotPassword(this.token, password, confirmPassword).subscribe({
-      next: () => {
-        this.sendForgotPasswordLoading = false;
-        this.successToUpdatePassword = true;
-        this.fromServerError = null;
-      },
-      error: (error: HttpErrorResponse) => {
-        this.successToUpdatePassword = false;
-        this.sendForgotPasswordLoading = false;
-        this.fromServerError = error.error;
-      }
-    });
+    this.userService
+      .sendForgotPassword(this.token, password, confirmPassword)
+      .subscribe({
+        next: () => {
+          this.sendForgotPasswordLoading = false;
+          this.successToUpdatePassword = true;
+          this.fromServerError = null;
+        },
+        error: (error: HttpErrorResponse) => {
+          this.successToUpdatePassword = false;
+          this.sendForgotPasswordLoading = false;
+          this.fromServerError = error.error;
+        },
+      });
   }
 
   setPasswordVisibility() {

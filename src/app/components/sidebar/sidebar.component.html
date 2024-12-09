@@ -36,9 +36,12 @@
         </span>
       </button>
 
-
       <!-- NOTIFICATION BUTTON -->
-      <button type="button" class="reset-button" aria-label="Menu de notificações">
+      <button
+        type="button"
+        class="reset-button"
+        aria-label="Menu de notificações"
+      >
         <span
           [matBadge]="0"
           matBadgeOverlap="true"
@@ -54,41 +57,28 @@
           </p>
       </mat-menu> -->
 
-
-
       <!-- USER BUTTON -->
-      <button type="button"
-      aria-label="Menu do usuário" class="md:!ml-4 reset-button">
-        <span
-          class="material-symbols-outlined text-white md:text-4xl text-2xl"
-          style="font-variation-settings: 'FILL' 1"
-        >
-          account_circle
-        </span>
-      </button>
-      <!-- <mat-menu #userMenu="matMenu" xPosition="before">
-        <a routerLink="/profile" class="!!py-1 !min-h-0"  mat-menu-item>
-          <p class="text-sm text-slate-700 flex items-center gap-1">
-            <span class="material-symbols-outlined text-lg">
-              person
-              </span>Perfil
-          </p>
-        </a>
-
+      <div class="card flex justify-content-center">
         <button
-          (click)="logout()"
-          class="!!py-1 !min-h-0"
-          mat-menu-item
+          type="button"
+          aria-label="Menu do usuário"
+          class="md:!ml-4 reset-button"
+          (click)="profileMenu.toggle($event)"
         >
-          <p class="text-sm text-red-600 flex items-center gap-1">
-            <span class="material-symbols-outlined text-lg">
-              logout
-              </span>Sair
-          </p>
+          <span
+            class="material-symbols-outlined text-white md:!text-4xl text-2xl"
+            style="font-variation-settings: 'FILL' 1"
+          >
+            account_circle
+          </span>
         </button>
-
-
-      </mat-menu> -->
+        <p-menu
+          #profileMenu
+          [model]="profileMenuItems"
+          [popup]="true"
+          appendTo="body"
+        />
+      </div>
     </div>
   </div>
 </nav>

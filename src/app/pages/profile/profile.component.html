@@ -14,11 +14,13 @@
         </span>
       </div>
       @if (loading) {
-        <div class="flex w-full items-center justify-center min-h-32">
-          <mat-spinner diameter="20"></mat-spinner>
-        </div>
+      <div class="flex w-full items-center justify-center min-h-32">
+        <mat-spinner diameter="20"></mat-spinner>
+      </div>
       }@else {
-        <p class="text-slate-700 text-center">Usuário desde<br>{{user!.createdAt | date : "dd/MM/yyyy"}}</p>
+      <p class="text-slate-700 text-center">
+        Usuário desde<br />{{ user!.createdAt | date : "dd/MM/yyyy" }}
+      </p>
       }
     </div>
   </section>
@@ -35,54 +37,70 @@
     </div>
     } @else {
     <div class="flex flex-col gap-2">
-
       @if(!user!.emailConfirmed && !closeConfirmEmailAlert) {
-        <div class="w-full py-2 px-4 bg-yellow-300 border-2 border-solid border-yellow-500 flex items-center justify-start rounded-2xl">
-          <div class="flex-1 flex gap-4 items-center">
-            <p class="text-slate-800 text-sm">Seu e-mail ainda não foi confirmado</p>
-            <button (click)="sendConfirmEmail()" type="button" class="text-sm px-2 py-1 rounded-lg bg-teal-500 text-white">enviar e-mail</button>
-          </div>
-          <button type="button" (click)="sendCloseConfirmEmailAlert()" class="pointer flex items-center justify-center">
-            <span class="material-symbols-outlined">
-              close
-              </span>
+      <div
+        class="w-full py-2 px-4 bg-yellow-300 border-2 border-solid border-yellow-500 flex items-center justify-start rounded-2xl"
+      >
+        <div class="flex-1 flex gap-4 items-center">
+          <p class="text-slate-800 text-sm">
+            Seu e-mail ainda não foi confirmado
+          </p>
+          <button
+            (click)="sendConfirmEmail()"
+            type="button"
+            class="text-sm px-2 py-1 rounded-lg bg-teal-500 text-white"
+          >
+            enviar e-mail
           </button>
         </div>
+        <button
+          type="button"
+          (click)="sendCloseConfirmEmailAlert()"
+          class="pointer flex items-center justify-center"
+        >
+          <span class="material-symbols-outlined"> close </span>
+        </button>
+      </div>
       }
 
       <!-- NOME -->
       <div class="mb-3">
-          <label for="name" class="text-slate-500 pb-3 text-sm font-semibold"
-            >Nome</label
-          >
-          <div class="relative">
+        <label for="name" class="text-slate-500 pb-3 text-sm font-semibold"
+          >Nome</label
+        >
+        <div class="relative">
+          <p-inputGroup>
             <input
+              pInputText
+              class="w-full"
               type="text"
               id="name"
-              class="input"
               style="padding-right: 2.25rem"
               placeholder="Seu nome"
               required
               [disabled]="!editName"
               [(ngModel)]="newNameString"
             />
-            <button
-              (click)="setEditName()"
-              type="button"
-              class="absolute top-1/2 right-2 transform -translate-y-1/2 cursor-pointer flex justify-center items-center"
-            >
-              @if (editName) {
-              <span class="material-symbols-outlined text-green-500">
-                check_circle
-              </span>
-              }@else {
-              <span class="material-symbols-outlined text-slate-400">
-                edit_square
-              </span>
-              }
-            </button>
-          </div>
+            <p-inputGroupAddon>
+              <button
+                (click)="setEditName()"
+                type="button"
+                class="p-0 m-0 border-none bg-inherit cursor-pointer flex justify-center items-center"
+              >
+                @if (editName) {
+                <span class="material-symbols-outlined text-green-500">
+                  check_circle
+                </span>
+                }@else {
+                <span class="material-symbols-outlined text-slate-400">
+                  edit_square
+                </span>
+                }
+              </button>
+            </p-inputGroupAddon>
+          </p-inputGroup>
         </div>
+      </div>
 
       <!-- E-MAIL -->
       <div class="mb-3">
@@ -90,44 +108,51 @@
           >E-mail</label
         >
         <div class="relative">
-          <input
-            type="text"
-            id="email"
-            class="input"
-            style="padding-right: 2.25rem"
-            placeholder="Seu E-mail"
-            required
-            [disabled]="!editEmail"
-            [(ngModel)]="newEmailString"
-          />
-          <button
-            (click)="setEditEmail()"
-            type="button"
-            class="absolute top-1/2 right-2 transform -translate-y-1/2 cursor-pointer flex justify-center items-center"
-          >
-            @if (editEmail) {
-            <span class="material-symbols-outlined text-green-500">
-              check_circle
-            </span>
-            }@else {
-            <span class="material-symbols-outlined text-slate-400">
-              edit_square
-            </span>
-            }
-          </button>
+          <p-inputGroup>
+            <input
+              pInputText
+              class="w-full"
+              type="text"
+              id="email"
+              style="padding-right: 2.25rem"
+              placeholder="Seu E-mail"
+              required
+              [disabled]="!editEmail"
+              [(ngModel)]="newEmailString"
+            />
+            <p-inputGroupAddon>
+              <button
+                (click)="setEditEmail()"
+                type="button"
+                class="p-0 m-0 border-none bg-inherit cursor-pointer flex justify-center items-center"
+              >
+                @if (editEmail) {
+                <span class="material-symbols-outlined text-green-500">
+                  check_circle
+                </span>
+                }@else {
+                <span class="material-symbols-outlined text-slate-400">
+                  edit_square
+                </span>
+                }
+              </button>
+            </p-inputGroupAddon>
+          </p-inputGroup>
         </div>
       </div>
 
       <div class="mb-3 mt-4">
-        <mat-expansion-panel
-          class=""
-        >
+        <mat-expansion-panel class="">
           <mat-expansion-panel-header class="!text-slate-600">
             Mudar senha
           </mat-expansion-panel-header>
 
           <!-- MAT EXPANSION PANEL INVISIBLE -->
-          <form (submit)="updatePassword()" [formGroup]="changePasswordForm" class="flex w-full gap-4 flex-col">
+          <form
+            (submit)="updatePassword()"
+            [formGroup]="changePasswordForm"
+            class="flex w-full gap-4 flex-col"
+          >
             <div class="mb-3">
               <label
                 for="oldPassword"
@@ -135,64 +160,30 @@
                 >Senha Anterior</label
               >
               <div class="relative">
-                <input
-                  formControlName="oldPassword"
-                  [type]="passwordVisibility ? 'text' : 'password'"
+                <p-password
                   id="oldPassword"
-                  class="input"
-                  style="padding-right: 2.25rem"
-                  placeholder="•••••••••"
-                  required
+                  [style]="{ width: '100%' }"
+                  formControlName="oldPassword"
+                  [toggleMask]="true"
+                  [feedback]="false"
                 />
-                <button
-                  (click)="setPasswordVisibility()"
-                  type="button"
-                  class="absolute top-1/2 right-2 transform -translate-y-1/2 cursor-pointer flex justify-center items-center"
-                >
-                  @if (passwordVisibility) {
-                  <span class="material-symbols-outlined text-slate-400">
-                    visibility_off
-                  </span>
-                  }@else {
-                  <span class="material-symbols-outlined text-slate-400">
-                    visibility
-                  </span>
-                  }
-                </button>
               </div>
             </div>
 
             <div class="mb-3">
               <label
-                for="newPassword"
+                for="password"
                 class="text-slate-500 pb-1 text-sm font-semibold"
                 >Nova Senha</label
               >
               <div class="relative">
-                <input
-                  formControlName="newPassword"
-                  [type]="passwordVisibility ? 'text' : 'password'"
-                  id="newPassword"
-                  class="input"
-                  style="padding-right: 2.25rem"
-                  placeholder="•••••••••"
-                  required
+                <p-password
+                  [style]="{ width: '100%' }"
+                  id="password"
+                  formControlName="password"
+                  [toggleMask]="true"
+                  class="!w-full"
                 />
-                <button
-                  (click)="setPasswordVisibility()"
-                  type="button"
-                  class="absolute top-1/2 right-2 transform -translate-y-1/2 cursor-pointer flex justify-center items-center"
-                >
-                  @if (passwordVisibility) {
-                  <span class="material-symbols-outlined text-slate-400">
-                    visibility_off
-                  </span>
-                  }@else {
-                  <span class="material-symbols-outlined text-slate-400">
-                    visibility
-                  </span>
-                  }
-                </button>
               </div>
             </div>
 
@@ -203,35 +194,20 @@
                 >Confirmar Nova Senha</label
               >
               <div class="relative">
-                <input
-                  formControlName="confirmPassword"
-                  [type]="passwordVisibility ? 'text' : 'password'"
+                <p-password
+                  [style]="{ width: '100%' }"
                   id="confirmPassword"
-                  class="input"
-                  style="padding-right: 2.25rem"
-                  placeholder="•••••••••"
-                  required
+                  formControlName="confirmPassword"
+                  [toggleMask]="true"
+                  [feedback]="false"
                 />
-                <button
-                  (click)="setPasswordVisibility()"
-                  type="button"
-                  class="absolute top-1/2 right-2 transform -translate-y-1/2 cursor-pointer flex justify-center items-center"
-                >
-                  @if (passwordVisibility) {
-                  <span class="material-symbols-outlined text-slate-400">
-                    visibility_off
-                  </span>
-                  }@else {
-                  <span class="material-symbols-outlined text-slate-400">
-                    visibility
-                  </span>
-                  }
-                </button>
               </div>
             </div>
 
-            @if (changePasswordError) {
-              <p class="text-red-600 text-sm">{{changePasswordError}}</p>
+            @if (changePasswordForm.errors?.['passwordsMismatch']) {
+            <p class="p-0 m-0 text-red-600 text-sm">Senhas não conferem.</p>
+            } @else if (changePasswordError) {
+            <p class="p-0 m-0 text-red-600 text-sm">{{ changePasswordError }}</p>
             }
 
             <input
@@ -239,8 +215,7 @@
               type="submit"
               class="btn btn-principal"
               value="Atualizar senha"
-            >
-
+            />
           </form>
         </mat-expansion-panel>
       </div>

@@ -15,10 +15,15 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { DetailsUserResponse } from '../../models/DetailsUserResponse';
 import { CommonModule } from '@angular/common';
 import { UpdateUserRequest } from '../../models/UpdateUserRequest';
+import { InputTextModule } from 'primeng/inputtext';
+import { InputGroupModule } from 'primeng/inputgroup';
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { PasswordModule } from 'primeng/password';
+import { passwordsMatchValidator } from '../../validators/passwordsMatchValidator';
 
 interface IChangePasswordForm {
   oldPassword: FormControl<string>;
-  newPassword: FormControl<string>;
+  password: FormControl<string>;
   confirmPassword: FormControl<string>;
 }
 
@@ -31,6 +36,10 @@ interface IChangePasswordForm {
     ReactiveFormsModule,
     MatProgressSpinnerModule,
     MatExpansionModule,
+    InputTextModule,
+    InputGroupModule,
+    InputGroupAddonModule,
+    PasswordModule,
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss',
@@ -61,32 +70,35 @@ export class ProfileComponent implements OnInit {
   ngOnInit(): void {
     this.loading = true;
 
-    this.changePasswordForm = new FormGroup({
-      oldPassword: new FormControl<string>('', {
-        nonNullable: true,
-        validators: [
-          Validators.required,
-          Validators.minLength(3),
-          Validators.maxLength(100),
-        ],
-      }),
-      confirmPassword: new FormControl<string>('', {
-        nonNullable: true,
-        validators: [
-          Validators.required,
-          Validators.minLength(3),
-          Validators.maxLength(100),
-        ],
-      }),
-      newPassword: new FormControl<string>('', {
-        nonNullable: true,
-        validators: [
-          Validators.required,
-          Validators.minLength(3),
-          Validators.maxLength(100),
-        ],
-      }),
-    });
+    this.changePasswordForm = new FormGroup(
+      {
+        oldPassword: new FormControl<string>('', {
+          nonNullable: true,
+          validators: [
+            Validators.required,
+            Validators.minLength(3),
+            Validators.maxLength(100),
+          ],
+        }),
+        confirmPassword: new FormControl<string>('', {
+          nonNullable: true,
+          validators: [
+            Validators.required,
+            Validators.minLength(3),
+            Validators.maxLength(100),
+          ],
+        }),
+        password: new FormControl<string>('', {
+          nonNullable: true,
+          validators: [
+            Validators.required,
+            Validators.minLength(3),
+            Validators.maxLength(100),
+          ],
+        }),
+      },
+      { validators: passwordsMatchValidator() }
+    );
 
     this.loading = true;
     this.userService.getUser().subscribe({
@@ -100,6 +112,10 @@ export class ProfileComponent implements OnInit {
         }
       },
     });
+  }
+
+  jsonparse(s: any) {
+    return JSON.parse(s);
   }
 
   sendConfirmEmail() {
@@ -123,7 +139,7 @@ export class ProfileComponent implements OnInit {
     this.userService
       .changePassword(
         this.changePasswordForm.value.oldPassword!,
-        this.changePasswordForm.value.newPassword!
+        this.changePasswordForm.value.password!
       )
       .subscribe({
         next: () => {

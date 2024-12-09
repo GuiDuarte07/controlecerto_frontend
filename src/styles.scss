@@ -209,7 +209,7 @@ body {
 }
 
 .btn-principal {
-  @apply  bg-teal-700 hover:bg-teal-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-teal-700 dark:hover:bg-teal-800 dark:focus:bg-teal-800;
+  @apply  disabled:cursor-default cursor-pointer border-none bg-teal-700 hover:bg-teal-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-teal-700 dark:hover:bg-teal-800 dark:focus:bg-teal-800;
 }
 
 .create-record-options {

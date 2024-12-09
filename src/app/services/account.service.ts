@@ -73,7 +73,7 @@ export class AccountService {
   }
 
   getBalance(): Observable<BalanceStatement> {
-    const suffix = 'GetBalanceStatementAsync';
+    const suffix = 'GetBalanceStatement';
     return this.httpClient.get<BalanceStatement>(
       `${this.hostAddress}/${suffix}`
     );

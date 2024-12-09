@@ -1,4 +1,10 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { InfoTransactionResponse } from '../../models/InfoTransactionResponse';
 import { CommonModule } from '@angular/common';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -17,6 +23,10 @@ import { SidebarModule } from 'primeng/sidebar';
 import { ButtonModule } from 'primeng/button';
 import { ButtonGroupModule } from 'primeng/buttongroup';
 import { transactionTypeToText } from '../../utils/formaters';
+import {
+  TransactionDialogComponent,
+  TransactionDialogDataType,
+} from '../dialogs/transaction-dialog/transaction-dialog.component';
 
 @Component({
   selector: 'app-transaction-expansion-panel',
@@ -30,11 +40,15 @@ import { transactionTypeToText } from '../../utils/formaters';
     SidebarModule,
     ButtonModule,
     ButtonGroupModule,
+    TransactionDialogComponent,
   ],
   templateUrl: './transaction-expansion-panel.component.html',
   styleUrl: './transaction-expansion-panel.component.scss',
 })
 export class TransactionExpansionPanelComponent {
+  @ViewChild('transactionDialog')
+  transactionDialog!: TransactionDialogComponent;
+
   @Input() transaction!: InfoTransactionResponse;
   @Input() updateTransactions!: () => void;
 
@@ -67,16 +81,15 @@ export class TransactionExpansionPanelComponent {
   }
 
   openEditTransactionDialog(transaction: InfoTransactionResponse) {
-    const dialogRef = this.dialog.open(CreateTransactionDialogComponent, {
-      data: {
-        transactionType: transaction.type,
-        newTransaction: false,
-        transaction,
-      },
-    });
+    const dialogData: TransactionDialogDataType = {
+      newTransaction: false,
+      transactionType: transaction.type,
+      transaction,
+    };
 
-    dialogRef.afterClosed().subscribe((sucess) => {
-      if ((sucess as boolean) === true) {
+    this.transactionDialog.openDialog(dialogData);
+    this.transactionDialog.closeEvent.subscribe((success: boolean) => {
+      if (success === true) {
         this.updateTransactions();
       }
     });

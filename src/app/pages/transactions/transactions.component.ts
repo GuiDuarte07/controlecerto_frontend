@@ -1,5 +1,5 @@
 import { AccountsComponent } from './../accounts/accounts.component';
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, ViewChild } from '@angular/core';
 import { TransactionService } from '../../services/transaction.service';
 import { InfoTransactionResponse } from '../../models/InfoTransactionResponse';
 import { SidebarComponent } from '../../components/sidebar/sidebar.component';
@@ -34,6 +34,10 @@ import { ToggleButtonModule } from 'primeng/togglebutton';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { AccordionModule } from 'primeng/accordion';
 import { CheckboxModule } from 'primeng/checkbox';
+import {
+  TransactionDialogComponent,
+  TransactionDialogDataType,
+} from '../../components/dialogs/transaction-dialog/transaction-dialog.component';
 
 @Component({
   selector: 'app-transactions',
@@ -59,11 +63,15 @@ import { CheckboxModule } from 'primeng/checkbox';
     SelectButtonModule,
     AccordionModule,
     CheckboxModule,
+    TransactionDialogComponent,
   ],
   templateUrl: './transactions.component.html',
   styleUrl: './transactions.component.scss',
 })
 export class TransactionsComponent implements OnInit {
+  @ViewChild('transactionDialog')
+  transactionDialog!: TransactionDialogComponent;
+
   transactions: InfoTransactionResponse[] = [];
   invoices: InfoInvoiceResponse[] = [];
   accountBalance: number = 0;
@@ -160,6 +168,20 @@ export class TransactionsComponent implements OnInit {
     }
 
     return filtered;
+  }
+
+  openCreateTransactionDialog(type: TransactionTypeEnum) {
+    const dialogData: TransactionDialogDataType = {
+      newTransaction: true,
+      transactionType: type,
+    };
+
+    this.transactionDialog.openDialog(dialogData);
+    this.transactionDialog.closeEvent.subscribe((success: boolean) => {
+      if (success === true) {
+        this.updateTransactions();
+      }
+    });
   }
 
   setSeeInvoice() {
@@ -319,21 +341,6 @@ export class TransactionsComponent implements OnInit {
       (acc, current) => acc + (current.totalAmount - current.totalPaid),
       0
     );
-  }
-
-  openCreateTransactionDialog(type: TransactionTypeEnum) {
-    const dialogRef = this.dialog.open(CreateTransactionDialogComponent, {
-      data: {
-        transactionType: type,
-        newTransaction: true,
-      },
-    });
-
-    dialogRef.afterClosed().subscribe((sucess) => {
-      if ((sucess as boolean) === true) {
-        this.updateTransactions();
-      }
-    });
   }
 
   openTranferDialog() {

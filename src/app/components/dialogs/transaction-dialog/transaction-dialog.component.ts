@@ -26,23 +26,14 @@ import { CategoryService } from '../../../services/category.service';
 import { TransactionTypeEnum } from '../../../enums/TransactionTypeEnum';
 import { CreateCreditPurchaseRequest } from '../../../models/CreateCreditPurchaseRequest ';
 import { CreditCardInfo } from '../../../models/CreditCardInfo';
-import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
-import { MatInputModule } from '@angular/material/input';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CreateTransactionRequest } from '../../../models/CreateTransaction';
 import { CurrencyMaskDirective } from '../../../directive/currency-mask.directive';
-import { MatDatepickerModule } from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
-import { MatCheckboxModule } from '@angular/material/checkbox';
 import { BillTypeEnum } from '../../../enums/BillTypeEnum';
 import { InfoTransactionResponse } from '../../../models/InfoTransactionResponse';
 import { UpdateTransactionRequest } from '../../../models/UpdateTransaction';
 import { UpdateCreditPurchaseRequest } from '../../../models/UpdateCreditPurchaseRequest';
-import { AccountDialogComponent } from '../account-dialog/account-dialog.component';
-import { CreateCreditCardDialogComponent } from '../create-credit-card-dialog/create-credit-card-dialog.component';
 import { SelectionComponent } from '../../selection/selection.component';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
@@ -51,6 +42,9 @@ import { InputTextModule } from 'primeng/inputtext';
 import { CalendarModule } from 'primeng/calendar';
 import { CheckboxModule } from 'primeng/checkbox';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { ToastService } from '../../../services/toast.service';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 
 export type TransactionDialogDataType =
   | { newTransaction: true; transactionType: TransactionTypeEnum }
@@ -80,7 +74,6 @@ interface ITransactionForm {
     CommonModule,
     FormsModule,
     CurrencyMaskDirective,
-    SelectionComponent,
     DialogModule,
     ButtonModule,
     DropdownModule,
@@ -88,8 +81,14 @@ interface ITransactionForm {
     CalendarModule,
     CheckboxModule,
     InputNumberModule,
+    ToastModule,
   ],
-  providers: [provideNativeDateAdapter(), CurrencyMaskDirective],
+  providers: [
+    provideNativeDateAdapter(),
+    CurrencyMaskDirective,
+    ToastService,
+    MessageService,
+  ],
   templateUrl: './transaction-dialog.component.html',
   styleUrl: './transaction-dialog.component.scss',
 })
@@ -119,7 +118,7 @@ export class TransactionDialogComponent implements OnInit {
     private creditCardService: CreditCardService,
     private accountService: AccountService,
     private categoryService: CategoryService,
-    private snackBar: MatSnackBar
+    private messageService: MessageService
   ) {
     console.log(this.data);
   }
@@ -338,15 +337,6 @@ export class TransactionDialogComponent implements OnInit {
       this.transactionForm.value.amount! / this.installments;
   }
 
-  openSnackBar(message: string) {
-    this.snackBar.open(message, undefined, {
-      duration: 3000,
-      horizontalPosition: 'end',
-      verticalPosition: 'bottom',
-      panelClass: ['.snackbar-error'],
-    });
-  }
-
   changeSelectedItem(item: Category | Account | CreditCardInfo) {
     if (item instanceof Category) {
       this.selectedCategory = item;
@@ -394,14 +384,22 @@ export class TransactionDialogComponent implements OnInit {
         .createCreditPurchase(creditPurchaseToCreate)
         .subscribe({
           next: () => {
-            this.openSnackBar('Despesa de cartão gerada com sucesso!');
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Transação Criada',
+              detail: 'Despesa de cartão gerada com sucesso!',
+              life: 3000,
+            });
             this.transactionForm.reset();
             this.closeDialog(true);
           },
           error: (err: HttpErrorResponse) => {
-            this.openSnackBar(
-              'Houve um erro na criação dessa despesa: ' + err.error
-            );
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Houve um Erro',
+              detail: 'Erro na criação dessa despesa: ' + err.error,
+              life: 3000,
+            });
             console.log(err.error);
           },
         });
@@ -423,14 +421,22 @@ export class TransactionDialogComponent implements OnInit {
         .updateCreditPurchase(creditPurchaseToUpdate)
         .subscribe({
           next: () => {
-            this.openSnackBar('Despesa de cartão atualizada com sucesso!');
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Transação Criada',
+              detail: 'Despesa de cartão atualizada com sucesso!',
+              life: 3000,
+            });
             this.transactionForm.reset();
             this.closeDialog(true);
           },
           error: (err: HttpErrorResponse) => {
-            this.openSnackBar(
-              'Houve um erro na atualização dessa despesa: ' + err.error
-            );
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Houve um Erro',
+              detail: 'Erro na atualização dessa despesa: ' + err.error,
+              life: 3000,
+            });
             console.log(err.error);
           },
         });
@@ -451,12 +457,22 @@ export class TransactionDialogComponent implements OnInit {
 
       this.transactionService.createTransaction(transactionToCreate).subscribe({
         next: () => {
-          this.openSnackBar('Transação gerada com sucesso!');
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Transação Criada',
+            detail: 'Transação gerada com sucesso!',
+            life: 3000,
+          });
           this.transactionForm.reset();
           this.closeDialog(true);
         },
         error: (err: HttpErrorResponse) => {
-          this.openSnackBar('Erro: ' + err.error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Houve um Erro',
+            detail: 'Erro: ' + err.error,
+            life: 3000,
+          });
         },
       });
     }
@@ -474,12 +490,22 @@ export class TransactionDialogComponent implements OnInit {
 
       this.transactionService.updateTransaction(transactionToUpdate).subscribe({
         next: () => {
-          this.openSnackBar('Transação editada com sucesso!');
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Transação Criada',
+            detail: 'Transação editada com sucesso!',
+            life: 3000,
+          });
           this.transactionForm.reset();
           this.closeDialog(true);
         },
         error: (err: HttpErrorResponse) => {
-          this.openSnackBar('Erro: ' + err.error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Houve um Erro',
+            detail: 'Erro: ' + err.error,
+            life: 3000,
+          });
         },
       });
     }

@@ -1,3 +1,4 @@
+import { ToastService } from './../../../services/toast.service';
 import { AccountService } from '../../../services/account.service';
 import { Component, OnInit, Inject, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -129,12 +130,22 @@ export class AccountDialogComponent implements OnInit {
       });
       this.accountService.createAccount(accountToCreate).subscribe({
         next: () => {
-          this.toast(true, 'Conta criada com sucesso!');
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Conta Criada',
+            detail: 'Conta criada com sucesso!',
+            life: 3000,
+          });
           this.accountForm.reset();
           this.closeDialog(true);
         },
         error: (err: HttpErrorResponse) => {
-          this.toast(false, 'Houve um erro na criação da conta: ' + err.error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Houve um Erro',
+            detail: 'Houve um erro na criação da conta: ' + err.error,
+            life: 3000,
+          });
         },
       });
     } else {
@@ -144,12 +155,22 @@ export class AccountDialogComponent implements OnInit {
       });
       this.accountService.updateAccount(accountToUpdate).subscribe({
         next: () => {
-          this.toast(true, 'Conta editada com sucesso!');
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Conta Atualizada',
+            detail: 'Conta editada com sucesso!',
+            life: 3000,
+          });
           this.accountForm.reset();
           this.closeDialog(true);
         },
         error: (err: HttpErrorResponse) => {
-          this.toast(false, 'Houve um erro na edição da conta: ' + err.error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Houve um Erro',
+            detail: 'Houve um erro na edição da conta: ' + err.error,
+            life: 3000,
+          });
         },
       });
     }
@@ -161,19 +182,5 @@ export class AccountDialogComponent implements OnInit {
 
   setDefaultColor(color: string) {
     this.accountForm.patchValue({ color });
-  }
-
-  toast(success: boolean, message: string) {
-    console.log('dsd');
-    this.messageService.add({
-      severity: success ? 'success' : 'error',
-      summary: success
-        ? this.data!.newAccount
-          ? 'Conta Criada'
-          : 'Conta Atualizada'
-        : 'Houve um erro',
-      detail: message,
-      life: 3000,
-    });
   }
 }

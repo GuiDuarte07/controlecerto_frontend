@@ -60,9 +60,7 @@
 
       <div class="flex justify-between items-center w-full px-4">
         <!-- Filtro de Mês -->
-        <div
-          class="sm:py-0 py-3 flex gap-4 justify-center items-center"
-        >
+        <div class="sm:py-0 py-3 flex gap-4 justify-center items-center">
           <button
             (click)="prevMonthFilter()"
             type="button"
@@ -73,7 +71,7 @@
               chevron_left
             </span>
           </button>
-          <p class="text-base tracking-wide text-slate-700">
+          <p class="text-base tracking-wide text-slate-700 w-40 text-center">
             {{ formaterService.getMonthYearString(filterDate) }}
           </p>
           <button
@@ -188,7 +186,7 @@
                 optionValue="value"
               />
             </div>
-            {{filterOptions.type}}
+            {{ filterOptions.type }}
             <div class="">
               <p-checkbox
                 [(ngModel)]="filterOptions.type"
@@ -216,8 +214,6 @@
                 label="Despesas de cartão como transações"
               />
             </div>
-
-            
           </div>
         </p-overlayPanel>
       </div>
@@ -244,9 +240,9 @@
     </div>
 
     <!-- LISTA DE FATURAS -->
-    @if(invoices.length) {
+    @if(invoices.length) { @for(invoice of invoices; track invoice) {
+    @if(invoice.totalAmount > 0) {
     <div class="w-full h-[2px] rounded-2xl bg-slate-200 my-1"></div>
-    @for(invoice of invoices; track invoice) { @if(invoice.totalAmount > 0) {
     <mat-expansion-panel
       [expanded]="false"
       class="!shadow-none !bg-none flex w-full items-center rounded-sm !p-0"
@@ -389,6 +385,5 @@
     }
   </section>
 </main>
-
 
 <app-transaction-dialog #transactionDialog></app-transaction-dialog>

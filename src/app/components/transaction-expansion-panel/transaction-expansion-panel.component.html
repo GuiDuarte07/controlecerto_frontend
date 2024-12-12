@@ -131,7 +131,7 @@
               [severity]="'danger'"
               icon="pi pi-trash"
               aria-label="Excluir lançamento"
-              (onClick)="openDeleteAlertDialog(transaction)"
+              (onClick)="deleteTransaction($event)"
             />
           </p-buttonGroup>
         </div>
@@ -176,3 +176,5 @@
 </p-sidebar>
 
 <app-transaction-dialog #transactionDialog></app-transaction-dialog>
+<p-toast />
+<p-confirmDialog />

@@ -42,7 +42,6 @@ import { InputTextModule } from 'primeng/inputtext';
 import { CalendarModule } from 'primeng/calendar';
 import { CheckboxModule } from 'primeng/checkbox';
 import { InputNumberModule } from 'primeng/inputnumber';
-import { ToastService } from '../../../services/toast.service';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 
@@ -86,7 +85,6 @@ interface ITransactionForm {
   providers: [
     provideNativeDateAdapter(),
     CurrencyMaskDirective,
-    ToastService,
     MessageService,
   ],
   templateUrl: './transaction-dialog.component.html',

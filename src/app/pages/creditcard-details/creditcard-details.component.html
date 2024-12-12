@@ -29,7 +29,7 @@
 
     <!-- EDITAR BTN -->
     <div class="px-4">
-      <button (click)="openCreditCardDialog()" type="button" aria-label="editar cartão" class="flex p-2">
+      <button (click)="openCreditCardDialog()" type="button" aria-label="editar cartão" class="border-none bg-inherit flex p-2">
         <span class="material-symbols-outlined text-slate-800"> edit_square </span>
       </button>
     </div>
@@ -92,7 +92,7 @@
       @for(invoice of invoices; track invoice) {
         <a
           [routerLink]="['/', 'invoices', invoice.id]"
-        class="cursor-pointer border border-solid w-full shadow rounded px-4 py-3 my-4 flex justify-between hover:bg-slate-50 transition-all duration-150"
+        class="cursor-pointer border border-solid w-full shadow border-slate-300 rounded px-4 py-3 my-4 flex justify-between hover:bg-slate-50 transition-all duration-150"
         aria-label="Ver fatura"
         >
           <div class="">

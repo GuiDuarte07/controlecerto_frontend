@@ -17,14 +17,14 @@
           <button
             pTooltip="Escolha o ícone e a cor da categoria"
             tooltipPosition="right"
-            class="'rounded-md text-white' border-none bg-inherit flex justify-center items-center p-2"
+            class="rounded-md border-none bg-inherit flex justify-center items-center p-2"
             [ngStyle]="{
               'background-color': categoryForm.value.color
             }"
             (click)="iconPanel.toggle($event)"
             type="button"
           >
-            <span class="material-symbols-outlined">
+            <span class="material-symbols-outlined text-white">
               {{ selectedIcon }}
             </span>
           </button>

@@ -117,7 +117,7 @@
           (onClick)="openCategoryDialog(selectedCategory!, true)"
           [disabled]="getSelectedCategoryParent()"
         />
-        <p-button label="Deletar" icon="pi pi-trash" severity="danger" />
+        <p-button label="Deletar" icon="pi pi-trash" severity="danger" (click)="deleteCategory($event)" />
       </p-buttonGroup>
     </div>
 
@@ -164,4 +164,6 @@
   </div>
 </p-sidebar>
 
+<p-toast />
+<p-confirmDialog></p-confirmDialog>
 <app-category-dialog #categoryDialog></app-category-dialog>

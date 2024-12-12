@@ -13,7 +13,7 @@
           (click)="prevInvoice()"
           type="button"
           aria-label="Mês anterior"
-          class="flex items-center"
+          class="border-none bg-inherit flex items-center"
         >
           <span class="text-slate-700 material-symbols-outlined">
             chevron_left
@@ -26,7 +26,7 @@
           (click)="nextInvoice()"
           type="button"
           aria-label="Próximo mês"
-          class="flex items-center"
+          class="border-none bg-inherit flex items-center"
         >
           <span class="text-slate-700 material-symbols-outlined">
             chevron_right
@@ -152,10 +152,10 @@
 
     <!-- SALDO DE PAGAMENTOS -->
     <div
-      class="py-2 border-t-2 border-solid border-slate-200 flex justify-between w-full"
+      class="py-2 rounded-lg border-2 border-solid border-slate-200 flex justify-between w-full px-1 items-center"
     >
       <div class="flex-1">
-        <p class="text-base tracking-wide text-slate-600">
+        <p class="text-base tracking-wide text-slate-600 py-0">
           Saldo dos Pagamentos
         </p>
       </div>

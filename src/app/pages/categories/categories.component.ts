@@ -1,5 +1,11 @@
 import { Category } from './../../models/Category';
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  OnInit,
+  signal,
+  ViewChild,
+} from '@angular/core';
 import { CategoryService } from '../../services/category.service';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -20,6 +26,10 @@ import { RegisterButtonComponent } from '../../components/ui/register-button/reg
 
 import { ButtonGroupModule } from 'primeng/buttongroup';
 import { OrderListModule } from 'primeng/orderlist';
+import { ConfirmDialog, ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-categories',
@@ -34,12 +44,18 @@ import { OrderListModule } from 'primeng/orderlist';
     ButtonGroupModule,
     OrderListModule,
     RegisterButtonComponent,
+    ToastModule,
     CategoryDialogComponent,
+    ConfirmDialogModule,
+    ToastModule,
   ],
+  providers: [ConfirmationService, MessageService],
   templateUrl: './categories.component.html',
   styleUrl: './categories.component.scss',
 })
 export class CategoriesComponent implements OnInit {
+  fullLoadScreen = signal(false);
+
   expenseCategories: InfoParentCategoryResponse[] = [];
   incomeCategories: InfoParentCategoryResponse[] = [];
   categoriesType: 'expense' | 'income' = 'expense';
@@ -50,7 +66,11 @@ export class CategoriesComponent implements OnInit {
   @ViewChild('categoryDialog')
   categoryDialog!: CategoryDialogComponent;
 
-  constructor(private categoryService: CategoryService) {}
+  constructor(
+    private categoryService: CategoryService,
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService
+  ) {}
 
   ngOnInit(): void {
     this.updateCategories();
@@ -98,6 +118,49 @@ export class CategoriesComponent implements OnInit {
         this.incomeCategories = value.filter(
           (x) => x.billType === BillTypeEnum.INCOME
         );
+      },
+    });
+  }
+
+  deleteCategory(event: Event) {
+    this.confirmationService.confirm({
+      target: event.target as EventTarget,
+      header: 'Deletar Categoria',
+      message: `Deseja deletar a categoria ${this.selectedCategory?.name}?`,
+      icon: 'pi pi-info-circle',
+      rejectLabel: 'Cancelar',
+      rejectButtonStyleClass: 'p-button-secondary',
+      acceptLabel: 'Deletar',
+      acceptButtonStyleClass: 'p-button-danger',
+      accept: () => {
+        this.fullLoadScreen.set(true);
+
+        if (this.selectedCategory) {
+          this.categoryService
+            .deleteCategory(this.selectedCategory.id!)
+            .subscribe({
+              next: () => {
+                this.selectedCategory = null;
+                this.categorySideBarOpen = false;
+                this.fullLoadScreen.set(false);
+                this.messageService.add({
+                  severity: 'success',
+                  summary: 'Deletado',
+                  detail: 'Categoria deletada com sucesso!',
+                  life: 3000,
+                });
+              },
+              error: (error: HttpErrorResponse) => {
+                this.fullLoadScreen.set(false);
+                this.messageService.add({
+                  severity: 'error',
+                  summary: 'Erro ao Deletar',
+                  detail: error.error,
+                  life: 3000,
+                });
+              },
+            });
+        }
       },
     });
   }

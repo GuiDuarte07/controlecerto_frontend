@@ -8,7 +8,7 @@
       <app-register-button title="Adicionar cartão" (clickEvent)="openCreditCardDialog()" ></app-register-button>
     </div>
 
-    <ul class="flex flex-col gap-4">
+    <ul class="m-0 p-0 flex flex-col gap-4">
       @if(($creditCards | async)?.length == 0) {
         <div class="flex w-full items-center min-h-32">
           <p class="text-center w-full text-slate-700">

@@ -21,16 +21,16 @@
         <!-- COR E SALDO INICIAL -->
         <div class="w-full flex gap-2">
           <button
-            pTooltip="Escolha o ícone e a cor da categoria"
+            pTooltip="Escolha a cor da conta"
             tooltipPosition="right"
-            class="rounded-md text-white border-none bg-inherit flex justify-center items-center p-2"
+            class="rounded-md text-white border-none bg-inherit flex justify-center items-center px-3"
             [ngStyle]="{
               'background-color': accountForm.value.color
             }"
             (click)="colorPanel.toggle($event)"
             type="button"
           >
-            <span class="material-symbols-outlined"> account_balance </span>
+            <span class="material-symbols-outlined !text-xl"> account_balance </span>
           </button>
 
           <p-overlayPanel
@@ -39,7 +39,7 @@
             [showCloseIcon]="true"
             appendTo="body"
           >
-            <div class="w-96">
+            <div class="w-full md:w-96">
               <div class="w-full flex items-center">
                 <p>Outra cor</p>
                 <p-colorPicker
@@ -78,7 +78,7 @@
             appCurrencyMask
             thousandSeparator="."
             prefix="R$ "
-            class="w-full"
+            class="w-full font-semibold"
             required
           />
 

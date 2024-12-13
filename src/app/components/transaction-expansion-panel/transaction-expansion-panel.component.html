@@ -139,34 +139,50 @@
     </div>
 
     <!-- Segunda parte (conta, categoria, etc) -->
-    <div class="w-full sm:w-6/12 flex flex-col items-center gap-2">
-      <div class="w-full flex items-center justify-center">
-        <div class="flex flex-col gap-1 sm:w-4/12 w-6/12 justify-center">
+    <div class="w-full sm:w-6/12 flex flex-col items-start gap-3">
+      <div class="w-full flex gap-2">
+        <div class="flex flex-col gap-2 sm:w-4/12 w-6/12 justify-center">
+          <p class="text-sm text-slate-400">Obersavações</p>
+          <p class="text-sm text-slate-800 break-words">
+            {{ transaction.observations ?? "-----------" }}
+          </p>
+        </div>
+
+        <div class="flex flex-col gap-2 sm:w-4/12 w-6/12 justify-center">
+          <p class="text-sm text-slate-400">Destino/Origem</p>
+          <p class="text-sm text-slate-800 break-words">
+            {{ transaction.destination }}
+          </p>
+        </div>
+      </div>
+
+      <div class="w-full flex gap-2">
+        <div class="flex flex-col gap-2 sm:w-4/12 w-6/12 justify-center">
           <p class="text-sm text-slate-400">Conta</p>
-          <p class="text-sm text-slate-800">
+          <p class="text-sm text-slate-800 break-words">
             {{ transaction.account.bank }}
           </p>
         </div>
 
-        <div class="flex flex-col gap-1 sm:w-4/12 w-6/12 justify-center">
+        <div class="flex flex-col gap-2 sm:w-4/12 w-6/12 justify-center">
           <p class="text-sm text-slate-400">Categoria</p>
-          <p class="text-sm text-slate-800">
+          <p class="text-sm text-slate-800 break-words">
             {{ transaction.category?.name || "Pagamento Fatura" }}
           </p>
         </div>
       </div>
 
-      <div class="w-full flex items-center justify-center">
-        <div class="flex flex-col gap-1 sm:w-4/12 w-6/12 justify-center">
+      <div class="w-full flex gap-2">
+        <div class="flex flex-col gap-2 sm:w-4/12 w-6/12 justify-center">
           <p class="text-sm text-slate-400">Data</p>
-          <p class="text-sm tracking-wide text-slate-800">
+          <p class="text-sm tracking-wide text-slate-800 break-words">
             {{ formaterService.formatDateString(transaction.purchaseDate) }}
           </p>
         </div>
 
-        <div class="flex flex-col gap-1 sm:w-4/12 w-6/12 justify-center">
+        <div class="flex flex-col gap-2 sm:w-4/12 w-6/12 justify-center">
           <p class="text-sm text-slate-400">Tipo</p>
-          <p class="text-sm tracking-wide text-slate-800">
+          <p class="text-sm tracking-wide text-slate-800 break-words">
             {{ transactionTypeToText(transaction.type) }}
           </p>
         </div>

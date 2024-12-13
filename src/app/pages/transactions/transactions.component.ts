@@ -1,5 +1,5 @@
 import { AccountsComponent } from './../accounts/accounts.component';
-import { Component, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, OnInit, signal, viewChild, ViewChild } from '@angular/core';
 import { TransactionService } from '../../services/transaction.service';
 import { InfoTransactionResponse } from '../../models/InfoTransactionResponse';
 import { SidebarComponent } from '../../components/sidebar/sidebar.component';
@@ -64,13 +64,18 @@ import {
     AccordionModule,
     CheckboxModule,
     TransactionDialogComponent,
-  ],
+    TransferDialogComponent
+],
   templateUrl: './transactions.component.html',
   styleUrl: './transactions.component.scss',
 })
 export class TransactionsComponent implements OnInit {
   @ViewChild('transactionDialog')
   transactionDialog!: TransactionDialogComponent;
+  
+  @ViewChild('transferDialog')
+  transferDialog!: TransferDialogComponent;
+
 
   transactions: InfoTransactionResponse[] = [];
   invoices: InfoInvoiceResponse[] = [];
@@ -168,20 +173,6 @@ export class TransactionsComponent implements OnInit {
     }
 
     return filtered;
-  }
-
-  openCreateTransactionDialog(type: TransactionTypeEnum) {
-    const dialogData: TransactionDialogDataType = {
-      newTransaction: true,
-      transactionType: type,
-    };
-
-    this.transactionDialog.openDialog(dialogData);
-    this.transactionDialog.closeEvent.subscribe((success: boolean) => {
-      if (success === true) {
-        this.updateTransactions();
-      }
-    });
   }
 
   setSeeInvoice() {
@@ -343,10 +334,23 @@ export class TransactionsComponent implements OnInit {
     );
   }
 
-  openTranferDialog() {
-    this.dialog.open(TransferDialogComponent, {
-      panelClass: 'dialog-responsive',
+
+  openCreateTransactionDialog(type: TransactionTypeEnum) {
+    const dialogData: TransactionDialogDataType = {
+      newTransaction: true,
+      transactionType: type,
+    };
+
+    this.transactionDialog.openDialog(dialogData);
+    this.transactionDialog.closeEvent.subscribe((success: boolean) => {
+      if (success === true) {
+        this.updateTransactions();
+      }
     });
+  }
+
+  openTranferDialog() {
+    this.transferDialog.openDialog();
   }
 
   openPaymentInvoiceDialog(invoice: InfoInvoiceResponse): void {
@@ -362,4 +366,5 @@ export class TransactionsComponent implements OnInit {
       }
     });
   }
+  
 }

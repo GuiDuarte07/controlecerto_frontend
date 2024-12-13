@@ -3,14 +3,8 @@ import { AccountService } from './../../../services/account.service';
 import { TransactionService } from './../../../services/transaction.service';
 import {
   Component,
-  ElementRef,
   EventEmitter,
-  Inject,
-  Input,
   OnInit,
-  Output,
-  signal,
-  ViewChild,
 } from '@angular/core';
 import {
   FormControl,
@@ -34,7 +28,6 @@ import { BillTypeEnum } from '../../../enums/BillTypeEnum';
 import { InfoTransactionResponse } from '../../../models/InfoTransactionResponse';
 import { UpdateTransactionRequest } from '../../../models/UpdateTransaction';
 import { UpdateCreditPurchaseRequest } from '../../../models/UpdateCreditPurchaseRequest';
-import { SelectionComponent } from '../../selection/selection.component';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';

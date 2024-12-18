@@ -5,21 +5,10 @@
         Cartões de Crédito
       </h2>
 
-      <button
-        (click)="openCreditCardDialog()"
-        class="flex items-center gap-2 bg-teal-200 rounded-lg px-2 py-1"
-      >
-        <span
-          aria-label="sinal de mais"
-          class="material-symbols-outlined text-xl text-teal-700"
-        >
-          add_circle
-        </span>
-        <p class="text-sm text-teal-700">Adicionar Cartão</p>
-      </button>
+      <app-register-button title="Adicionar cartão" (clickEvent)="openCreditCardDialog()" ></app-register-button>
     </div>
 
-    <ul class="flex flex-col gap-4">
+    <ul class="m-0 p-0 flex flex-col gap-4">
       @if(($creditCards | async)?.length == 0) {
         <div class="flex w-full items-center min-h-32">
           <p class="text-center w-full text-slate-700">

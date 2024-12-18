@@ -1,28 +1,27 @@
 import { TransactionService } from './../../../services/transaction.service';
 import { AccountService } from './../../../services/account.service';
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import {
-  MatDialog,
-  MatDialogModule,
-  MatDialogRef,
-} from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { CurrencyMaskDirective } from '../../../directive/currency-mask.directive';
-import { MatDatepickerModule } from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
-import { SelectionComponent } from '../../selection/selection.component';
 import { Account } from '../../../models/AccountRequest ';
-import { AccountDialogComponent } from '../account-dialog/account-modal.component';
+import { AccountDialogComponent } from '../account-dialog/account-dialog.component';
 import { CreateTransferenceRequest } from '../../../models/CreateTransferenceRequest';
 import { HttpErrorResponse } from '@angular/common/http';
+import { DialogModule } from 'primeng/dialog';
+import { ButtonModule } from 'primeng/button';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
+import { InputTextModule } from 'primeng/inputtext';
+import { CalendarModule } from 'primeng/calendar';
+import { DropdownModule } from 'primeng/dropdown';
+import { differentAccountsValidator } from '../../../validators/differentAccountsValidator';
 
 interface ITransferenceForm {
   amount: FormControl<number>;
@@ -38,13 +37,16 @@ interface ITransferenceForm {
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    MatDialogModule,
-    MatButtonModule,
     CurrencyMaskDirective,
-    MatDatepickerModule,
-    SelectionComponent,
+    DialogModule,
+    ButtonModule,
+    ToastModule,
+    InputTextModule,
+    CalendarModule,
+    DropdownModule,
+    ToastModule
   ],
-  providers: [provideNativeDateAdapter(), CurrencyMaskDirective],
+  providers: [provideNativeDateAdapter(), CurrencyMaskDirective, MessageService],
   templateUrl: './transfer-dialog.component.html',
   styleUrl: './transfer-dialog.component.scss',
 })
@@ -54,16 +56,18 @@ export class TransferDialogComponent implements OnInit {
   loadingAccounts = true;
   accounts!: Account[];
 
+  closeEvent = new EventEmitter<boolean>();
+  visible = false;
+
+
   selectedAccountOrigin?: Account;
   selectedAccountDestiny?: Account;
 
   constructor(
     private readonly accountService: AccountService,
     private readonly transactionService: TransactionService,
-    public dialogRef: MatDialogRef<TransferDialogComponent>,
-    private snackBar: MatSnackBar,
-    public dialog: MatDialog
-  ) {}
+    private messageService: MessageService
+  ) { }
 
   ngOnInit() {
     this.transferForm = new FormGroup({
@@ -87,9 +91,27 @@ export class TransferDialogComponent implements OnInit {
         nonNullable: true,
         validators: [Validators.required],
       }),
+    },
+      { validators: differentAccountsValidator() });
+
+    this.transferForm.get('accountOriginId')?.valueChanges.subscribe((id) => {
+      this.selectedAccountOrigin = this.accounts.find((account) => account.id === id);
     });
 
+    this.transferForm.get('accountDestinyId')?.valueChanges.subscribe((id) => {
+      this.selectedAccountDestiny = this.accounts.find((account) => account.id === id);
+    });
+  }
+
+  openDialog() {
+    this.visible = true;
     this.updateAccounts();
+  }
+
+  closeDialog(success: boolean) {
+    this.visible = false;
+    this.transferForm.reset();
+    this.closeEvent.emit(success);
   }
 
   updateAccounts() {
@@ -97,7 +119,7 @@ export class TransferDialogComponent implements OnInit {
     this.accountService.getAccounts().subscribe((data) => {
       this.accounts = data;
       this.loadingAccounts = false;
-      console.log(this.loadingAccounts);
+      console.log(this.accounts);
     });
   }
 
@@ -115,7 +137,7 @@ export class TransferDialogComponent implements OnInit {
     }
   }
 
-  openAccountDialog() {
+  /* openAccountDialog() {
     const dialogRef = this.dialog.open(AccountDialogComponent, {
       panelClass: 'dialog-responsive',
       data: { newAccount: true },
@@ -125,11 +147,7 @@ export class TransferDialogComponent implements OnInit {
         this.updateAccounts();
       }
     });
-  }
-
-  closeDialog(sucess: boolean) {
-    this.dialogRef.close(sucess);
-  }
+  } */
 
   createTransference() {
     if (this.transferForm.invalid) return;
@@ -152,25 +170,23 @@ export class TransferDialogComponent implements OnInit {
 
     this.transactionService.createTransference(transferToCreate).subscribe({
       next: () => {
-        this.openSnackBar(
-          `Transferência da conta ${this.selectedAccountOrigin?.bank} para ${this.selectedAccountDestiny?.bank} realizada!`
-        );
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Transferência concluida!',
+          detail: `Transferência da conta ${this.selectedAccountOrigin?.bank} para ${this.selectedAccountDestiny?.bank} realizada.`,
+          life: 3000,
+        });
         this.transferForm.reset();
         this.closeDialog(true);
       },
       error: (err: HttpErrorResponse) => {
-        this.openSnackBar('Houve um erro ao gerar transferência: ' + err.error);
-        console.log(err.error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro na Transferência',
+          detail: err.error,
+          life: 3000,
+        });
       },
-    });
-  }
-
-  openSnackBar(message: string) {
-    this.snackBar.open(message, undefined, {
-      duration: 3000,
-      horizontalPosition: 'end',
-      verticalPosition: 'bottom',
-      panelClass: ['.snackbar-error'],
     });
   }
 }

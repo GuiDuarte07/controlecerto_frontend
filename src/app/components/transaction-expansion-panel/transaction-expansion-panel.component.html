@@ -1,5 +1,5 @@
 <ng-template #headerContent>
-  <div class="w-full flex flex-col sm:flex-row">
+  <div class="w-full h-fit flex flex-col sm:flex-row">
     <div class="sm:w-8/12 w-full flex">
       <div class="w-8/12 flex gap-2 items-center">
         <div
@@ -29,12 +29,18 @@
       </div>
     </div>
 
-    <div class="sm:w-4/12 w-full flex items-center">
+    <div class="sm:w-4/12 w-full flex items-center justify-start">
       <p class="text-sm tracking-wide text-slate-500 sm:w-6/12 w-8/12">
         {{ transaction.purchaseDate | date : "dd/MM/yyyy" }}
       </p>
-      <p class="text-sm tracking-wide text-black sm:w-6/12 w-4/12 md:block flex justify-end">
-        <span class=" ">{{ transaction.type === 1 ? "+" : "-" }}</span>
+      <p
+        [ngClass]="{
+        'text-green-600': transaction.type === 1,
+        'text-red-600': transaction.type !== 1,
+      }"
+        class="font-medium text-end text-sm tracking-wide text-black sm:w-6/12 w-4/12 md:block flex justify-end"
+      >
+        <span>{{ transaction.type === 1 ? "+" : "-" }}</span>
         {{ formaterService.formatCurrency(transaction.amount) }}
       </p>
     </div>
@@ -42,23 +48,44 @@
 </ng-template>
 
 @if (!selectMode) {
-<mat-expansion-panel
-  style="width: 100% !important"
-  class="remove-child-padding !shadow-none !bg-none flex !w-full items-center rounded-sm p-0!"
+<button
+  (click)="toggleSidebarVisible()"
+  class="bg-inherit border-none w-full remove-child-padding flex items-center sm:h-10 p-0"
 >
-  <mat-expansion-panel-header class="!p-0 !py-1 !h-fit">
+  <div class="p-0 py-1 w-full">
     <ng-container *ngTemplateOutlet="headerContent"></ng-container>
-  </mat-expansion-panel-header>
+  </div>
+</button>
 
-  <!-- MAT EXPANSION PANEL INVISIBLE -->
-  <div class="flex w-full sm:px-16 sm:gap-4 gap-2">
+} @else {
+<button
+  type="button"
+  (click)="toggleCheckedStatus()"
+  [ngClass]="{ 'bg-slate-300': checked }"
+  class="w-full flex m-1 rounded-sm border-0 bg-inherit items-center"
+>
+  <mat-checkbox [checked]="checked" class="inline-block"> </mat-checkbox>
+  <ng-container *ngTemplateOutlet="headerContent"></ng-container>
+</button>
+}
+
+<p-sidebar
+  [style]="{ height: 'fit-content' }"
+  [style.display]="sidebarVisible ? 'inherit' : 'none'"
+  position="bottom"
+  class="mx-12"
+  [(visible)]="sidebarVisible"
+>
+  <div class="sm:px-80 py-4 flex w-full flex-col sm:flex-row">
     <!-- Primeira parte (icone, botoes, etc) -->
-    <div class="w-6/12 flex">
+    <div class="w-full sm:w-6/12 flex">
       <!-- ícone, descrição e quantia -->
-      <div class="w-10/12 flex flex-col gap-2 items-center">
+      <div class="m-0 p-0 w-full flex flex-col gap-2 items-center">
         <div
-          [ngStyle]="{ 'background-color': transaction.category?.color || '#057a55' }"
-          class="text-white rounded-full w-14 h-14 flex items-center justify-center p-2"
+          [ngStyle]="{
+            'background-color': transaction.category?.color || '#057a55'
+          }"
+          class="text-white rounded-full w-20 h-20 flex items-center justify-center p-2"
         >
           <span class="material-symbols-outlined text-3xl">
             {{ transaction.category?.icon || "payments" }}
@@ -66,7 +93,7 @@
         </div>
 
         <h3
-          class="max-w-full text-sm text-pretty text-slate-900 font-medium whitespace-nowrap overflow-hidden text-ellipsis"
+          class="my-0 p-0 max-w-full text-sm text-pretty text-slate-900 font-medium whitespace-nowrap overflow-hidden text-ellipsis"
         >
           {{ transaction.description }}
         </h3>
@@ -76,87 +103,94 @@
                   'text-green-600': transaction.type === 1,
                   'text-red-600': transaction.type !== 1,
                 }"
-          class="text-sm tracking-wide text-black"
+          class="m-0 p-0 text-sm tracking-wide text-black font-bold"
         >
           {{ formaterService.formatCurrencySymbol(transaction.amount) }}
         </p>
-      </div>
 
-      <!-- Botões de Editar e Excluir -->
-      <div class="flex flex-col gap-4 items-center justify-evenly">
-        <button
-          [disabled]="transaction.type === 4"
-          (click)="openEditTransactionDialog(transaction)"
-          aria-label="Editar lançamento"
-          [matTooltipPosition]="'right'"
-          mat-raised-button
-          [matTooltip]="transaction.type === 4 ? 'Não Disponível para pagamento de fatura': 'Editar Lançamento'"
-          type="button"
-          class="flex items-center justify-center size-8 bg-slate-400 rounded-full"
-        >
-          <span class="material-symbols-outlined text-base text-white">
-            edit_square
-          </span>
-        </button>
-
-        <button
-          (click)="openDeleteAlertDialog(transaction)"
-          aria-label="Excluir lançamento"
-          [matTooltipPosition]="'right'"
-          mat-raised-button
-          matTooltip="Excluir lançamento"
-          type="button"
-          class="flex items-center justify-center size-8 bg-slate-400 rounded-full"
-        >
-          <span class="material-symbols-outlined text-base text-white">
-            delete
-          </span>
-        </button>
+        <div class="">
+          <p-buttonGroup>
+            <p-button
+              size="small"
+              label="Editar"
+              icon="pi pi-check"
+              [disabled]="transaction.type === 4"
+              aria-label="Editar lançamento"
+              (onClick)="openEditTransactionDialog(transaction)"
+            />
+            <p-button
+              size="small"
+              label="Cancelar"
+              icon="pi pi-times"
+              aria-label="Fechar SideBar"
+              (onClick)="toggleSidebarVisible()"
+            />
+            <p-button
+              size="small"
+              label="Deletar"
+              [severity]="'danger'"
+              icon="pi pi-trash"
+              aria-label="Excluir lançamento"
+              (onClick)="deleteTransaction($event)"
+            />
+          </p-buttonGroup>
+        </div>
       </div>
     </div>
 
     <!-- Segunda parte (conta, categoria, etc) -->
-    <div class="w-6/12 flex flex-col items-center justify-center gap-2">
-      <div class="w-full flex items-center">
-        <div class="flex flex-col gap-1 sm:w-4/12 w-6/12 justify-center">
-          <p class="text-sm text-slate-400">Conta</p>
-          <p class="text-sm text-slate-800">
-            {{ transaction.account.bank }}
+    <div class="w-full sm:w-6/12 flex flex-col items-start gap-3">
+      <div class="w-full flex gap-2">
+        <div class="flex flex-col gap-2 sm:w-4/12 w-6/12 justify-center">
+          <p class="text-sm text-slate-400">Observações</p>
+          <p class="text-sm text-slate-800 break-words">
+            {{ transaction.observations ?? "-----------" }}
           </p>
         </div>
 
-        <div class="flex flex-col gap-1 sm:w-4/12 w-6/12 justify-center">
-          <p class="text-sm text-slate-400">Categoria</p>
-          <p class="text-sm text-slate-800">
-            {{ transaction.category?.name || 'Pagamento Fatura' }}
+        <div class="flex flex-col gap-2 sm:w-4/12 w-6/12 justify-center">
+          <p class="text-sm text-slate-400">Destino/Origem</p>
+          <p class="text-sm text-slate-800 break-words">
+            {{ transaction.destination }}
           </p>
         </div>
       </div>
 
-      <div class="w-full flex items-center">
-        <div class="flex flex-col gap-1 sm:w-4/12 w-6/12 justify-center">
+      <div class="w-full flex gap-2">
+        <div class="flex flex-col gap-2 sm:w-4/12 w-6/12 justify-center">
+          <p class="text-sm text-slate-400">Conta</p>
+          <p class="text-sm text-slate-800 break-words">
+            {{ transaction.account.bank }}
+          </p>
+        </div>
+
+        <div class="flex flex-col gap-2 sm:w-4/12 w-6/12 justify-center">
+          <p class="text-sm text-slate-400">Categoria</p>
+          <p class="text-sm text-slate-800 break-words">
+            {{ transaction.category?.name || "Pagamento Fatura" }}
+          </p>
+        </div>
+      </div>
+
+      <div class="w-full flex gap-2">
+        <div class="flex flex-col gap-2 sm:w-4/12 w-6/12 justify-center">
           <p class="text-sm text-slate-400">Data</p>
-          <p class="text-sm tracking-wide text-slate-800">
+          <p class="text-sm tracking-wide text-slate-800 break-words">
             {{ formaterService.formatDateString(transaction.purchaseDate) }}
           </p>
         </div>
 
-        <div class="flex flex-col gap-1 sm:w-4/12 w-6/12 justify-center">
-          <p class="text-sm text-slate-400">Hora</p>
-          <p class="text-sm tracking-wide text-slate-800">
-            {{
-              formaterService.formatDateToHourMinutes(transaction.purchaseDate)
-            }}
+        <div class="flex flex-col gap-2 sm:w-4/12 w-6/12 justify-center">
+          <p class="text-sm text-slate-400">Tipo</p>
+          <p class="text-sm tracking-wide text-slate-800 break-words">
+            {{ transactionTypeToText(transaction.type) }}
           </p>
         </div>
       </div>
     </div>
   </div>
-</mat-expansion-panel>
-} @else {
-    <button type="button" (click)="toggleCheckedStatus()" [ngClass]="{'bg-slate-300': checked}" class="w-full flex m-1 rounded-sm">
-      <mat-checkbox [checked]="checked" class="inline-block">
-      </mat-checkbox>
-      <ng-container *ngTemplateOutlet="headerContent"></ng-container>
-    </button>
-}
+</p-sidebar>
+
+<app-transaction-dialog #transactionDialog></app-transaction-dialog>
+<p-toast />
+<p-confirmDialog />

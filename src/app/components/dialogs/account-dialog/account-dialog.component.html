@@ -1,0 +1,139 @@
+@if(data) {
+<p-dialog
+  [header]="data.newAccount ? 'Criar Conta' : 'Editar Conta'"
+  [modal]="true"
+  [(visible)]="visible"
+  [style]="{ width: '36rem' }"
+  [dismissableMask]="true"
+  (onHide)="closeDialog(false)"
+>
+  <ng-template pTemplate="body" class="bg-slate-300">
+    <form
+      [formGroup]="accountForm"
+      (ngSubmit)="createNewAccount()"
+      class="m-4 flex flex-col gap-4"
+    >
+      <div>
+        <label for="balance" class="label"
+          >{{ data.newAccount ? "Saldo Inicial" : "Saldo Atual" }}
+        </label>
+
+        <!-- COR E SALDO INICIAL -->
+        <div class="w-full flex gap-2">
+          <button
+            pTooltip="Escolha a cor da conta"
+            tooltipPosition="right"
+            class="rounded-md text-white border-none bg-inherit flex justify-center items-center px-3"
+            [ngStyle]="{
+              'background-color': accountForm.value.color
+            }"
+            (click)="colorPanel.toggle($event)"
+            type="button"
+          >
+            <span class="material-symbols-outlined !text-xl"> account_balance </span>
+          </button>
+
+          <p-overlayPanel
+            #colorPanel
+            styleClass=""
+            [showCloseIcon]="true"
+            appendTo="body"
+          >
+            <div class="w-full md:w-96">
+              <div class="w-full flex items-center">
+                <p>Outra cor</p>
+                <p-colorPicker
+                  formControlName="color"
+                  appendTo="body"
+                  styleClass="border-none size-8 rounded flex justify-center items-center mx-2 my-1"
+                ></p-colorPicker>
+              </div>
+              <ul class="p-0 m-0 mt-2 flex flex-wrap justify-start w-full">
+                @for (color of defaultColors; track color) {
+                <li class="">
+                  <button
+                    [style.background-color]="color"
+                    class="border-none size-8 rounded flex justify-center items-center mx-2 my-1"
+                    [ngClass]="{
+                      'border-[1px] border-slate-300 !border-solid':
+                        accountForm.value.color === color
+                    }"
+                    (click)="setDefaultColor(color)"
+                    type="button"
+                  >
+                    @if(accountForm.value.color === color) {
+                    <span class="material-symbols-outlined"> check </span>
+                    }
+                  </button>
+                </li>
+                }
+              </ul>
+            </div>
+          </p-overlayPanel>
+
+          <input
+            pInputText
+            id="balance"
+            formControlName="balance"
+            appCurrencyMask
+            thousandSeparator="."
+            prefix="R$ "
+            class="w-full font-semibold"
+            required
+          />
+
+          
+        </div>
+      </div>
+
+      <div>
+        <label for="bank" class="label">Instituição Financeira</label>
+        <input
+          pInputText
+          formControlName="bank"
+          type="text"
+          id="bank"
+          placeholder="Digite o nome dessa conta."
+          class="w-full"
+          required
+        />
+      </div>
+
+      <div class="">
+        <label for="description" class="label">Descrição</label>
+        <textarea
+          pInputTextarea
+          formControlName="description"
+          id="description"
+          rows="2"
+          class="w-full max-w-full"
+          placeholder="Insira uma descrição para essa conta..."
+        ></textarea>
+      </div>
+    </form>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      label="Fechar"
+      icon="pi pi-times"
+      size="small"
+      severity="danger"
+      (click)="closeDialog(false)"
+    ></button>
+    <button
+      pButton
+      [label]="data.newAccount ? 'Criar' : 'Editar'"
+      icon="pi pi-check"
+      size="small"
+      severity="primary"
+      (click)="createNewAccount()"
+      [disabled]="!accountForm.valid"
+    ></button>
+  </ng-template>
+</p-dialog>
+}
+
+<p-toast />
+

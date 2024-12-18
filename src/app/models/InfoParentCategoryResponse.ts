@@ -1,26 +1,27 @@
 import { BillTypeEnum } from '../enums/BillTypeEnum';
+import { Category } from './Category';
 
-export class Category {
-  id?: number;
+export class InfoParentCategoryResponse {
+  id: number;
   name: string;
   icon: string;
   billType: BillTypeEnum;
   color: string;
-  parentId?: number;
+  subCategories: Category[];
 
   constructor(
-    id: number | undefined,
+    id: number,
     name: string,
     icon: string,
     billType: BillTypeEnum,
     color: string,
-    parentId?: number
+    subCategories: Category[]
   ) {
     this.id = id;
     this.name = name;
     this.icon = icon;
     this.billType = billType;
     this.color = color;
-    this.parentId = parentId;
+    this.subCategories = subCategories;
   }
 }

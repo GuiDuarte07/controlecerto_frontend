@@ -1,5 +1,5 @@
 import { AccountsComponent } from './../accounts/accounts.component';
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, viewChild, ViewChild } from '@angular/core';
 import { TransactionService } from '../../services/transaction.service';
 import { InfoTransactionResponse } from '../../models/InfoTransactionResponse';
 import { SidebarComponent } from '../../components/sidebar/sidebar.component';
@@ -24,6 +24,21 @@ import { FormsModule } from '@angular/forms';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { TransferDialogComponent } from '../../components/dialogs/transfer-dialog/transfer-dialog.component';
 
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { ButtonModule } from 'primeng/button';
+import { InputGroupModule } from 'primeng/inputgroup';
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { InputTextModule } from 'primeng/inputtext';
+import { DropdownModule } from 'primeng/dropdown';
+import { ToggleButtonModule } from 'primeng/togglebutton';
+import { SelectButtonModule } from 'primeng/selectbutton';
+import { AccordionModule } from 'primeng/accordion';
+import { CheckboxModule } from 'primeng/checkbox';
+import {
+  TransactionDialogComponent,
+  TransactionDialogDataType,
+} from '../../components/dialogs/transaction-dialog/transaction-dialog.component';
+
 @Component({
   selector: 'app-transactions',
   standalone: true,
@@ -38,11 +53,30 @@ import { TransferDialogComponent } from '../../components/dialogs/transfer-dialo
     TransactionExpansionPanelComponent,
     FormsModule,
     MatCheckbox,
-  ],
+    OverlayPanelModule,
+    ButtonModule,
+    InputGroupModule,
+    InputGroupAddonModule,
+    InputTextModule,
+    DropdownModule,
+    ToggleButtonModule,
+    SelectButtonModule,
+    AccordionModule,
+    CheckboxModule,
+    TransactionDialogComponent,
+    TransferDialogComponent
+],
   templateUrl: './transactions.component.html',
   styleUrl: './transactions.component.scss',
 })
 export class TransactionsComponent implements OnInit {
+  @ViewChild('transactionDialog')
+  transactionDialog!: TransactionDialogComponent;
+  
+  @ViewChild('transferDialog')
+  transferDialog!: TransferDialogComponent;
+
+
   transactions: InfoTransactionResponse[] = [];
   invoices: InfoInvoiceResponse[] = [];
   accountBalance: number = 0;
@@ -65,13 +99,20 @@ export class TransactionsComponent implements OnInit {
     dateFilterDes: boolean;
     accountFilter: Account | null;
     textFilter: string;
-    seeInvoices: boolean;
+    hideInvoices: boolean;
+    type: boolean;
   } = {
     dateFilterDes: true,
     accountFilter: null,
     textFilter: '',
-    seeInvoices: true,
+    hideInvoices: false,
+    type: false,
   };
+
+  dataOptionsLabel: any[] = [
+    { label: 'Descrecente', value: true },
+    { label: 'Crescente', value: false },
+  ];
 
   constructor(
     private transactionService: TransactionService,
@@ -116,12 +157,27 @@ export class TransactionsComponent implements OnInit {
       return this.filterOptions.dateFilterDes ? dateB - dateA : dateA - dateB;
     });
 
+    // Ordenar pro tipo
+    if (this.filterOptions.type) {
+      const transactionOrder = {
+        [TransactionTypeEnum.INCOME]: 0,
+        [TransactionTypeEnum.EXPENSE]: 1,
+        [TransactionTypeEnum.CREDITEXPENSE]: 2,
+        [TransactionTypeEnum.INVOICEPAYMENT]: 3,
+        [TransactionTypeEnum.TRANSFERENCE]: 4,
+      };
+
+      filtered.sort(
+        (a, b) => transactionOrder[a.type] - transactionOrder[b.type]
+      );
+    }
+
     return filtered;
   }
 
   setSeeInvoice() {
-    this.filterOptions.seeInvoices = !this.filterOptions.seeInvoices;
-    console.log(this.filterOptions.seeInvoices);
+    /* this.filterOptions.hideInvoices = !this.filterOptions.hideInvoices;
+    console.log(this.filterOptions.hideInvoices); */
     this.updateTransactions();
   }
 
@@ -198,7 +254,7 @@ export class TransactionsComponent implements OnInit {
       .getTransactions(
         firstDayOfMonthUTC,
         lastDayOfMonthUTC,
-        this.filterOptions.seeInvoices
+        !this.filterOptions.hideInvoices
       )
       .subscribe((result) => {
         this.transactions = result.transactions;
@@ -278,25 +334,23 @@ export class TransactionsComponent implements OnInit {
     );
   }
 
-  openCreateTransactionDialog(type: TransactionTypeEnum) {
-    const dialogRef = this.dialog.open(CreateTransactionDialogComponent, {
-      data: {
-        transactionType: type,
-        newTransaction: true,
-      },
-    });
 
-    dialogRef.afterClosed().subscribe((sucess) => {
-      if ((sucess as boolean) === true) {
+  openCreateTransactionDialog(type: TransactionTypeEnum) {
+    const dialogData: TransactionDialogDataType = {
+      newTransaction: true,
+      transactionType: type,
+    };
+
+    this.transactionDialog.openDialog(dialogData);
+    this.transactionDialog.closeEvent.subscribe((success: boolean) => {
+      if (success === true) {
         this.updateTransactions();
       }
     });
   }
 
   openTranferDialog() {
-    this.dialog.open(TransferDialogComponent, {
-      panelClass: 'dialog-responsive',
-    });
+    this.transferDialog.openDialog();
   }
 
   openPaymentInvoiceDialog(invoice: InfoInvoiceResponse): void {
@@ -312,4 +366,5 @@ export class TransactionsComponent implements OnInit {
       }
     });
   }
+  
 }

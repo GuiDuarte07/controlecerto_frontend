@@ -5,6 +5,7 @@ import { map } from 'rxjs';
 import { UpdateCategoryRequest } from '../models/UpdateCategoryRequest';
 import { BillTypeEnum } from '../enums/BillTypeEnum';
 import { serverConnectionString } from '../config/server';
+import { InfoParentCategoryResponse } from '../models/InfoParentCategoryResponse';
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +17,7 @@ export class CategoryService {
   GetCategories(type?: BillTypeEnum) {
     let suffix = 'GetAllCategories';
     return this.http
-      .get<Category[]>(
+      .get<InfoParentCategoryResponse[]>(
         `${this.hostAddress}/${suffix}${
           typeof type !== 'undefined' ? '/' + type : ''
         }`
@@ -25,12 +26,23 @@ export class CategoryService {
         map((data) =>
           data.map(
             (item) =>
-              new Category(
+              new InfoParentCategoryResponse(
                 item.id,
                 item.name,
                 item.icon,
                 item.billType,
-                item.color
+                item.color,
+                item.subCategories.map(
+                  (item_sb) =>
+                    new Category(
+                      item_sb.id,
+                      item_sb.name,
+                      item_sb.icon,
+                      item_sb.billType,
+                      item_sb.color,
+                      item_sb.parentId
+                    )
+                )
               )
           )
         )

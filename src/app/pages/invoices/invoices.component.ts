@@ -1,20 +1,23 @@
 import { FormaterService } from './../../services/formater.service';
 import { CreditCardService } from './../../services/credit-card.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { InfoInvoiceResponse } from '../../models/InfoInvoiceResponse';
 import { CommonModule } from '@angular/common';
-import { MatDialog } from '@angular/material/dialog';
+import { ChipModule } from 'primeng/chip';
 import { InvoicePaymentDialogComponent } from '../../components/dialogs/invoice-payment-dialog/invoice-payment-dialog.component';
 
 @Component({
   selector: 'app-invoices',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, InvoicePaymentDialogComponent, ChipModule],
   templateUrl: './invoices.component.html',
   styleUrl: './invoices.component.scss',
 })
 export class InvoicesComponent implements OnInit {
+  @ViewChild('invoicePaymentDialog')
+  invoicePaymentDialog!: InvoicePaymentDialogComponent;
+
   invoiceId!: number;
   invoice!: InfoInvoiceResponse;
   nextInvoiceId?: number;
@@ -24,8 +27,7 @@ export class InvoicesComponent implements OnInit {
     private creditCardService: CreditCardService,
     public formaterService: FormaterService,
     private activatedRoute: ActivatedRoute,
-    private router: Router,
-    public dialog: MatDialog
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -49,15 +51,10 @@ export class InvoicesComponent implements OnInit {
     });
   }
 
-  openPaymentInvoiceDialog(): void {
-    const dialogRef = this.dialog.open(InvoicePaymentDialogComponent, {
-      data: {
-        invoice: this.invoice,
-      },
-    });
-
-    dialogRef.afterClosed().subscribe((sucess) => {
-      if ((sucess as boolean) === true) {
+  openPaymentInvoiceDialog() {
+    this.invoicePaymentDialog.openDialog({ invoice: this.invoice });
+    this.invoicePaymentDialog.closeEvent.subscribe((success: boolean) => {
+      if (success === true) {
         this.updateInvoice();
       }
     });
@@ -87,7 +84,9 @@ export class InvoicesComponent implements OnInit {
     actualInvoiceDate.setDate(1);
     actualInvoiceDate.setHours(0, 0, 0, 0);
 
-    if (actualInvoiceDate.getFullYear() > this.invoice.invoiceDate.getFullYear())
+    if (
+      actualInvoiceDate.getFullYear() > this.invoice.invoiceDate.getFullYear()
+    )
       return true;
     else if (
       actualInvoiceDate.getFullYear() < this.invoice.invoiceDate.getFullYear()

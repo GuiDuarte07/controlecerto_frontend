@@ -1,7 +1,9 @@
 <main class="w-full mb-6">
   <section class="registration-container !w-[800px]">
     @if(invoice) {
-    <div class="flex w-full justify-between items-center mb-4">
+    <div
+      class="flex flex-col md:flex-row w-full justify-center md:justify-between items-center mb-4"
+    >
       <!-- Título + menu -->
       <div class="w-4/12 flex gap-2 items-center">
         <h2 class="text-xl text-slate-700 tracking-wide">Faturas</h2>
@@ -13,7 +15,7 @@
           (click)="prevInvoice()"
           type="button"
           aria-label="Mês anterior"
-          class="flex items-center"
+          class="border-none bg-inherit flex items-center"
         >
           <span class="text-slate-700 material-symbols-outlined">
             chevron_left
@@ -26,7 +28,7 @@
           (click)="nextInvoice()"
           type="button"
           aria-label="Próximo mês"
-          class="flex items-center"
+          class="border-none bg-inherit flex items-center"
         >
           <span class="text-slate-700 material-symbols-outlined">
             chevron_right
@@ -37,26 +39,27 @@
     </div>
 
     <!-- ICONE, NOME E PAGAR FATURA -->
-    <div class="flex w-full items-center mb-4 justify-between">
+    <div
+      class="flex flex-col md:flex-row w-full items-center mb-4 justify-between"
+    >
       <div class="flex-1 flex gap-4 items-center">
         <div
-        class="text-white bg-slate-500 rounded-md w-20 h-12 flex items-center justify-center p-2"
-      >
-        <span class="material-symbols-outlined text-xl"> credit_card </span>
-      </div>
-      <h2 class="text-lg text-slate-700 font-medium">
-        {{ invoice.creditCard.description }}
-        @if(isActualInvoice()) {
-          <span class="ml-4 text-xs px-2 py-1 rounded-2xl bg-teal-300 text-white">fatura atual</span>
-        }
+          class="text-white bg-slate-500 rounded-md w-20 h-12 flex items-center justify-center p-2"
+        >
+          <span class="material-symbols-outlined text-xl"> credit_card </span>
+        </div>
+        <h2 class="text-lg text-slate-700 font-medium">
+          {{ invoice.creditCard.description }}
+        </h2>
 
-        @if(isOverdueInvoice()) {
-          <span class="ml-4 text-xs px-2 py-1 rounded-2xl bg-slate-500 text-white">fatura encerrada</span>
-        }
-      </h2>
+        <p-chip *ngIf="isActualInvoice()" label="Atual" styleClass="text-sm" icon="pi pi-bell" />
+
+        <p-chip *ngIf="isOverdueInvoice()" label="Encerrada" styleClass="text-sm" icon="pi pi-times" />
+
+        <p-chip *ngIf="invoice.isPaid" label="Pago" styleClass="text-sm text-green-600" icon="pi pi-check" />
       </div>
-      @if(!invoice.isPaid) {
-        <button
+      @if(!invoice.isPaid && invoice.totalAmount !== 0) {
+      <button
         aria-label="pagar fatura do mês"
         (click)="openPaymentInvoiceDialog()"
         type="button"
@@ -68,9 +71,11 @@
     </div>
 
     <!-- CARDS FECHAMENTO, VENCIMENTO, VALOR -->
-    <div class="flex w-full items-center justify-center gap-10 mb-4">
+    <div
+      class="flex flex-col md:flex-row w-full items-center justify-center gap-8 mb-4"
+    >
       <div
-        class="shadow-lg bg-slate-200 rounded-md w-40 h-16 flex items-center justify-center p-2"
+        class="shadow-lg bg-slate-200 rounded-md w-52 h-16 flex items-center justify-center p-2"
       >
         <div
           class="text-slate-800 flex flex-col gap-1 justify-center items-center"
@@ -83,7 +88,7 @@
       </div>
 
       <div
-        class="shadow-lg bg-slate-200 rounded-md w-40 h-16 flex items-center justify-center p-2"
+        class="shadow-lg bg-slate-200 rounded-md w-52 h-16 flex items-center justify-center p-2"
       >
         <div
           class="text-slate-800 flex flex-col gap-1 justify-center items-center"
@@ -96,7 +101,7 @@
       </div>
 
       <div
-        class="shadow-lg bg-slate-200 rounded-md w-40 h-16 flex items-center justify-center p-2"
+        class="shadow-lg bg-slate-200 rounded-md w-52 h-16 flex items-center justify-center p-2"
       >
         <div
           class="text-slate-800 flex flex-col gap-1 justify-center items-center"
@@ -110,52 +115,52 @@
     </div>
 
     <!-- PAGAMENTOS -->
-    <div
-      class="mt-6 min-h-20 flex flex-col w-full gap-2 mb-2 pb-4"
-    >
+    <div class="mt-6 min-h-20 flex flex-col w-full gap-2 mb-2 pb-4">
       <h3 class="text-xl text-slate-700 tracking-wide">Pagamentos</h3>
 
-      @if(this.invoice.invoicePayments?.length) {
-        @for(payment of invoice.invoicePayments; track payment) {
-          <div class="pt-2 flex w-full items-center rounded-sm">
-            <div class="w-7/12 flex gap-2 items-center">
-              <div
-                class="text-white bg-green-600 rounded-full w-8 h-8 flex items-center justify-center p-2"
-              >
-                <span class="material-symbols-outlined text-xl"> payments </span>
-              </div>
-
-              <h3 class="text-sm text-slate-900 font-medium">
-                {{ payment.description }}
-              </h3>
-            </div>
-
-            <div class="w-3/12 flex items-center justify-center overflow-hidden">
-              <p class="text-sm tracking-wide text-slate-500">
-                {{ payment.paymentDate | date : "dd/MM/yyyy" }}
-              </p>
-            </div>
-
-            <div class="w-2/12 flex items-center justify-center">
-              <p class="text-sm tracking-wide text-black">
-                <span class=" ">-</span>
-                {{ formaterService.formatCurrency(payment.amountPaid) }}
-              </p>
-            </div>
+      @if(this.invoice.invoicePayments?.length) { @for(payment of
+      invoice.invoicePayments; track payment) {
+      <div class="pt-2 flex w-full items-center rounded-sm">
+        <div class="w-7/12 flex gap-2 items-center">
+          <div
+            class="text-white bg-green-600 rounded-full w-8 h-8 flex items-center justify-center p-2"
+          >
+            <span class="material-symbols-outlined text-xl"> payments </span>
           </div>
-          }
-      } @else {
-        <p class="pt-2 flex w-full items-center text-sm rounded-sm text-slate-500">Nenhum pagamento registrado.</p>
-      }
 
+          <h3 class="text-sm text-slate-900 font-medium">
+            {{ payment.description }}
+          </h3>
+        </div>
+
+        <div class="w-3/12 flex items-center justify-center overflow-hidden">
+          <p class="text-sm tracking-wide text-slate-500">
+            {{ payment.paymentDate | date : "dd/MM/yyyy" }}
+          </p>
+        </div>
+
+        <div class="w-2/12 flex items-center justify-center">
+          <p class="text-sm tracking-wide text-black">
+            <span class=" ">-</span>
+            {{ formaterService.formatCurrency(payment.amountPaid) }}
+          </p>
+        </div>
+      </div>
+      } } @else {
+      <p
+        class="pt-2 flex w-full items-center text-sm rounded-sm text-slate-500"
+      >
+        Nenhum pagamento registrado.
+      </p>
+      }
     </div>
 
     <!-- SALDO DE PAGAMENTOS -->
     <div
-      class="py-2 border-t-2 border-solid border-slate-200 flex justify-between w-full"
+      class="py-2 rounded-lg border-2 border-solid border-slate-200 flex flex-col md:flex-row justify-center md:justify-between w-full px-1 items-center"
     >
       <div class="flex-1">
-        <p class="text-base tracking-wide text-slate-600">
+        <p class="text-base tracking-wide text-slate-600 py-0">
           Saldo dos Pagamentos
         </p>
       </div>
@@ -165,26 +170,24 @@
           <div class="flex items-center justify-between">
             <p class="text-sm text-slate-600">total pago</p>
             <p class="mr-4 text-sm font-medium text-green-600">
-              {{
-                totalPayment()
-                  | currency : "BRL" : ""
-              }}
+              {{ totalPayment() | currency : "BRL" : "" }}
             </p>
           </div>
 
           <div class="flex items-center justify-between">
             <p class="text-sm text-slate-600">restante</p>
             <p class="mr-4 text-sm font-medium text-red-600">
-              {{ this.invoice.totalAmount - totalPayment() | currency : "BRL" : "" }}
+              {{
+                this.invoice.totalAmount - totalPayment()
+                  | currency : "BRL" : ""
+              }}
             </p>
           </div>
         </div>
       </div>
     </div>
     <!-- LANÇAMENTOS -->
-    <div
-      class="mt-6 min-h-20 flex flex-col w-full gap-2 mb-2 pb-4"
-    >
+    <div class="mt-6 min-h-20 flex flex-col w-full gap-2 mb-2 pb-4">
       <h3 class="text-xl text-slate-700 tracking-wide">Lançamentos</h3>
 
       @for(transaction of invoice.transactions; track transaction) {
@@ -218,9 +221,9 @@
         </div>
       </div>
       }
-
-
     </div>
     }
   </section>
 </main>
+
+<app-invoice-payment-dialog #invoicePaymentDialog></app-invoice-payment-dialog>

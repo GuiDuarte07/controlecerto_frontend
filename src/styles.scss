@@ -1,10 +1,91 @@
-@use '@angular/material' as mat;
-@use './custom-theme.scss' as custom-theme;
-@include mat.all-component-themes(custom-theme.$app-theme);
-
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 @import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200");
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+/* 
+@tailwind base;
+@tailwind components;
+@tailwind utilities; */
+@layer primeg, tailwind-base, tailwind-utilities;
+        
+@layer tailwind-base {
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  p, h1, h2, h3, h4, h5, h6 {
+    padding: 0;
+    margin:  0;
+  }
+
+  body {
+    font-family: Arial, sans-serif; 
+    font-size: 1rem; 
+    color: #333;
+    background-color: #fff;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  a {
+    text-decoration: none; 
+    color: inherit; 
+  }
+
+  ul, ol {
+    list-style: none; 
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%; 
+  }
+
+  button {
+    cursor: pointer; 
+  }
+
+  input,
+  textarea,
+  select {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+  }
+
+  blockquote {
+    margin: 1rem 0;
+    padding: 0.5rem;
+    border-left: 4px solid #ddd; 
+    font-style: italic;
+  }
+
+  code {
+    font-family: "Courier New", monospace; 
+  }
+
+ 
+  input[type="checkbox"],
+  input[type="radio"] {
+    vertical-align: middle; 
+  }
+
+}
+
+@layer tailwind-utilities {
+    @tailwind components;
+    @tailwind utilities;
+}
+
+
+@import 'primeng/resources/themes/aura-light-cyan/theme.css'; /* tema do PrimeNG */
+@import 'primeng/resources/primeng.min.css'; /* estilos principais do PrimeNG */
+@import 'primeicons/primeicons.css'; /* ícones */
+
+
 
 .material-symbols-outlined {
   font-variation-settings:
@@ -13,17 +94,65 @@
   'GRAD' 0,
   'opsz' 24
 }
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+
+html, body {
+	font-size: 16px;
+}
+
+.dlabel-text {
+  display: block;
+  margin-bottom: .25rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 500;
+  color: rgb(30 41 59 / 1);
+  font-family: "Inter", sans-serif;
+}
+
+.input-full {
+  width: 100%;
+  display: inline-block;
+}
+
+
+
+.dForm-dialog-container {
+  margin: 0 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.750rem;
+}
+
+
+.text-red {
+  @apply text-red-600;
+}
+
+.text-green {
+  @apply text-green-500;
+}
+
+.text-yellow {
+  @apply text-yellow-600;
+}
+
+.text-blue {
+  @apply text-blue-700;
+}
+
+
+
+/* font-family: "Roboto", sans-serif; */
+p, h1, h2, h3, h4, h5, h6, button, a {
+  
+  font-family: "Inter", sans-serif;
+}
 
 * {
-  /* font-family: "Roboto", sans-serif; */
-  font-family: "Inter", sans-serif;
-  padding: 0;
-  margin: 0;
   box-sizing: border-box;
 }
+
+
 
 body {
   overflow-x: hidden;
@@ -32,6 +161,14 @@ body {
 
 .dialog-responsive {
   padding: 0;
+}
+
+
+.reset-button {
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
 }
 
 .registration-container {
@@ -44,7 +181,7 @@ body {
 }
 
 .label {
-  @apply block mb-2 text-sm font-medium text-gray-900 dark:text-white;
+  @apply block p-0 m-0 mb-2 text-base font-normal text-gray-900 font-["Inter"];
 }
 
 .input {
@@ -72,22 +209,22 @@ body {
 }
 
 .btn-principal {
-  @apply  bg-teal-700 hover:bg-teal-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-teal-700 dark:hover:bg-teal-800 dark:focus:bg-teal-800;
+  @apply  disabled:cursor-default cursor-pointer border-none bg-teal-700 hover:bg-teal-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-teal-700 dark:hover:bg-teal-800 dark:focus:bg-teal-800;
 }
 
 .create-record-options {
   @apply flex items-center gap-2 font-light text-white text-xl w-60 h-36 justify-center rounded-2xl shadow transition-transform transform hover:scale-105
 }
 
-.active-route-sidebar {
-  @apply md:font-bold border-solid border-b-2 border-white
+.rounded-selection-item {
+  @apply h-6 w-7 flex justify-center items-center rounded-md;
 }
 
-.snackbar-error {
-  background-color: red !important;
-  color: black !important;
-  font-size: 16px !important;
+
+.custom-text-style {
+  @apply text-xs text-slate-800 font-semibold
 }
+
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
@@ -96,11 +233,25 @@ input::-ms-reveal {
   display: none;
 }
 
-/* Remove password reveal icon in Chrome, Safari, Edge, Opera */
 input::-webkit-credentials-auto-fill-button,
 input::-webkit-autofill-button,
 input::-webkit-clear-button,
 input::-webkit-inner-spin-button,
 input::-webkit-outer-spin-button {
   display: none;
+}
+ 
+
+
+.p-selectbutton .p-button.p-highlight::before {
+  background: transparent;
+  box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.02), 0px 1px 2px 0px rgba(0, 0, 0, 0.04);
+}
+
+.p-selectbutton .p-button.p-highlight:hover {
+  background: white !important;
+}
+
+.p-inputtext.p-component.p-element.p-password-input {
+  width: 100%;
 }

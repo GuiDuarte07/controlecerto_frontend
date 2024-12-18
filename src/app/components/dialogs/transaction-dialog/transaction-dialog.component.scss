@@ -1,0 +1,5 @@
+@import '../../../../styles.scss'; 
+
+.two-side-form-section {
+  @apply flex gap-3 flex-col md:flex-row;
+}

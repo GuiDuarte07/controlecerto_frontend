@@ -6,13 +6,13 @@
       class="flex w-full justify-between flex-col sm:flex-row items-center mb-4"
     >
       <!-- Título + menu -->
-      <div class="w-full sm:w-4/12 flex gap-2 items-center">
+      <div class="sm:w-6/12 flex gap-2 items-center">
         <h2 class="text-xl text-slate-700 tracking-wide">Lançamentos</h2>
 
         <button
           [matMenuTriggerFor]="menu"
           type="button"
-          class="size-6 text-white bg-emerald-400 rounded-full flex justify-center items-center transition-transform transform hover:rotate-90 duration-300"
+          class="border-none size-6 text-white bg-emerald-400 rounded-full flex justify-center items-center transition-transform transform hover:rotate-90 duration-300"
         >
           <span class="material-symbols-outlined text-xl font-bold"> add </span>
         </button>
@@ -45,7 +45,11 @@
             </span>
             <span class="!text-sm"> Cartão de Crédito</span>
           </button>
-          <button (click)="openTranferDialog()" class="!text-blue-600 !py-0 !text-sm" mat-menu-item>
+          <button
+            (click)="openTranferDialog()"
+            class="!text-blue-600 !py-0 !text-sm"
+            mat-menu-item
+          >
             <span class="!text-sm pr-2 material-icons-outlined">
               sync_alt
             </span>
@@ -54,151 +58,177 @@
         </mat-menu>
       </div>
 
-      <!-- Filtro de Mês -->
-      <div
-        class="sm:py-0 py-3 flex gap-4 justify-center w-full lg:w-4/12 items-center"
-      >
+      <div class="flex justify-between items-center w-full px-4">
+        <!-- Filtro de Mês -->
+        <div class="sm:py-0 py-3 flex gap-4 justify-center items-center">
+          <button
+            (click)="prevMonthFilter()"
+            type="button"
+            aria-label="Mês anterior"
+            class="border-none bg-inherit flex items-center"
+          >
+            <span class="text-slate-700 material-symbols-outlined">
+              chevron_left
+            </span>
+          </button>
+          <p class="text-base tracking-wide text-slate-700 w-40 text-center">
+            {{ formaterService.getMonthYearString(filterDate) }}
+          </p>
+          <button
+            (click)="nexMonthFilter()"
+            type="button"
+            aria-label="Próximo mês"
+            class="border-none bg-inherit flex items-center"
+          >
+            <span class="text-slate-700 material-symbols-outlined">
+              chevron_right
+            </span>
+          </button>
+        </div>
+
+        <!-- BOTÃO DE OPÇÕES DE FILTROS -->
         <button
-          (click)="prevMonthFilter()"
+          (click)="options.toggle($event)"
           type="button"
-          aria-label="Mês anterior"
-          class="flex items-center"
+          class="bg-inherit border-none bg-teal-600 rounded px-3 py-1"
         >
-          <span class="text-slate-700 material-symbols-outlined">
-            chevron_left
+          <span class="material-symbols-outlined !text-lg text-white">
+            more_vert
           </span>
         </button>
-        <p class="text-base tracking-wide text-slate-700">
-          {{ formaterService.getMonthYearString(filterDate) }}
-        </p>
-        <button
-          (click)="nexMonthFilter()"
-          type="button"
-          aria-label="Próximo mês"
-          class="flex items-center"
-        >
-          <span class="text-slate-700 material-symbols-outlined">
-            chevron_right
-          </span>
-        </button>
-      </div>
-      <div class="w-4/12"></div>
-    </div>
 
-    <!-- Filtros Gerais -->
-    <div
-      class="mb-2 px-2 w-full h-10 rounded-3xl bg-teal-500 flex items-center"
-    >
-      <div
-        class="px-1 w-4/12 flex items-center gap-2 border-r-2 border-solid border-slate-200"
-      >
-      <button (click)="toggleTransactionSearch()" type="button" class="">
-        <span class="material-symbols-outlined text-white">
-          manage_search
-        </span>
-      </button>
+        <!-- FILTROS GERAIS -->
+        <p-overlayPanel appendTo="body" #options class="!absolute">
+          <div class="w-[26rem] flex flex-col gap-3">
+            <div class="">
+              <label for="searchInput" class="label">Buscar por texto</label>
+              <p-inputGroup>
+                <p-inputGroupAddon>
+                  <i class="pi pi-search"></i>
+                </p-inputGroupAddon>
+                <input
+                  [(ngModel)]="filterOptions.textFilter"
+                  id="searchInput"
+                  pInputText
+                  placeholder="Buscar"
+                />
+              </p-inputGroup>
+            </div>
 
-        @if(showTransactionSearch) {
-          <input [(ngModel)]="filterOptions.textFilter" type="text" id="showTransactionSearch" class="h-6 w-full rounded-md text-sm bg-slate-100 px-2 text-slate-800" placeholder="Pesquisar por texto">
-        }
-      </div>
+            <div class="">
+              <label for="accountsFilter" class="label"
+                >Filtrar por conta</label
+              >
+              <p-dropdown
+                id="accountsFilter"
+                [options]="accounts"
+                [(ngModel)]="filterOptions.accountFilter"
+                optionLabel="name"
+                [showClear]="true"
+                placeholder="Selecione uma conta"
+                [style]="{ width: '100%' }"
+                appendTo="body"
+              >
+                <!-- Template para o item selecionado -->
+                <ng-template pTemplate="selectedItem">
+                  <div
+                    style="height: 20px"
+                    class="flex items-center gap-2"
+                    *ngIf="filterOptions.accountFilter"
+                  >
+                    <div
+                      [ngStyle]="{
+                        'background-color': filterOptions.accountFilter.color
+                      }"
+                      class="rounded-selection-item"
+                    >
+                      <span
+                        class="material-symbols-outlined"
+                        style="font-size: 1rem; color: white"
+                      >
+                        account_balance
+                      </span>
+                    </div>
+                    <p class="custom-text-style">
+                      {{ filterOptions.accountFilter.bank }}
+                    </p>
+                  </div>
+                </ng-template>
 
-      <button
-        type="button"
-        class="px-1 w-4/12 flex items-center justify-start border-r-2 gap-3 border-solid border-slate-200"
-      >
-        <span class="material-symbols-outlined text-white text-xl">
-          account_balance
-        </span>
+                <!-- Template para cada item na lista -->
+                <ng-template let-account pTemplate="item">
+                  <div style="height: 20px" class="flex items-center gap-2">
+                    <div
+                      [ngStyle]="{ 'background-color': account.color }"
+                      class="rounded-selection-item"
+                    >
+                      <span
+                        class="material-symbols-outlined"
+                        style="font-size: 1rem; color: white"
+                      >
+                        account_balance
+                      </span>
+                    </div>
+                    <p class="custom-text-style">
+                      {{ account.bank }}
+                    </p>
+                  </div>
+                </ng-template>
+              </p-dropdown>
+            </div>
 
-        <app-selection
-          [itemSelected]="!!filterOptions.accountFilter"
-          customClass="block"
-        >
-          <div
-            selected-item-content
-            class="gap-2 flex items-center w-full overflow-hidden"
-          >
-            <div class="gap-2 flex items-center w-full overflow-hidden">
-              <p class="overflow-hidden text-sm text-white font-semibold">
-                {{ filterOptions.accountFilter?.bank }}
-              </p>
+            <div class="flex items-center gap-2 mt-1">
+              <label class="label">Ordenar por data</label>
+              <p-selectButton
+                [options]="dataOptionsLabel"
+                [(ngModel)]="filterOptions.dateFilterDes"
+                optionLabel="label"
+                optionValue="value"
+              />
+            </div>
+            {{ filterOptions.type }}
+            <div class="">
+              <p-checkbox
+                [(ngModel)]="filterOptions.type"
+                [binary]="true"
+                inputId="typeFilter"
+                label="Ordenar por tipo"
+              />
+            </div>
+
+            <div class="">
+              <p-checkbox
+                [(ngModel)]="selectMode"
+                [binary]="true"
+                inputId="selectMode"
+                label="Selecionar Transações"
+              />
+            </div>
+
+            <div class="">
+              <p-checkbox
+                [(ngModel)]="filterOptions.hideInvoices"
+                (onChange)="setSeeInvoice()"
+                [binary]="true"
+                inputId="seeInvoice"
+                label="Despesas de cartão como transações"
+              />
             </div>
           </div>
-
-          <div
-            placeholder-content
-            class="gap-2 flex items-center w-full overflow-hidden"
-          >
-            <div class="gap-2 flex items-center w-full overflow-hidden">
-              <p class="overflow-hidden text-sm text-white font-semibold">
-                Todas
-              </p>
-            </div>
-          </div>
-
-          <ng-container options-loop>
-            @for (account of accounts; track account) {
-            <button
-              (click)="changeAccountFilter(account)"
-              class="py-2 px-3 gap-2 flex items-center hover:bg-slate-200 transition-all duration-150 w-full"
-            >
-              <p class="overflow-hidden text-sm text-slate-800 font-semibold">
-                {{ account.bank }}
-              </p>
-            </button>
-            }
-            <button
-              (click)="changeAccountFilter(null)"
-              class="py-2 px-3 gap-2 flex items-center hover:bg-slate-200 transition-all duration-150 w-full"
-            >
-              <p class="overflow-hidden text-sm text-slate-800 font-semibold">
-                Todas
-              </p>
-            </button>
-          </ng-container>
-        </app-selection>
-      </button>
-
-      <button
-        type="button"
-        (click)="changeDateFilter()"
-        class="px-1 w-2/12 flex items-start justify-center border-r-2 border-solid border-slate-200"
-      >
-        <span class="material-symbols-outlined text-white text-xl">
-          calendar_month
-        </span>
-        @if(filterOptions.dateFilterDes) {
-        <span class="material-symbols-outlined text-white text-lg">
-          arrow_downward
-        </span>
-        }@else {
-        <span class="material-symbols-outlined text-white text-lg">
-          arrow_upward
-        </span>
-        }
-      </button>
-
-      <button
-        class="px-1 w-2/12 flex items-start justify-center"
-        [matMenuTriggerFor]="filterMenu"
-        aria-label="Mais opções nos filtros"
-      >
-        <span class="material-symbols-outlined text-xl text-white">
-          more_vert
-        </span>
-      </button>
-      <mat-menu #filterMenu="matMenu" class="px-2">
-        <mat-checkbox [(ngModel)]="selectMode">Selecionar transações</mat-checkbox>
-        <mat-checkbox (change)="setSeeInvoice()">Despesas de cartão como transações</mat-checkbox>
-      </mat-menu>
+        </p-overlayPanel>
+      </div>
     </div>
 
     <div class="w-full">
       <!-- LISTA DE TRANSAÇÕES -->
-    @for(transaction of filteredTransactions; track transaction) {
-      <app-transaction-expansion-panel [selectMode]="selectMode" (checkedEvent)="checkedTransatcionUpdate($event)" [transaction]="transaction" [updateTransactions]="updateTransactions"></app-transaction-expansion-panel>
-  
+      @for(transaction of filteredTransactions; track transaction) {
+      <app-transaction-expansion-panel
+        [selectMode]="selectMode"
+        (checkedEvent)="checkedTransatcionUpdate($event)"
+        [transaction]="transaction"
+        [updateTransactions]="updateTransactions"
+      ></app-transaction-expansion-panel>
+
       <!-- LISTA DE TRANSAÇÃO VAZIA -->
       } @if(filteredTransactions.length === 0 && invoices.length === 0) {
       <div class="flex w-full items-center min-h-32">
@@ -210,10 +240,9 @@
     </div>
 
     <!-- LISTA DE FATURAS -->
-    @if(invoices.length) { 
-      <div class="w-full h-[2px] rounded-2xl bg-slate-200 my-1"></div>
-      @for(invoice of invoices; track invoice) {
+    @if(invoices.length) { @for(invoice of invoices; track invoice) {
     @if(invoice.totalAmount > 0) {
+    <div class="w-full h-[2px] rounded-2xl bg-slate-200 my-1"></div>
     <mat-expansion-panel
       [expanded]="false"
       class="!shadow-none !bg-none flex w-full items-center rounded-sm !p-0"
@@ -248,7 +277,7 @@
 
       <!-- DETALHES DA FATURA -->
       <div
-        class="w-full flex gap-4 pt-2 pb-3 px-1 items-center border-b border-b-slate-300 border-solid"
+        class="w-full flex gap-4 pt-2 pb-3 px-1 items-center border-0 border-b border-b-slate-300 border-solid"
       >
         <div class="w-6/12">
           <div *ngIf="invoice.isPaid" class="font-medium">Fatura Paga</div>
@@ -274,7 +303,7 @@
             *ngIf="!invoice.isPaid"
             (click)="openPaymentInvoiceDialog(invoice)"
             type="button"
-            class="text-center sm:px-3 sm:py-1 px-1 bg-green-600 text-white sm:rounded-2xl rounded-lg text-sm sm:text-base cursor-pointer"
+            class="border-none text-center sm:px-3 sm:py-1 px-1 bg-green-600 text-white sm:rounded-2xl rounded-lg text-sm sm:text-base cursor-pointer"
           >
             Pagar Fatura
           </button>
@@ -283,7 +312,10 @@
 
       <!-- TRANSAÇÕES DA FATURA -->
       @for(transaction of invoice.transactions; track transaction) {
-        <app-transaction-expansion-panel [transaction]="transaction" [updateTransactions]="updateTransactions"></app-transaction-expansion-panel>
+      <app-transaction-expansion-panel
+        [transaction]="transaction"
+        [updateTransactions]="updateTransactions"
+      ></app-transaction-expansion-panel>
       }
     </mat-expansion-panel>
     } } }
@@ -291,7 +323,7 @@
     <!-- DEMONSTRATIVO DE SALDO -->
     @if(filteredTransactions.length > 0 || invoices.length > 0) {
     <div
-      class="my-2 py-2 border-t-2 border-solid border-slate-200 flex flex-col sm:flex-row justify-between w-full"
+      class="my-2 py-2 border-0 border-t-2 border-solid border-slate-200 flex flex-col sm:flex-row justify-between w-full"
     >
       <div class="flex-1">
         <p class="text-base tracking-wide text-slate-600">
@@ -299,24 +331,24 @@
         </p>
       </div>
 
-      <div class="sm:px-4 sm:w-8/12 w-full flex">
+      <div class="sm:px-4 sm:w-8/12 w-full flex gap-2">
         <div class="sm:pl-7 flex flex-col w-full">
-          <div class="flex items-center justify-between">
-            <p class="text-sm text-slate-600">receita</p>
+          <div class="flex items-center justify-between h-8">
+            <p class="p-text-balance">receita</p>
             <p class="sm:mr-4 mr-1 text-sm font-medium text-green-600">
               {{ incomesTotal() | currency : "BRL" : "" }}
             </p>
           </div>
 
-          <div class="flex items-center justify-between">
-            <p class="text-sm text-slate-600">despesa</p>
+          <div class="flex items-center justify-between h-8">
+            <p class="p-text-balance">despesa</p>
             <p class="sm:mr-4 mr-1 text-sm font-medium text-red-600">
               {{ expensesTotal() | currency : "BRL" : "" }}
             </p>
           </div>
 
-          <div class="flex items-center justify-between">
-            <p class="text-sm text-slate-600">fatura</p>
+          <div class="flex items-center justify-between h-8">
+            <p class="p-text-balance">fatura</p>
             <p class="sm:mr-4 mr-1 text-sm font-medium text-slate-700">
               {{ invoiceTotal() | currency : "BRL" : "" }}
             </p>
@@ -324,8 +356,8 @@
         </div>
 
         <div class="sm:pl-7 flex flex-col w-full">
-          <div class="flex items-center justify-between">
-            <p class="text-sm text-slate-600">saldo anterior</p>
+          <div class="flex items-center justify-between h-8">
+            <p class="p-text-balance">saldo anterior</p>
             <p class="sm:mr-4 mr-1 text-sm font-medium text-amber-600">
               {{
                 accountBalance + expensesTotal() - incomesTotal()
@@ -334,15 +366,15 @@
             </p>
           </div>
 
-          <div class="flex items-center justify-between">
-            <p class="text-sm text-slate-600">saldo atual</p>
+          <div class="flex items-center justify-between h-8">
+            <p class="p-text-balance">saldo atual</p>
             <p class="sm:mr-4 mr-1 text-sm font-medium text-blue-600">
               {{ accountBalance | currency : "BRL" : "" }}
             </p>
           </div>
 
-          <div class="flex items-center justify-between">
-            <p class="text-sm text-slate-600">saldo previsto</p>
+          <div class="flex items-center justify-between h-8">
+            <p class="p-text-balance">saldo previsto</p>
             <p class="sm:mr-4 mr-1 text-sm font-medium text-indigo-700">
               {{ accountBalance - invoiceTotal() | currency : "BRL" : "" }}
             </p>
@@ -353,3 +385,6 @@
     }
   </section>
 </main>
+
+<app-transaction-dialog #transactionDialog></app-transaction-dialog>
+<app-transfer-dialog #transferDialog></app-transfer-dialog>

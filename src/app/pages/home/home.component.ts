@@ -10,7 +10,6 @@ import { InfoInvoiceResponse } from '../../models/InfoInvoiceResponse';
 import { FormaterService } from '../../services/formater.service';
 import { TransactionTypeEnum } from '../../enums/TransactionTypeEnum';
 import { MatDialog } from '@angular/material/dialog';
-import { CreateTransactionDialogComponent } from '../../components/dialogs/create-transaction-dialog/create-transaction-dialog.component';
 import { TransactionService } from '../../services/transaction.service';
 import { InfoTransactionResponse } from '../../models/InfoTransactionResponse';
 import { DetailsUserResponse } from '../../models/DetailsUserResponse';

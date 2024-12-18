@@ -1,5 +1,4 @@
-import { AccountsComponent } from './../accounts/accounts.component';
-import { Component, OnInit, signal, viewChild, ViewChild } from '@angular/core';
+import { Component, OnInit, signal, ViewChild } from '@angular/core';
 import { TransactionService } from '../../services/transaction.service';
 import { InfoTransactionResponse } from '../../models/InfoTransactionResponse';
 import { SidebarComponent } from '../../components/sidebar/sidebar.component';
@@ -8,13 +7,10 @@ import { FormaterService } from '../../services/formater.service';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog } from '@angular/material/dialog';
-import { AlertDialogComponent } from '../../components/dialogs/alert-dialog/alert-dialog.component';
 import { MatMenuModule } from '@angular/material/menu';
-import { CreateTransactionDialogComponent } from '../../components/dialogs/create-transaction-dialog/create-transaction-dialog.component';
 import { TransactionTypeEnum } from '../../enums/TransactionTypeEnum';
 import { InfoInvoiceResponse } from '../../models/InfoInvoiceResponse';
 import { AccountService } from '../../services/account.service';
-import { CreditCardService } from '../../services/credit-card.service';
 import { RouterLink } from '@angular/router';
 import { InvoicePaymentDialogComponent } from '../../components/dialogs/invoice-payment-dialog/invoice-payment-dialog.component';
 import { Account } from '../../models/AccountRequest ';
@@ -64,18 +60,17 @@ import {
     AccordionModule,
     CheckboxModule,
     TransactionDialogComponent,
-    TransferDialogComponent
-],
+    TransferDialogComponent,
+  ],
   templateUrl: './transactions.component.html',
   styleUrl: './transactions.component.scss',
 })
 export class TransactionsComponent implements OnInit {
   @ViewChild('transactionDialog')
   transactionDialog!: TransactionDialogComponent;
-  
+
   @ViewChild('transferDialog')
   transferDialog!: TransferDialogComponent;
-
 
   transactions: InfoTransactionResponse[] = [];
   invoices: InfoInvoiceResponse[] = [];
@@ -334,7 +329,6 @@ export class TransactionsComponent implements OnInit {
     );
   }
 
-
   openCreateTransactionDialog(type: TransactionTypeEnum) {
     const dialogData: TransactionDialogDataType = {
       newTransaction: true,
@@ -366,5 +360,4 @@ export class TransactionsComponent implements OnInit {
       }
     });
   }
-  
 }

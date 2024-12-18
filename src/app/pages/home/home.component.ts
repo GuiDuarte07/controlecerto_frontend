@@ -31,6 +31,7 @@ type boardType = 'balance' | 'income' | 'expense' | 'invoice';
     SidebarComponent,
     RouterLink,
     TransactionDialogComponent,
+    TransferDialogComponent,
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
@@ -38,6 +39,8 @@ type boardType = 'balance' | 'income' | 'expense' | 'invoice';
 export class HomeComponent implements OnInit {
   @ViewChild('transactionDialog')
   transactionDialog!: TransactionDialogComponent;
+  @ViewChild('transferDialog')
+  transferDialog!: TransferDialogComponent;
 
   balance: BalanceStatement = {
     balance: 0,
@@ -85,15 +88,7 @@ export class HomeComponent implements OnInit {
   }
 
   openTranferDialog() {
-    const dialogRef = this.dialog.open(TransferDialogComponent, {
-      panelClass: 'dialog-responsive',
-    });
-
-    dialogRef.afterClosed().subscribe((sucess: boolean) => {
-      if (sucess === true) {
-        this.setBoardDetails(this.boardOption);
-      }
-    });
+    this.transferDialog.openDialog();
   }
 
   getBalances() {

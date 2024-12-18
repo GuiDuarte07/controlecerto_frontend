@@ -9,7 +9,7 @@
       <div class="flex items-center gap-4 md:flex-row flex-col">
         <!-- AMOUNT INPUT -->
         <div class="w-full md:w-6/12">
-          <label for="amount" class="block mb-1 text-sm font-medium text-slate-600 dark:text-white">Valor</label>
+          <label for="amount" class="label">Valor</label>
           <input pInputText formControlName="amount" appCurrencyMask prefix="R$ " thousandSeparator="." id="amount"
             class="w-full" required />
         </div>
@@ -17,7 +17,7 @@
         <!-- DATEPICKER -->
         <div class="w-full md:w-6/12">
           <label for="purchaseDatePicker"
-            class="block mb-1 text-sm font-medium text-slate-600 dark:text-white">Data</label>
+            class="label">Data</label>
           <div class="relative">
 
             <p-calendar id="purchaseDatePicker" formControlName="purchaseDate" [iconDisplay]="'input'" [showIcon]="true"

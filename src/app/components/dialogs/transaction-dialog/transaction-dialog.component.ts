@@ -1,11 +1,7 @@
 import { CreditCardService } from './../../../services/credit-card.service';
 import { AccountService } from './../../../services/account.service';
 import { TransactionService } from './../../../services/transaction.service';
-import {
-  Component,
-  EventEmitter,
-  OnInit,
-} from '@angular/core';
+import { Component, EventEmitter, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -23,7 +19,6 @@ import { CreditCardInfo } from '../../../models/CreditCardInfo';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CreateTransactionRequest } from '../../../models/CreateTransaction';
 import { CurrencyMaskDirective } from '../../../directive/currency-mask.directive';
-import { provideNativeDateAdapter } from '@angular/material/core';
 import { BillTypeEnum } from '../../../enums/BillTypeEnum';
 import { InfoTransactionResponse } from '../../../models/InfoTransactionResponse';
 import { UpdateTransactionRequest } from '../../../models/UpdateTransaction';
@@ -75,11 +70,7 @@ interface ITransactionForm {
     InputNumberModule,
     ToastModule,
   ],
-  providers: [
-    provideNativeDateAdapter(),
-    CurrencyMaskDirective,
-    MessageService,
-  ],
+  providers: [CurrencyMaskDirective, MessageService],
   templateUrl: './transaction-dialog.component.html',
   styleUrl: './transaction-dialog.component.scss',
 })
@@ -387,11 +378,10 @@ export class TransactionDialogComponent implements OnInit {
           error: (err: HttpErrorResponse) => {
             this.messageService.add({
               severity: 'error',
-              summary: 'Houve um Erro',
-              detail: 'Erro na criação dessa despesa: ' + err.error,
+              summary: 'Erro Criação Despesa',
+              detail: err.error,
               life: 3000,
             });
-            console.log(err.error);
           },
         });
     }

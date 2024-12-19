@@ -55,43 +55,47 @@
           {{ account.bank }}
         </p>
       </button>
-      <div class="flex gap-2 items-center">
-        <p class="text-sm font-medium text-slate-700">saldo atual:</p>
-        <p class="text-sm font-medium text-green-500">
-          {{ account.balance | currency : "BRL" : "symbol" }}
-        </p>
-        <button
-          class="reset-button text-slate-600 flex items-center justify-center"
-          (click)="iconPanel.toggle($event)"
-          aria-label="Abrir menu"
-        >
-          <span class="material-symbols-outlined text-xl"> more_vert </span>
-        </button>
+      <div class="flex gap-2 items-center justify-between sm:justify-start w-full sm:w-fit">
+        <div class="flex items-center gap-2">
+          <p class="text-sm font-medium text-slate-700">saldo atual:</p>
+          <p class="text-sm font-medium text-green-500">
+            {{ account.balance | currency : "BRL" : "symbol" }}
+          </p>
+        </div>
 
-        <p-overlayPanel
-          #iconPanel
-          styleClass=""
-          [showCloseIcon]="true"
-          appendTo="body"
-        >
-          <div class="flex flex-col gap-2">
-            <p-button
-              (click)="openAccountDialog(account)"
-              label="Editar"
-              icon="pi pi-pen-to-square"
-              [text]="true"
-              severity="info"
-            />
+        <div class="">
+          <button
+            class="reset-button text-slate-600 flex items-center justify-center"
+            (click)="iconPanel.toggle($event)"
+            aria-label="Abrir menu"
+          >
+            <span class="material-symbols-outlined text-xl"> more_vert </span>
+          </button>
+          <p-overlayPanel
+            #iconPanel
+            styleClass=""
+            [showCloseIcon]="true"
+            appendTo="body"
+          >
+            <div class="flex flex-col gap-2">
+              <p-button
+                (click)="openAccountDialog(account)"
+                label="Editar"
+                icon="pi pi-pen-to-square"
+                [text]="true"
+                severity="info"
+              />
 
-            <p-button
-              (click)="deleteAccountConfirm($event, account.id!)"
-              label="Desativar"
-              icon="pi pi-trash"
-              [text]="true"
-              severity="danger"
-            />
-          </div>
-        </p-overlayPanel>
+              <p-button
+                (click)="deleteAccountConfirm($event, account.id!)"
+                label="Desativar"
+                icon="pi pi-trash"
+                [text]="true"
+                severity="danger"
+              />
+            </div>
+          </p-overlayPanel>
+        </div>
       </div>
     </li>
     } }

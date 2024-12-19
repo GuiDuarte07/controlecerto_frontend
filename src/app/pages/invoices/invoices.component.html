@@ -1,5 +1,5 @@
-<main class="w-full mb-6">
-  <section class="registration-container !w-[800px]">
+<main class="w-full sm:mb-6">
+  <section class="registration-container w-full md:!w-[768px]">
     @if(invoice) {
     <div
       class="flex flex-col md:flex-row w-full justify-center md:justify-between items-center mb-4"
@@ -40,7 +40,7 @@
 
     <!-- ICONE, NOME E PAGAR FATURA -->
     <div
-      class="flex flex-col md:flex-row w-full items-center mb-4 justify-between"
+      class="flex flex-col sm:flex-row w-full items-center mb-4 justify-between"
     >
       <div class="flex-1 flex gap-4 items-center">
         <div
@@ -48,26 +48,30 @@
         >
           <span class="material-symbols-outlined text-xl"> credit_card </span>
         </div>
-        <h2 class="text-lg text-slate-700 font-medium">
-          {{ invoice.creditCard.description }}
-        </h2>
+        <div class="flex-1 flex gap-4 items-center">
+          <h2 class="text-lg text-slate-700 font-medium">
+            {{ invoice.creditCard.description }}
+          </h2>
+  
+          <p-chip *ngIf="isActualInvoice()" label="Atual" styleClass="text-sm" icon="pi pi-bell" />
+  
+          <p-chip *ngIf="isOverdueInvoice()" label="Encerrada" styleClass="text-sm" icon="pi pi-times" />
+  
+          <p-chip *ngIf="invoice.isPaid" label="Pago" styleClass="text-sm text-green-600" icon="pi pi-check" />
+        </div>
 
-        <p-chip *ngIf="isActualInvoice()" label="Atual" styleClass="text-sm" icon="pi pi-bell" />
-
-        <p-chip *ngIf="isOverdueInvoice()" label="Encerrada" styleClass="text-sm" icon="pi pi-times" />
-
-        <p-chip *ngIf="invoice.isPaid" label="Pago" styleClass="text-sm text-green-600" icon="pi pi-check" />
+        @if(!invoice.isPaid && invoice.totalAmount !== 0) {
+          <button
+            aria-label="pagar fatura do mês"
+            (click)="openPaymentInvoiceDialog()"
+            type="button"
+            class="rounded-3xl shadow border border-solid border-slate-400 bg-green-600 px-3 py-2 mr-6"
+          >
+            <div class="text-sm text-white font-medium">Pagar Fatura</div>
+          </button>
+          }
       </div>
-      @if(!invoice.isPaid && invoice.totalAmount !== 0) {
-      <button
-        aria-label="pagar fatura do mês"
-        (click)="openPaymentInvoiceDialog()"
-        type="button"
-        class="rounded-3xl shadow border border-solid border-slate-400 bg-green-600 px-3 py-2 mr-6"
-      >
-        <div class="text-sm text-white font-medium">Pagar Fatura</div>
-      </button>
-      }
+      
     </div>
 
     <!-- CARDS FECHAMENTO, VENCIMENTO, VALOR -->
@@ -157,15 +161,15 @@
 
     <!-- SALDO DE PAGAMENTOS -->
     <div
-      class="py-2 rounded-lg border-2 border-solid border-slate-200 flex flex-col md:flex-row justify-center md:justify-between w-full px-1 items-center"
+      class="py-2 rounded-lg border-2 border-solid border-slate-200 flex flex-col md:flex-row justify-start md:justify-between w-full px-1 md:items-center"
     >
       <div class="flex-1">
-        <p class="text-base tracking-wide text-slate-600 py-0">
+        <p class="pl-2 md:pl-0 text-base tracking-wide text-slate-600 py-0">
           Saldo dos Pagamentos
         </p>
       </div>
 
-      <div class="px-4 w-4/12 flex">
+      <div class="md:px-4 md:w-4/12 flex">
         <div class="pl-7 flex flex-col w-full">
           <div class="flex items-center justify-between">
             <p class="text-sm text-slate-600">total pago</p>

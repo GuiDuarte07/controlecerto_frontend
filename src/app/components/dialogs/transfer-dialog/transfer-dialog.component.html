@@ -2,7 +2,7 @@
   [dismissableMask]="true" (onHide)="closeDialog(false)">
   <ng-template pTemplate="body" class="bg-slate-300">
     @if (loadingAccounts) {
-    <div class="d">{{loadingAccounts}}</div>
+    <div class="">loading...</div>
     } @else {
     <form [formGroup]="transferForm" class="m-8 flex flex-col gap-4">
       <!-- FIRST COLUMN -->
@@ -11,7 +11,7 @@
         <div class="w-full md:w-6/12">
           <label for="amount" class="label">Valor</label>
           <input pInputText formControlName="amount" appCurrencyMask prefix="R$ " thousandSeparator="." id="amount"
-            class="w-full" required />
+            class="w-full font-semibold text-blue-600" required />
         </div>
 
         <!-- DATEPICKER -->

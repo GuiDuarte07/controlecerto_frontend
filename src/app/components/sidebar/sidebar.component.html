@@ -1,10 +1,6 @@
 <nav class="bg-teal-600 h-14 w-screen flex items-center !mb-12 justify-center">
   <div class="w-full md:w-[800px] flex items-center h-full justify-between">
-    <div class="md:w-2/12 h-full overflow-hidden">
-      
-
-      
-    </div>
+    <div class="md:w-2/12 h-full overflow-hidden"></div>
     <div class="flex items-center h-full flex-1 justify-center">
       <a
         [class.active-route-sidebar]="isCurrentRoute('/home')"
@@ -31,50 +27,76 @@
       </a>
     </div>
     <div class="md:w-2/12 flex gap-4 flex-end items-center">
-      <button type="button" class="reset-button">
-        <span
-          class="material-symbols-outlined text-white text-base md:text-xl"
-          style="font-variation-settings: 'FILL' 1"
-        >
-          settings
-        </span>
-      </button>
-
       <!-- NOTIFICATION BUTTON -->
-      <button
-        type="button"
-        class="reset-button"
-        aria-label="Menu de notificações"
-      >
-        <span
-          [matBadge]="0"
-          matBadgeOverlap="true"
-          class="material-symbols-outlined text-white text-base md:text-xl font-bold"
-          style="font-variation-settings: 'FILL' 1"
+      <div class="mx-1">
+        <button
+          type="button"
+          class="reset-button"
+          aria-label="Menu de notificações"
+          (click)="handleNotificationBadge($event)"
         >
-          notifications
-        </span>
-      </button>
-      <!-- <mat-menu class="!min-h-14" #notificationMenu="matMenu" xPosition="before">
-          <p class="h-full w-full text-sm text-center text-slate-700 flex justify-center items-center gap-1">
-            Nenhuma<br> notificação
-          </p>
-      </mat-menu> -->
+          <i
+            class="pi pi-bell text-xl text-white"
+            pBadge
+            [value]="newNotificationsCount()"
+            severity="danger"
+          ></i>
+        </button>
+        <p-overlayPanel #notificationPanel styleClass="" appendTo="body">
+          <ul class="p-0 m-0 flex gap-2 flex-col w-80">
+            @for (notification of notifications; track $index) {
+            <li
+              [ngClass]="{ '!bg-blue-100': notification.isRead === false }"
+              class="rounded-lg px-2 py-1 bg-slate-100"
+            >
+              <div class="flex justify-between">
+                <h3 [innerHTML]="notification.title" class="text-base"></h3>
+                <button
+                  (click)="deleteNotification(notification.id)"
+                  type="button"
+                  aria-label="Deletar notificação"
+                  class="border-0 bg-inherit m-0 p-0 text-base"
+                >
+                  <i class="pi pi-times text-red-300"></i>
+                </button>
+              </div>
+
+              <p [innerHTML]="notification.message" class="text-sm"></p>
+              <time
+                aria-label="Data da notificação:"
+                [dateTime]="notification.createdAt"
+                class="text-xs text-slate-500"
+                >{{ notification.createdAt | date }}</time
+              >
+            </li>
+            }
+            @empty {
+              <p class="">
+                Ops 🤷‍♂️<br>
+                Nenhuma notificação
+                 foi encontrada.
+              </p>
+            }
+          </ul>
+        </p-overlayPanel>
+      </div>
+
+      <!-- CONFIGURATION BUTTON -->
+      <div class="mx-1">
+        <button type="button" class="reset-button">
+          <i class="pi pi-cog text-xl text-white"></i>
+        </button>
+      </div>
 
       <!-- USER BUTTON -->
       <div class="card flex justify-content-center">
         <button
           type="button"
           aria-label="Menu do usuário"
-          class="md:!ml-4 reset-button"
+          class="md:!ml-4 border-0 w-8 h-8 rounded-full bg-teal-700"
           (click)="profileMenu.toggle($event)"
         >
-          <span
-            class="material-symbols-outlined text-white md:!text-4xl text-2xl"
-            style="font-variation-settings: 'FILL' 1"
-          >
-            account_circle
-          </span>
+          <i class="pi pi-user text-xl text-white"></i>
         </button>
         <p-menu
           #profileMenu

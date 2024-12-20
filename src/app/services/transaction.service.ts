@@ -94,7 +94,6 @@ export class TransactionService {
   }
 
   private mapToInfoTransactionResponse(data: any): InfoTransactionResponse {
-    console.log(data);
     return new InfoTransactionResponse({
       id: data.id,
       type: data.type,

@@ -45,8 +45,6 @@ export class InvoicesComponent implements OnInit {
         this.invoice = value.invoice;
         this.nextInvoiceId = value.nextInvoiceId;
         this.prevInvoiceId = value.prevInvoiceId;
-
-        console.log(value);
       },
     });
   }

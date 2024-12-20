@@ -171,8 +171,6 @@ export class TransactionsComponent implements OnInit {
   }
 
   setSeeInvoice() {
-    /* this.filterOptions.hideInvoices = !this.filterOptions.hideInvoices;
-    console.log(this.filterOptions.hideInvoices); */
     this.updateTransactions();
   }
 
@@ -186,10 +184,6 @@ export class TransactionsComponent implements OnInit {
 
   changeDateFilter() {
     this.filterOptions.dateFilterDes = !this.filterOptions.dateFilterDes;
-  }
-
-  changeAccountFilter(account: Account | null) {
-    this.filterOptions.accountFilter = account;
   }
 
   toggleAccountSelection() {
@@ -210,8 +204,6 @@ export class TransactionsComponent implements OnInit {
         (t) => t.id !== transaction.id
       );
     }
-
-    console.log(this.selectedTransactions);
   }
 
   updateTransactions() {
@@ -254,8 +246,6 @@ export class TransactionsComponent implements OnInit {
       .subscribe((result) => {
         this.transactions = result.transactions;
         this.invoices = result.invoices;
-
-        console.log(result);
       });
 
     this.updateAccountBalance();

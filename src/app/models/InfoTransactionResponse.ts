@@ -46,8 +46,6 @@ export class InfoTransactionResponse {
     installmentNumber: number | undefined;
     creditPurchase: InfoCreditPurchaseResponse | undefined;
   }) {
-    console.log(purchaseDate.toUTCString())
-    console.log(purchaseDate.toLocaleString());
     this.id = id;
     this.type = type;
     this.amount = amount;

@@ -44,9 +44,13 @@ interface ITransferenceForm {
     InputTextModule,
     CalendarModule,
     DropdownModule,
-    ToastModule
+    ToastModule,
   ],
-  providers: [provideNativeDateAdapter(), CurrencyMaskDirective, MessageService],
+  providers: [
+    provideNativeDateAdapter(),
+    CurrencyMaskDirective,
+    MessageService,
+  ],
   templateUrl: './transfer-dialog.component.html',
   styleUrl: './transfer-dialog.component.scss',
 })
@@ -59,7 +63,6 @@ export class TransferDialogComponent implements OnInit {
   closeEvent = new EventEmitter<boolean>();
   visible = false;
 
-
   selectedAccountOrigin?: Account;
   selectedAccountDestiny?: Account;
 
@@ -67,39 +70,45 @@ export class TransferDialogComponent implements OnInit {
     private readonly accountService: AccountService,
     private readonly transactionService: TransactionService,
     private messageService: MessageService
-  ) { }
+  ) {}
 
   ngOnInit() {
-    this.transferForm = new FormGroup({
-      amount: new FormControl<number>(0, {
-        nonNullable: true,
-        validators: [Validators.required],
-      }),
-      description: new FormControl<string | null>(null, {
-        nonNullable: false,
-        validators: [Validators.minLength(3), Validators.maxLength(100)],
-      }),
-      purchaseDate: new FormControl<Date>(new Date(), {
-        nonNullable: true,
-        validators: [Validators.required],
-      }),
-      accountDestinyId: new FormControl<number | null>(null, {
-        nonNullable: true,
-        validators: [Validators.required],
-      }),
-      accountOriginId: new FormControl<number | null>(null, {
-        nonNullable: true,
-        validators: [Validators.required],
-      }),
-    },
-      { validators: differentAccountsValidator() });
+    this.transferForm = new FormGroup(
+      {
+        amount: new FormControl<number>(0, {
+          nonNullable: true,
+          validators: [Validators.required],
+        }),
+        description: new FormControl<string | null>(null, {
+          nonNullable: false,
+          validators: [Validators.minLength(3), Validators.maxLength(100)],
+        }),
+        purchaseDate: new FormControl<Date>(new Date(), {
+          nonNullable: true,
+          validators: [Validators.required],
+        }),
+        accountDestinyId: new FormControl<number | null>(null, {
+          nonNullable: true,
+          validators: [Validators.required],
+        }),
+        accountOriginId: new FormControl<number | null>(null, {
+          nonNullable: true,
+          validators: [Validators.required],
+        }),
+      },
+      { validators: differentAccountsValidator() }
+    );
 
     this.transferForm.get('accountOriginId')?.valueChanges.subscribe((id) => {
-      this.selectedAccountOrigin = this.accounts.find((account) => account.id === id);
+      this.selectedAccountOrigin = this.accounts.find(
+        (account) => account.id === id
+      );
     });
 
     this.transferForm.get('accountDestinyId')?.valueChanges.subscribe((id) => {
-      this.selectedAccountDestiny = this.accounts.find((account) => account.id === id);
+      this.selectedAccountDestiny = this.accounts.find(
+        (account) => account.id === id
+      );
     });
   }
 
@@ -119,7 +128,6 @@ export class TransferDialogComponent implements OnInit {
     this.accountService.getAccounts().subscribe((data) => {
       this.accounts = data;
       this.loadingAccounts = false;
-      console.log(this.accounts);
     });
   }
 

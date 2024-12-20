@@ -78,14 +78,12 @@ export class CreditCardService {
 
   createCreditPurchase(creditPurchase: CreateCreditPurchaseRequest) {
     const suffix = 'CreateCreditPurchase';
-    console.log('enviando', creditPurchase);
     //retorna InfoCreditPurchaseResponse, porém como não terá uso ainda, não irei implementar
     return this.http.post<any>(`${this.hostAddress}/${suffix}`, creditPurchase);
   }
 
   createCreditCard(creditCard: CreateCreditCardRequest) {
     const suffix = 'CreateCreditCard';
-    console.log('enviando', creditCard);
     return this.http.post<any>(`${this.hostAddress}/${suffix}`, creditCard);
   }
 

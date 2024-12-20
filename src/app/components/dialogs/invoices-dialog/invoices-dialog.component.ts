@@ -33,7 +33,7 @@ export class InvoicesDialogComponent implements OnInit {
   ngOnInit(): void {
     this.invoices$ = this.creditCardService.getInvoices(this.data.accountId);
 
-    this.invoices$.subscribe((d) => console.log(d));
+    this.invoices$.subscribe();
   }
 
   closeDialog() {

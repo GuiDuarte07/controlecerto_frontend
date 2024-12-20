@@ -101,9 +101,7 @@ export class TransactionDialogComponent implements OnInit {
     private accountService: AccountService,
     private categoryService: CategoryService,
     private messageService: MessageService
-  ) {
-    console.log(this.data);
-  }
+  ) {}
 
   ngOnInit(): void {
     this.transactionForm = new FormGroup<ITransactionForm>({
@@ -295,7 +293,6 @@ export class TransactionDialogComponent implements OnInit {
     // Puxando as categorias
     this.categoryService.GetCategories(categoryType).subscribe((categories) => {
       this.categories = categories;
-      console.log(categories);
       //this.categories = categories.filter((c) => c.billType === categoryType);
       if (this.data!.newTransaction === false) {
         let id = this.data!.transaction.category!.id;
@@ -361,7 +358,6 @@ export class TransactionDialogComponent implements OnInit {
         creditCardId!,
         categoryId!
       );
-      console.log(creditPurchaseToCreate);
       this.creditCardService
         .createCreditPurchase(creditPurchaseToCreate)
         .subscribe({
@@ -418,7 +414,6 @@ export class TransactionDialogComponent implements OnInit {
               detail: 'Erro na atualização dessa despesa: ' + err.error,
               life: 3000,
             });
-            console.log(err.error);
           },
         });
     }
@@ -433,8 +428,6 @@ export class TransactionDialogComponent implements OnInit {
         ...this.transactionForm.getRawValue(),
         type: this.data.transactionType,
       });
-
-      console.log(transactionToCreate);
 
       this.transactionService.createTransaction(transactionToCreate).subscribe({
         next: () => {
@@ -498,7 +491,6 @@ export class TransactionDialogComponent implements OnInit {
 
   formatedDate() {
     const date = this.transactionForm.value.purchaseDate!;
-    console.log(date);
 
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');

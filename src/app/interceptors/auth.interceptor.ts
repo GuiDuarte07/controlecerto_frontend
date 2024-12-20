@@ -44,7 +44,6 @@ export class AuthInterceptor implements HttpInterceptor {
 
       return this.authService.getNewAccessToken().pipe(
         switchMap((data) => {
-          console.log(data.accessToken);
           this.isRefreshing = false;
           this.refreshTokenSubject.next(data.accessToken);
           this.cookieService.set('AccessToken', data.accessToken);
@@ -52,14 +51,12 @@ export class AuthInterceptor implements HttpInterceptor {
         }),
         catchError((error) => {
           this.isRefreshing = false;
-          console.log('Algum erro aconteceu.', error);
           this.authService.logout();
           this.router.navigate(['/login']);
           return throwError(() => error);
         })
       );
     } else {
-      console.log('Refreshing token');
       return this.refreshTokenSubject.pipe(
         filter((token) => token !== ''),
         take(1),

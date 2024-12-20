@@ -217,8 +217,6 @@ export class CategoryDialogComponent implements OnInit {
         this.categoryForm.value.parentId!
       );
 
-      console.log(createdCategory);
-
       this.categoryService.createCategory(createdCategory).subscribe({
         next: () => {
           this.openSnackBar('Categoria criada com sucesso!');

@@ -226,7 +226,6 @@ export class CreateCreditCardDialogComponent implements OnInit {
         },
         error: (err: HttpErrorResponse) => {
           this.openSnackBar('Houve um erro na criação do cartão: ' + err.error);
-          console.log(err.error);
         },
       });
     } else {
@@ -244,7 +243,6 @@ export class CreateCreditCardDialogComponent implements OnInit {
         },
         error: (err: HttpErrorResponse) => {
           this.openSnackBar('Houve um erro na edição do cartão: ' + err.error);
-          console.log(err.error);
         },
       });
     }

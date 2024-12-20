@@ -10,7 +10,6 @@ import {
   AccountDialogComponent,
   AccountDialogDataType,
 } from '../../components/dialogs/account-dialog/account-dialog.component';
-import { AlertDialogComponent } from '../../components/dialogs/alert-dialog/alert-dialog.component';
 import { RegisterButtonComponent } from '../../components/ui/register-button/register-button.component';
 
 //PrimeNg imports

@@ -32,7 +32,6 @@ export class ConfirmEmailComponent implements OnInit {
         this.loading = false;
       },
       error: (error: HttpErrorResponse) => {
-        console.log(error);
         this.serverErrorMessage = error.error;
         this.loading = false;
       },

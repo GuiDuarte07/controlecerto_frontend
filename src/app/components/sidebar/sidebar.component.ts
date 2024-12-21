@@ -88,6 +88,12 @@ export class SidebarComponent implements OnInit {
     });
   }
 
+  notificationActionPath(action: string | undefined) {
+    if (action) {
+      this.router.navigateByUrl(action);
+    }
+  }
+
   logout() {
     this.authService.logout();
   }

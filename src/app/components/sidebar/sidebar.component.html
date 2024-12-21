@@ -46,8 +46,9 @@
           <ul class="p-0 m-0 flex gap-2 flex-col w-80">
             @for (notification of notifications; track $index) {
             <li
-              [ngClass]="{ '!bg-blue-100': notification.isRead === false }"
+              [ngClass]="{ '!bg-blue-100': notification.isRead === false, 'cursor-pointer border border-solid border-slate-300': notification.actionPath}"
               class="rounded-lg px-2 py-1 bg-slate-100"
+              (click)="notificationActionPath(notification.actionPath)"
             >
               <div class="flex justify-between">
                 <h3 [innerHTML]="notification.title" class="text-base"></h3>

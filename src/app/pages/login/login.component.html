@@ -30,7 +30,7 @@
             <div class="mb-3">
               <label
                 for="email"
-                class="text-slate-500 pb-1 text-sm font-semibold"
+                class="label"
                 >E-mail</label
               >
               <div class="relative">
@@ -44,11 +44,6 @@
                   placeholder="user@email.com"
                   required
                 />
-                <!-- <span
-                  class="material-symbols-outlined text-slate-400 absolute top-1/2 right-2 transform -translate-y-1/2 pointer-events-none"
-                >
-                  mail
-                </span> -->
               </div>
             </div>
             <div
@@ -199,7 +194,7 @@
             </span>
           </div>
           <h2
-            class="text-center text-2xl font-bold text-gray-600 block dark:text-white"
+            class="text-center text-2xl font-bold text-gray-600 block"
           >
             Esqueci minha senha
           </h2>
@@ -215,19 +210,15 @@
             >
             <div class="relative">
               <input
+                pInputText
                 [(ngModel)]="emailToForgotPassword"
                 type="text"
                 id="emailToForgotPassword"
-                class="input"
+                class="w-full"
                 style="padding-right: 2.25rem"
                 placeholder="user@email.com"
                 required
               />
-              <span
-                class="material-symbols-outlined text-slate-400 absolute top-1/2 right-2 transform -translate-y-1/2 pointer-events-none"
-              >
-                mail
-              </span>
             </div>
           </div>
 
@@ -242,7 +233,7 @@
               (click)="sendForgotPasswordEmail()"
               aria-label="Enviar para esse e-mail a solicitação de alteração de senha"
               type="button"
-              class="disabled:bg-slate-400 px-9 py-2 bg-teal-600 text-white font-semibold text-sm rounded-lg flex gap-2 items-center"
+              class="disabled:bg-slate-400 border-0 px-9 py-2 bg-teal-600 text-white font-semibold text-sm rounded-lg flex gap-2 items-center"
             >
               @if(loading) {
               <div class="px-8 py-1">

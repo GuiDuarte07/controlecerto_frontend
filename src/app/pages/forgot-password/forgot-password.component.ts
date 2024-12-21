@@ -11,6 +11,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { passwordsMatchValidator } from '../../validators/passwordsMatchValidator';
+import { PasswordModule } from 'primeng/password';
 
 interface IForgotPasswordForm {
   password: FormControl<string>;
@@ -25,6 +26,7 @@ interface IForgotPasswordForm {
     MatProgressSpinnerModule,
     CommonModule,
     ReactiveFormsModule,
+    PasswordModule,
   ],
   templateUrl: './forgot-password.component.html',
   styleUrl: './forgot-password.component.scss',

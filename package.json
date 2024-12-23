@@ -22,6 +22,7 @@
     "@angular/router": "^17.0.0",
     "@popperjs/core": "^2.11.8",
     "esbuild": "^0.23.1",
+    "marked": "^15.0.4",
     "material-icons": "^1.13.12",
     "ngx-cookie-service": "^17.1.0",
     "primeicons": "^7.0.0",

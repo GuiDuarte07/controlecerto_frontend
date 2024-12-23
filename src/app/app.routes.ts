@@ -15,6 +15,7 @@ import { CreditcardDetailsComponent } from './pages/creditcard-details/creditcar
 import { ConfirmEmailComponent } from './pages/confirm-email/confirm-email.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
+import { ArticlesComponent } from './pages/articles/articles.component';
 
 export const routes: Routes = [
   {
@@ -44,4 +45,5 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'confirm-email/:token', component: ConfirmEmailComponent },
   { path: 'forgot-password/:token', component: ForgotPasswordComponent },
+  { path: 'articles/:title', component: ArticlesComponent },
 ];

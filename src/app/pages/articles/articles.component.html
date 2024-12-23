@@ -1,0 +1,15 @@
+@if(loading) {
+<div
+  class="w-full h-full flex items-center justify-center box-border overflow-hidden"
+>
+  <i class="pi pi-spin pi-spinner text-9xl"></i>
+</div>
+} @else { @if (error) {
+<div class="w-full h-full flex items-center justify-center flex-col">
+  <h2 class="mb-2">Houve um erro 🛠</h2>
+  <p class="">{{ error }}</p>
+</div>
+} @else {
+<div class="max-w-[800px] m-auto p-5" [innerHTML]="htmlContent"></div>
+
+} }

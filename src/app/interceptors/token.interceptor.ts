@@ -7,6 +7,7 @@ import {
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
@@ -16,14 +17,18 @@ export class TokenInterceptor implements HttpInterceptor {
     request: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    const authToken = this.cookieService.get('AccessToken');
+    if (request.url.startsWith(environment.serverConnectionString)) {
+      const authToken = this.cookieService.get('AccessToken');
 
-    if (authToken) {
-      request = request.clone({
-        setHeaders: {
-          Authorization: `Bearer ${authToken}`,
-        },
-      });
+      if (authToken) {
+        request = request.clone({
+          setHeaders: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        });
+      }
+
+      return next.handle(request);
     }
 
     return next.handle(request);

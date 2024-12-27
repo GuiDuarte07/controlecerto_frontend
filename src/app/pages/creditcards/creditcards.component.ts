@@ -1,12 +1,9 @@
 import { Observable } from 'rxjs';
 import { CreditCardService } from './../../services/credit-card.service';
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CreditCardInfo } from '../../models/CreditCardInfo';
 import { CommonModule } from '@angular/common';
-import { SidebarComponent } from '../../components/sidebar/sidebar.component';
-import { MatDialog } from '@angular/material/dialog';
 import { CreateCreditCardDialogComponent } from '../../components/dialogs/create-credit-card-dialog/create-credit-card-dialog.component';
-import { InvoicesDialogComponent } from '../../components/dialogs/invoices-dialog/invoices-dialog.component';
 import { RouterModule } from '@angular/router';
 import { RegisterButtonComponent } from '../../components/ui/register-button/register-button.component';
 
@@ -14,8 +11,8 @@ import { RegisterButtonComponent } from '../../components/ui/register-button/reg
   selector: 'app-creditcards',
   standalone: true,
   imports: [
+    CreateCreditCardDialogComponent,
     CommonModule,
-    SidebarComponent,
     RouterModule,
     RegisterButtonComponent,
   ],
@@ -23,13 +20,13 @@ import { RegisterButtonComponent } from '../../components/ui/register-button/reg
   styleUrl: './creditcards.component.scss',
 })
 export class CreditcardsComponent implements OnInit {
+  @ViewChild('createCreditCardDialog')
+  createCreditCardDialog!: CreateCreditCardDialogComponent;
+
   $creditCards!: Observable<CreditCardInfo[]>;
   day = new Date().getDate();
 
-  constructor(
-    private creditCardService: CreditCardService,
-    public dialog: MatDialog
-  ) {}
+  constructor(private creditCardService: CreditCardService) {}
 
   ngOnInit(): void {
     this.updatedCreditCards();
@@ -39,28 +36,37 @@ export class CreditcardsComponent implements OnInit {
     this.$creditCards = this.creditCardService.getCreditCards();
   }
 
-  openCreditCardDialog() {
-    const dialogRef = this.dialog.open(CreateCreditCardDialogComponent, {
-      data: {
-        newCreditCard: true,
-      },
+  /* openAccountDialog(account?: Account) {
+    let dialogData: AccountDialogDataType;
+
+    if (account) {
+      dialogData = {
+        newAccount: false,
+        account,
+      };
+    } else {
+      dialogData = { newAccount: true };
+    }
+
+    this.createCreditCardDialog.openDialog(dialogData);
+
+    this.createCreditCardDialog.closeEvent.subscribe((success: boolean) => {
+      if ((success as boolean) === true) {
+        this.updatedAccounts();
+      }
     });
-    dialogRef.afterClosed().subscribe((sucess) => {
-      if ((sucess as boolean) === true) {
+  } */
+
+  openCreditCardDialog(data?: CreditCardInfo) {
+    this.createCreditCardDialog.openDialog(data);
+    this.createCreditCardDialog.closeEvent.subscribe((success: boolean) => {
+      if ((success as boolean) === true) {
         this.updatedCreditCards();
       }
     });
   }
 
-  openInvoicesDialog(accountId: number) {
-    this.dialog.open(InvoicesDialogComponent, {
-      data: {
-        accountId,
-      },
-    });
-  }
-
-  formatDateString(dateString: string | Date): string {
+  /* formatDateString(dateString: string | Date): string {
     const date = new Date(dateString);
     const today = new Date();
     const yesterday = new Date(today);
@@ -82,5 +88,5 @@ export class CreditcardsComponent implements OnInit {
         day: 'numeric',
       });
     }
-  }
+  } */
 }

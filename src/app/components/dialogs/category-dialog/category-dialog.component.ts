@@ -10,8 +10,6 @@ import { iconsOptions } from '../../../utils/material_options_icons';
 import { CategoryService } from '../../../services/category.service';
 import { Category } from '../../../models/Category';
 import { CommonModule } from '@angular/common';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatButton } from '@angular/material/button';
 import { UpdateCategoryRequest } from '../../../models/UpdateCategoryRequest';
 import { colorOptions } from '../../../utils/color_options';
 import { DialogModule } from 'primeng/dialog';
@@ -27,6 +25,8 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { DropdownModule } from 'primeng/dropdown';
 import { InfoParentCategoryResponse } from '../../../models/InfoParentCategoryResponse';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 
 export type CategoryDialogDataType =
   | {
@@ -71,7 +71,9 @@ interface ICateogryForm {
     IconFieldModule,
     InputIconModule,
     DropdownModule,
+    ToastModule,
   ],
+  providers: [MessageService],
   templateUrl: './category-dialog.component.html',
   styleUrl: './category-dialog.component.scss',
 })
@@ -119,7 +121,7 @@ export class CategoryDialogComponent implements OnInit {
 
   constructor(
     private categoryService: CategoryService,
-    private snackBar: MatSnackBar
+    private messageService: MessageService
   ) {}
 
   ngOnInit(): void {
@@ -197,15 +199,6 @@ export class CategoryDialogComponent implements OnInit {
     this.closeEvent.emit(success);
   }
 
-  openSnackBar(message: string) {
-    this.snackBar.open(message, undefined, {
-      duration: 3000,
-      horizontalPosition: 'end',
-      verticalPosition: 'bottom',
-      panelClass: ['.snackbar-error'],
-    });
-  }
-
   createNewCategory() {
     if (this.data!.newCategory) {
       const createdCategory = new Category(
@@ -219,12 +212,22 @@ export class CategoryDialogComponent implements OnInit {
 
       this.categoryService.createCategory(createdCategory).subscribe({
         next: () => {
-          this.openSnackBar('Categoria criada com sucesso!');
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Categoria Criada',
+            detail: 'Categoria criada com sucesso!',
+            life: 3000,
+          });
           this.cleanForm();
           this.closeDialog(true);
         },
         error: (err) => {
-          this.openSnackBar('Erro: ' + err.error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: err.error,
+            life: 3000,
+          });
         },
       });
     } else {
@@ -235,12 +238,22 @@ export class CategoryDialogComponent implements OnInit {
 
       this.categoryService.updateCategory(updatedCategory).subscribe({
         next: () => {
-          this.openSnackBar('Categoria editada com sucesso!');
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Categoria Editada',
+            detail: 'Categoria editada com sucesso!',
+            life: 3000,
+          });
           this.cleanForm();
           this.closeDialog(true);
         },
         error: (err) => {
-          this.openSnackBar('Erro: ' + err.error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: err.error,
+            life: 3000,
+          });
         },
       });
     }

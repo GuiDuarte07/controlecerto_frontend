@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { FormaterService } from '../../services/formater.service';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CreditCardService } from '../../services/credit-card.service';
@@ -11,11 +11,14 @@ import { CreateCreditCardDialogComponent } from '../../components/dialogs/create
 @Component({
   selector: 'app-creditcard-details',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, CreateCreditCardDialogComponent],
   templateUrl: './creditcard-details.component.html',
   styleUrl: './creditcard-details.component.scss',
 })
 export class CreditcardDetailsComponent {
+  @ViewChild('createCreditCardDialog')
+  createCreditCardDialog!: CreateCreditCardDialogComponent;
+
   creditCardId!: number;
   creditCard!: CreditCardInfo;
   invoices: InfoInvoiceResponse[] = [];
@@ -35,6 +38,15 @@ export class CreditcardDetailsComponent {
 
     this.updateCreditCard();
     this.updateInvoice();
+  }
+
+  openEditCreditCardDialog() {
+    this.createCreditCardDialog.openDialog(this.creditCard);
+    this.createCreditCardDialog.closeEvent.subscribe((success: boolean) => {
+      if ((success as boolean) === true) {
+        this.updateCreditCard();
+      }
+    });
   }
 
   updateCreditCard(): void {
@@ -59,26 +71,12 @@ export class CreditcardDetailsComponent {
     });
   }
 
-  openCreditCardDialog() {
-    const dialogRef = this.dialog.open(CreateCreditCardDialogComponent, {
-      data: {
-        newCreditCard: false,
-        creditCard: this.creditCard,
-      },
-    });
-    dialogRef.afterClosed().subscribe((sucess) => {
-      if ((sucess as boolean) === true) {
-        this.updateCreditCard();
-      }
-    });
-  }
-
   isActualInvoice(invoice: InfoInvoiceResponse): boolean {
     const today = new Date();
 
     const actualInvoiceDate = new Date();
     actualInvoiceDate.setDate(1);
-    actualInvoiceDate.setHours(0,0,0,0);
+    actualInvoiceDate.setHours(0, 0, 0, 0);
 
     const isAfterOrInClosingDate =
       today.getDate() >= invoice.closingDate.getDate();
@@ -97,19 +95,19 @@ export class CreditcardDetailsComponent {
     actualInvoiceDate.setDate(1);
     actualInvoiceDate.setHours(0, 0, 0, 0);
 
-    if(actualInvoiceDate.getFullYear() > invoice.invoiceDate.getFullYear())
+    if (actualInvoiceDate.getFullYear() > invoice.invoiceDate.getFullYear())
       return true;
-    else if (actualInvoiceDate.getFullYear() < invoice.invoiceDate.getFullYear())
+    else if (
+      actualInvoiceDate.getFullYear() < invoice.invoiceDate.getFullYear()
+    )
       return false;
 
-    if(actualInvoiceDate.getMonth() > invoice.invoiceDate.getMonth())
+    if (actualInvoiceDate.getMonth() > invoice.invoiceDate.getMonth())
       return true;
     else if (actualInvoiceDate.getMonth() < invoice.invoiceDate.getMonth())
       return false;
 
-
-    if (today.getDate() >= invoice.closingDate.getDate())
-      return true;
+    if (today.getDate() >= invoice.closingDate.getDate()) return true;
     return false;
   }
 }

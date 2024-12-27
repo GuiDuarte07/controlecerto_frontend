@@ -29,7 +29,7 @@
 
     <!-- EDITAR BTN -->
     <div class="px-4">
-      <button (click)="openCreditCardDialog()" type="button" aria-label="editar cartão" class="border-none bg-inherit flex p-2">
+      <button (click)="openEditCreditCardDialog()" type="button" aria-label="editar cartão" class="border-none bg-inherit flex p-2">
         <span class="material-symbols-outlined text-slate-800"> edit_square </span>
       </button>
     </div>
@@ -143,3 +143,6 @@
     
   </div>
 </section>
+
+
+<app-create-credit-card-dialog #createCreditCardDialog></app-create-credit-card-dialog>

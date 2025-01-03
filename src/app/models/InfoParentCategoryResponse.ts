@@ -7,6 +7,7 @@ export class InfoParentCategoryResponse {
   icon: string;
   billType: BillTypeEnum;
   color: string;
+  limit: number;
   subCategories: Category[];
 
   constructor(
@@ -15,6 +16,7 @@ export class InfoParentCategoryResponse {
     icon: string,
     billType: BillTypeEnum,
     color: string,
+    limit: number,
     subCategories: Category[]
   ) {
     this.id = id;
@@ -22,6 +24,7 @@ export class InfoParentCategoryResponse {
     this.icon = icon;
     this.billType = billType;
     this.color = color;
+    this.limit = limit;
     this.subCategories = subCategories;
   }
 }

@@ -70,9 +70,16 @@
         </span>
       </div>
 
-      <p class="text-sm text-slate-800 group-hover:font-medium">
+      <p class="text-sm text-slate-800 group-hover:font-bold font-medium">
         {{ category.name }}
       </p>
+
+      @if (category.limit && category.limit > 0) {
+      <p-tag
+        [value]="(category.limit! | currency : 'BRL' : 'symbol') || ''"
+        severity="success"
+      />
+      }
     </button>
   </li>
 </ng-template>
@@ -101,9 +108,42 @@
     </div>
 
     <div class="flex flex-col gap-3">
-      <div class="">
-        <p class="">Limite mensal <span>será implementado</span></p>
-        <p class="">Total gasto esse mês <span>será implementado</span></p>
+      <div class="grid-cols-2 grid grid-rows-3">
+        <p class="my-auto">Limite Mensal</p>
+        <div class="flex items-center gap-4">
+          <span class="font-medium text-blue-600 font-[Inter]">{{
+            selectedCategoryLimitInfo?.actualLimit | currency : "BRL" : "symbol"
+          }}</span>
+          <p-button ngClass="text-sm !p-0 !m-0" class="text-sm !p-0 !m-0" icon="pi pi-pen-to-square"></p-button>
+        </div>
+
+        <p class="m-0">Limite Disponível Esse Mês</p>
+        <span
+          *ngIf="selectedCategoryLimitInfo"
+          [ngClass]="{
+            'text-red-600': selectedCategoryLimitInfo.availableMonthLimit < 0,
+            'text-green-600': selectedCategoryLimitInfo.availableMonthLimit > 0
+          }"
+          class="font-medium font-[Inter]"
+          >{{
+            selectedCategoryLimitInfo.availableMonthLimit
+              | currency : "BRL" : "symbol"
+          }}</span
+        >
+
+        <p class="m-0">Limite Acumulado</p>
+        <span
+          *ngIf="selectedCategoryLimitInfo"
+          [ngClass]="{
+            'text-red-600': selectedCategoryLimitInfo.accumulatedLimit < 0,
+            'text-green-600': selectedCategoryLimitInfo.accumulatedLimit > 0
+          }"
+          class="font-medium font-[Inter]"
+          >{{
+            selectedCategoryLimitInfo.accumulatedLimit
+              | currency : "BRL" : "symbol"
+          }}</span
+        >
       </div>
       <p-buttonGroup>
         <p-button
@@ -117,28 +157,33 @@
           (onClick)="openCategoryDialog(selectedCategory!, true)"
           [disabled]="getSelectedCategoryParent()"
         />
-        <p-button label="Deletar" icon="pi pi-trash" severity="danger" (click)="deleteCategory($event)" />
+        <p-button
+          label="Deletar"
+          icon="pi pi-trash"
+          severity="danger"
+          (click)="deleteCategory($event)"
+        />
       </p-buttonGroup>
     </div>
 
     <div class="max-w-full">
       @if(getSelectedCategoryParent() !== null) {
-        <p class="">Categoria Pai</p>
-        <div class="w-full border-0 bg-transparent flex items-center gap-4">
-          <div
-            [ngStyle]="{ 'background-color': getSelectedCategoryParent()?.color }"
-            class="text-white rounded-full w-6 h-6 flex items-center justify-center"
-          >
-            <span class="material-symbols-outlined !text-base">
-              {{ getSelectedCategoryParent()?.icon }}
-            </span>
-          </div>
-
-          <p class="text-sm text-slate-800">
-            {{ getSelectedCategoryParent()?.name }}
-          </p>
+      <p class="">Categoria Pai</p>
+      <div class="w-full border-0 bg-transparent flex items-center gap-4">
+        <div
+          [ngStyle]="{ 'background-color': getSelectedCategoryParent()?.color }"
+          class="text-white rounded-full w-6 h-6 flex items-center justify-center"
+        >
+          <span class="material-symbols-outlined !text-base">
+            {{ getSelectedCategoryParent()?.icon }}
+          </span>
         </div>
-       } @else {
+
+        <p class="text-sm text-slate-800">
+          {{ getSelectedCategoryParent()?.name }}
+        </p>
+      </div>
+      } @else {
       <p class="">Sub-Categorias</p>
       <ul class="p-0 m-0 ml-2 flex flex-col gap-2">
         @for(subCategory of listSubCategories(selectedCategory); track

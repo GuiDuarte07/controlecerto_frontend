@@ -6,6 +6,7 @@ import { UpdateCategoryRequest } from '../models/UpdateCategoryRequest';
 import { BillTypeEnum } from '../enums/BillTypeEnum';
 import { serverConnectionString } from '../config/server';
 import { InfoParentCategoryResponse } from '../models/InfoParentCategoryResponse';
+import { InfoLimitResponse } from '../models/InfoLimitResponse';
 
 @Injectable({
   providedIn: 'root',
@@ -32,6 +33,7 @@ export class CategoryService {
                 item.icon,
                 item.billType,
                 item.color,
+                item.limit,
                 item.subCategories.map(
                   (item_sb) =>
                     new Category(
@@ -62,6 +64,13 @@ export class CategoryService {
   deleteCategory(categoryId: number) {
     const suffix = 'DeleteCategory';
     return this.http.delete<void>(
+      `${this.hostAddress}/${suffix}/${categoryId}`
+    );
+  }
+
+  getLimitInfo(categoryId: number) {
+    const suffix = 'GetLimitInfo';
+    return this.http.get<InfoLimitResponse>(
       `${this.hostAddress}/${suffix}/${categoryId}`
     );
   }

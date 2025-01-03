@@ -123,7 +123,9 @@
 
       <!-- CATEGORIA PAI -->
       <div class="w-full">
-        <label for="label" class="label" for="categories">Sub-Categoria de</label>
+        <label for="label" class="label" for="categories"
+          >Sub-Categoria de</label
+        >
         <p-dropdown
           id="categories"
           [options]="categories || []"
@@ -183,7 +185,22 @@
         </p-dropdown>
       </div>
 
-
+      <!-- LIMITE -->
+      @if(data.newCategory) {
+        <div class="w-full">
+          <p class="label">Limite mensal</p>
+          <input
+            pInputText
+            formControlName="limit"
+            appCurrencyMask
+            prefix="R$ "
+            thousandSeparator="."
+            id="amount"
+            class="block font-medium text-blue-500"
+            required
+          />
+        </div>
+      }
     </form>
   </ng-template>
 

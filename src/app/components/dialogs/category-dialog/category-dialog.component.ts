@@ -27,6 +27,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InfoParentCategoryResponse } from '../../../models/InfoParentCategoryResponse';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import { CurrencyMaskDirective } from '../../../directive/currency-mask.directive';
 
 export type CategoryDialogDataType =
   | {
@@ -50,6 +51,7 @@ interface ICateogryForm {
   icon: FormControl<string>;
   billType: FormControl<BillTypeEnum>;
   color: FormControl<string>;
+  limit: FormControl<number>;
   parentId: FormControl<number | null>;
 }
 
@@ -57,6 +59,7 @@ interface ICateogryForm {
   selector: 'app-category-dialog',
   standalone: true,
   imports: [
+    CurrencyMaskDirective,
     CommonModule,
     ReactiveFormsModule,
     DialogModule,
@@ -73,31 +76,11 @@ interface ICateogryForm {
     DropdownModule,
     ToastModule,
   ],
-  providers: [MessageService],
+  providers: [MessageService, CurrencyMaskDirective],
   templateUrl: './category-dialog.component.html',
   styleUrl: './category-dialog.component.scss',
 })
 export class CategoryDialogComponent implements OnInit {
-  members = [
-    {
-      name: 'Amy Elsner',
-      image: 'amyelsner.png',
-      email: 'amy@email.com',
-      role: 'Owner',
-    },
-    {
-      name: 'Bernardo Dominic',
-      image: 'bernardodominic.png',
-      email: 'bernardo@email.com',
-      role: 'Editor',
-    },
-    {
-      name: 'Ioni Bowcher',
-      image: 'ionibowcher.png',
-      email: 'ioni@email.com',
-      role: 'Viewer',
-    },
-  ];
   categoryForm!: FormGroup<ICateogryForm>;
 
   data: CategoryDialogDataType | null = null;
@@ -145,6 +128,10 @@ export class CategoryDialogComponent implements OnInit {
       color: new FormControl<string>(this.defaultColors[0], {
         nonNullable: true,
         validators: [Validators.required],
+      }),
+      limit: new FormControl<number>(0, {
+        nonNullable: true,
+        validators: [Validators.min(0)],
       }),
       parentId: new FormControl<number | null>(null, {
         nonNullable: false,
@@ -207,6 +194,9 @@ export class CategoryDialogComponent implements OnInit {
         this.categoryForm.value.icon!,
         this.categoryForm.value.billType!,
         this.categoryForm.value.color!,
+        this.categoryForm.value.limit! > 0
+          ? this.categoryForm.value.limit
+          : undefined,
         this.categoryForm.value.parentId!
       );
 

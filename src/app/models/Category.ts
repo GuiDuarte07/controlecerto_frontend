@@ -6,6 +6,7 @@ export class Category {
   icon: string;
   billType: BillTypeEnum;
   color: string;
+  limit?: number;
   parentId?: number;
 
   constructor(
@@ -14,6 +15,7 @@ export class Category {
     icon: string,
     billType: BillTypeEnum,
     color: string,
+    limit?: number,
     parentId?: number
   ) {
     this.id = id;
@@ -21,6 +23,7 @@ export class Category {
     this.icon = icon;
     this.billType = billType;
     this.color = color;
+    this.limit = limit;
     this.parentId = parentId;
   }
 }

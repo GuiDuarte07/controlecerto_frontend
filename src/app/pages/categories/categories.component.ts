@@ -1,15 +1,7 @@
 import { Category } from './../../models/Category';
-import {
-  AfterViewInit,
-  Component,
-  OnInit,
-  signal,
-  ViewChild,
-} from '@angular/core';
+import { Component, OnInit, signal, ViewChild } from '@angular/core';
 import { CategoryService } from '../../services/category.service';
-import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { BillTypeEnum } from '../../enums/BillTypeEnum';
@@ -20,16 +12,17 @@ import {
 import { InfoParentCategoryResponse } from '../../models/InfoParentCategoryResponse';
 import { SidebarModule } from 'primeng/sidebar';
 import { ButtonModule } from 'primeng/button';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { StepperModule } from 'primeng/stepper';
 import { RegisterButtonComponent } from '../../components/ui/register-button/register-button.component';
 
 import { ButtonGroupModule } from 'primeng/buttongroup';
 import { OrderListModule } from 'primeng/orderlist';
-import { ConfirmDialog, ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { HttpErrorResponse } from '@angular/common/http';
+import { TagModule } from 'primeng/tag';
+import { InfoLimitResponse } from '../../models/InfoLimitResponse';
 
 @Component({
   selector: 'app-categories',
@@ -48,6 +41,7 @@ import { HttpErrorResponse } from '@angular/common/http';
     CategoryDialogComponent,
     ConfirmDialogModule,
     ToastModule,
+    TagModule,
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './categories.component.html',
@@ -61,7 +55,11 @@ export class CategoriesComponent implements OnInit {
   categoriesType: 'expense' | 'income' = 'expense';
 
   categorySideBarOpen = false;
+
   selectedCategory: Category | InfoParentCategoryResponse | null = null;
+
+  loadingLimitInfo: boolean = true;
+  selectedCategoryLimitInfo: InfoLimitResponse | null = null;
 
   @ViewChild('categoryDialog')
   categoryDialog!: CategoryDialogComponent;
@@ -168,6 +166,14 @@ export class CategoriesComponent implements OnInit {
   toggleSideBarCategory(category: Category | InfoParentCategoryResponse) {
     this.categorySideBarOpen = !this.categorySideBarOpen;
     this.selectedCategory = category;
+
+    this.loadingLimitInfo = true;
+    this.categoryService.getLimitInfo(this.selectedCategory.id!).subscribe({
+      next: (info) => {
+        this.selectedCategoryLimitInfo = info;
+        this.loadingLimitInfo = false;
+      },
+    });
   }
 
   getSelectedCategoryParent(): InfoParentCategoryResponse | null {

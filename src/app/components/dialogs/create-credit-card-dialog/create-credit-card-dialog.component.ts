@@ -120,7 +120,6 @@ export class CreateCreditCardDialogComponent implements OnInit {
   }
 
   openDialog(data?: CreditCardInfo) {
-    console.log(data);
     this.data = data;
     this.visible = true;
 

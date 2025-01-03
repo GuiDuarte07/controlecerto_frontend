@@ -156,6 +156,7 @@ export class CategoryDialogComponent implements OnInit {
         color: this.data.newCategory
           ? this.defaultColors[0]
           : this.data.category.color,
+        parentId: this.data.category.parentId,
       });
     } else {
       if (this.data.parentCategory) {

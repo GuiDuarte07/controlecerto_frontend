@@ -61,11 +61,15 @@ import {
     CheckboxModule,
     TransactionDialogComponent,
     TransferDialogComponent,
+    InvoicePaymentDialogComponent,
   ],
   templateUrl: './transactions.component.html',
   styleUrl: './transactions.component.scss',
 })
 export class TransactionsComponent implements OnInit {
+  @ViewChild('invoicePaymentDialog')
+  invoicePaymentDialog!: InvoicePaymentDialogComponent;
+
   @ViewChild('transactionDialog')
   transactionDialog!: TransactionDialogComponent;
 
@@ -337,15 +341,10 @@ export class TransactionsComponent implements OnInit {
     this.transferDialog.openDialog();
   }
 
-  openPaymentInvoiceDialog(invoice: InfoInvoiceResponse): void {
-    const dialogRef = this.dialog.open(InvoicePaymentDialogComponent, {
-      data: {
-        invoice,
-      },
-    });
-
-    dialogRef.afterClosed().subscribe((sucess) => {
-      if ((sucess as boolean) === true) {
+  openPaymentInvoiceDialog(invoice: InfoInvoiceResponse) {
+    this.invoicePaymentDialog.openDialog({ invoice });
+    this.invoicePaymentDialog.closeEvent.subscribe((success: boolean) => {
+      if (success === true) {
         this.updateTransactions();
       }
     });

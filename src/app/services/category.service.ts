@@ -42,6 +42,7 @@ export class CategoryService {
                       item_sb.icon,
                       item_sb.billType,
                       item_sb.color,
+                      item_sb.limit,
                       item_sb.parentId
                     )
                 )

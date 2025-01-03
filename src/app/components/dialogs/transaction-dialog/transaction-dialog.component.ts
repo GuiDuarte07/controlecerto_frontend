@@ -32,6 +32,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import { InfoLimitResponse } from '../../../models/InfoLimitResponse';
 
 export type TransactionDialogDataType =
   | { newTransaction: true; transactionType: TransactionTypeEnum }
@@ -91,6 +92,7 @@ export class TransactionDialogComponent implements OnInit {
 
   categories: Category[] = [];
   selectedCategory?: Category;
+  limitInfo?: InfoLimitResponse;
 
   installments!: number;
   amountPerInstallment!: number;
@@ -155,6 +157,9 @@ export class TransactionDialogComponent implements OnInit {
       this.selectedCategory = this.categories.find(
         (category) => category.id === id
       );
+      this.categoryService
+        .getLimitInfo(id)
+        .subscribe((info) => (this.limitInfo = info));
     });
 
     this.transactionForm.get('accountId')?.valueChanges.subscribe((id) => {

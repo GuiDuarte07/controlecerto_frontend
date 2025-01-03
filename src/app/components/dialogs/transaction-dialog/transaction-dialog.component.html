@@ -55,9 +55,9 @@
         <div class="md:w-6/12 w-4/12">
           <label class="label" for="installment">Parcelas</label>
           <p-inputNumber
-            mode="decimal" 
+            mode="decimal"
             id="installment"
-            [min]="0" 
+            [min]="0"
             [max]="100"
             aria-describedby="installments-help"
             [(ngModel)]="installments"
@@ -87,6 +87,7 @@
         <!-- CATEGORY SELECTION -->
         <div class="w-full">
           <p class="label" for="categories">Categoria</p>
+
           <p-dropdown
             id="categories"
             [options]="categories"
@@ -144,6 +145,18 @@
               </div>
             </ng-template>
           </p-dropdown>
+
+          @if (selectedCategory && limitInfo && limitInfo.actualLimit > 0) {
+          <p
+            [ngClass]="{
+              '!text-red-500': limitInfo.accumulatedLimit < 0
+            }"
+            class="text-green-500 text-xs font-medium"
+          >
+            Limite:
+            {{ limitInfo.accumulatedLimit | currency : "BRL" : "symbol" }}
+          </p>
+          }
         </div>
 
         <!-- ACCOUNT/CREDIT CARD SELECTION -->
@@ -352,6 +365,5 @@
 </p-dialog>
 
 }
-
 
 <p-toast />

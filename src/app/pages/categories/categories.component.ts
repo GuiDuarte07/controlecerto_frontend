@@ -1,5 +1,5 @@
 import { Category } from './../../models/Category';
-import { Component, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, OnInit, signal, viewChild, ViewChild } from '@angular/core';
 import { CategoryService } from '../../services/category.service';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
@@ -23,6 +23,7 @@ import { ToastModule } from 'primeng/toast';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TagModule } from 'primeng/tag';
 import { InfoLimitResponse } from '../../models/InfoLimitResponse';
+import { ChangeCategoryLimitDialogComponent } from '../../components/dialogs/change-category-limit-dialog/change-category-limit-dialog.component';
 
 @Component({
   selector: 'app-categories',
@@ -42,6 +43,7 @@ import { InfoLimitResponse } from '../../models/InfoLimitResponse';
     ConfirmDialogModule,
     ToastModule,
     TagModule,
+    ChangeCategoryLimitDialogComponent,
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './categories.component.html',
@@ -63,6 +65,9 @@ export class CategoriesComponent implements OnInit {
 
   @ViewChild('categoryDialog')
   categoryDialog!: CategoryDialogComponent;
+
+  @ViewChild('categoryLimitDialog')
+  categoryLimitDialog!: ChangeCategoryLimitDialogComponent;
 
   constructor(
     private categoryService: CategoryService,
@@ -103,6 +108,21 @@ export class CategoriesComponent implements OnInit {
     this.categoryDialog.closeEvent.subscribe((success: boolean) => {
       if ((success as boolean) === true) {
         this.updateCategories();
+      }
+    });
+  }
+
+  openEditLimitModal(category?: InfoParentCategoryResponse | Category | null) {
+    if (!category) return;
+
+    this.categoryLimitDialog.openDialog(category);
+
+    this.categoryLimitDialog.closeEvent.subscribe(({ success, newLimit }) => {
+      if (success && this.selectedCategory) {
+        this.selectedCategory.limit = newLimit ?? undefined;
+        this.categoryService
+          .getLimitInfo(this.selectedCategory.id!)
+          .subscribe((res) => (this.selectedCategoryLimitInfo = res));
       }
     });
   }

@@ -114,7 +114,7 @@
           <span class="font-medium text-blue-600 font-[Inter]">{{
             selectedCategoryLimitInfo?.actualLimit | currency : "BRL" : "symbol"
           }}</span>
-          <p-button ngClass="text-sm !p-0 !m-0" class="text-sm !p-0 !m-0" icon="pi pi-pen-to-square"></p-button>
+          <p-button (onClick)="openEditLimitModal(selectedCategory)" ngClass="text-sm !p-0 !m-0" class="text-sm !p-0 !m-0" icon="pi pi-pen-to-square"></p-button>
         </div>
 
         <p class="m-0">Limite Disponível Esse Mês</p>
@@ -212,3 +212,4 @@
 <p-toast />
 <p-confirmDialog></p-confirmDialog>
 <app-category-dialog #categoryDialog></app-category-dialog>
+<app-change-category-limit-dialog #categoryLimitDialog></app-change-category-limit-dialog>

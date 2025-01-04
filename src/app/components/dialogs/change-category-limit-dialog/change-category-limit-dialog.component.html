@@ -1,0 +1,52 @@
+@if(data) {
+  <p-dialog
+    header="Atualizar Limite Mensal"
+    [modal]="true"
+    [(visible)]="visible"
+    [style]="{ width: '40rem' }"
+    [dismissableMask]="true"
+    (onHide)="closeDialog(false, null)"
+  >
+    <ng-template pTemplate="body" class="bg-slate-300">
+      <form [formGroup]="limitForm" class="m-4 flex flex-col gap-2">
+        <h3 class="m-0 p-0">Categoria</h3>
+        <p class="m-0 p-0 mx-2 text-slate-600 font-medium text-lg">{{data.name}}</p>
+
+        <div class="">
+          <input
+            pInputText
+            formControlName="limit"
+            appCurrencyMask
+            prefix="R$ "
+            thousandSeparator="."
+            id="amount"
+            class="block font-medium text-blue-600"
+            required
+          />
+        </div>
+      </form>
+    </ng-template>
+  
+    <ng-template pTemplate="footer">
+      <button
+        pButton
+        label="Fechar"
+        icon="pi pi-times"
+        size="small"
+        severity="danger"
+        (click)="closeDialog(false, null)"
+      ></button>
+      <button
+        pButton
+        label="Atualizar"
+        icon="pi pi-check"
+        size="small"
+        severity="primary"
+        (click)="changeLimit()"
+      ></button>
+    </ng-template>
+  </p-dialog>
+  
+  }
+  
+  <p-toast></p-toast>

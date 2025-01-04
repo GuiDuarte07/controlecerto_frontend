@@ -16,10 +16,10 @@ export class CategoryService {
   constructor(private http: HttpClient) {}
 
   GetCategories(type?: BillTypeEnum) {
-    let suffix = 'GetAllCategories';
+    let route = 'GetAllCategories';
     return this.http
       .get<InfoParentCategoryResponse[]>(
-        `${this.hostAddress}/${suffix}${
+        `${this.hostAddress}/${route}${
           typeof type !== 'undefined' ? '/' + type : ''
         }`
       )
@@ -53,26 +53,32 @@ export class CategoryService {
   }
 
   createCategory(category: Category) {
-    const suffix = 'CreateCategory';
-    return this.http.post<Category>(`${this.hostAddress}/${suffix}`, category);
+    const route = 'CreateCategory';
+    return this.http.post<Category>(`${this.hostAddress}/${route}`, category);
   }
 
   updateCategory(category: UpdateCategoryRequest) {
-    const suffix = 'UpdateCategory';
-    return this.http.patch<Category>(`${this.hostAddress}/${suffix}`, category);
+    const route = 'UpdateCategory';
+    return this.http.patch<Category>(`${this.hostAddress}/${route}`, category);
   }
 
   deleteCategory(categoryId: number) {
-    const suffix = 'DeleteCategory';
-    return this.http.delete<void>(
-      `${this.hostAddress}/${suffix}/${categoryId}`
-    );
+    const route = 'DeleteCategory';
+    return this.http.delete<void>(`${this.hostAddress}/${route}/${categoryId}`);
   }
 
   getLimitInfo(categoryId: number) {
-    const suffix = 'GetLimitInfo';
+    const route = 'GetLimitInfo';
     return this.http.get<InfoLimitResponse>(
-      `${this.hostAddress}/${suffix}/${categoryId}`
+      `${this.hostAddress}/${route}/${categoryId}`
     );
+  }
+
+  updateCategoryLimit(categoryId: number, limit: number) {
+    const route = 'UpdateCategoryLimit';
+    return this.http.patch<Category>(`${this.hostAddress}/${route}`, {
+      categoryId: categoryId,
+      amount: limit,
+    });
   }
 }

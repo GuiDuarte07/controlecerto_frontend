@@ -1,7 +1,7 @@
 import { CreditCardService } from './../../../services/credit-card.service';
 import { AccountService } from './../../../services/account.service';
 import { TransactionService } from './../../../services/transaction.service';
-import { Component, EventEmitter, OnInit } from '@angular/core';
+import { Component, CSP_NONCE, EventEmitter, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -33,6 +33,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { InfoLimitResponse } from '../../../models/InfoLimitResponse';
+import { InfoParentCategoryResponse } from '../../../models/InfoParentCategoryResponse';
 
 export type TransactionDialogDataType =
   | { newTransaction: true; transactionType: TransactionTypeEnum }
@@ -90,8 +91,8 @@ export class TransactionDialogComponent implements OnInit {
   selectedAccount?: Account;
   selectedCreditCard?: CreditCardInfo;
 
-  categories: Category[] = [];
-  selectedCategory?: Category;
+  categories: InfoParentCategoryResponse[] = [];
+  selectedCategory?: InfoParentCategoryResponse;
   limitInfo?: InfoLimitResponse;
 
   installments!: number;
@@ -154,7 +155,9 @@ export class TransactionDialogComponent implements OnInit {
     });
 
     this.transactionForm.get('categoryId')?.valueChanges.subscribe((id) => {
-      this.selectedCategory = this.categories.find(
+      if (id === 0) return;
+
+      this.selectedCategory = this.transformCategories().find(
         (category) => category.id === id
       );
       this.categoryService
@@ -217,6 +220,34 @@ export class TransactionDialogComponent implements OnInit {
     this.updateCategories();
 
     this.updateCreditCards();
+  }
+
+  transformCategories(): any[] {
+    const result: any[] = [];
+
+    this.categories.forEach((parent) => {
+      // Adiciona o pai na lista
+      result.push({
+        id: parent.id,
+        name: parent.name,
+        icon: parent.icon,
+        color: parent.color,
+        isParent: true,
+      });
+
+      // Adiciona as subcategorias com o formato nome_pai -> nome_filha
+      parent.subCategories.forEach((child) => {
+        result.push({
+          id: child.id,
+          name: `${child.name} <- ${parent.name}`,
+          icon: child.icon,
+          color: child.color,
+          isParent: false,
+        });
+      });
+    });
+
+    return result;
   }
 
   closeDialog(success: boolean) {
@@ -321,8 +352,10 @@ export class TransactionDialogComponent implements OnInit {
       this.transactionForm.value.amount! / this.installments;
   }
 
-  changeSelectedItem(item: Category | Account | CreditCardInfo) {
-    if (item instanceof Category) {
+  changeSelectedItem(
+    item: InfoParentCategoryResponse | Account | CreditCardInfo
+  ) {
+    if (item instanceof InfoParentCategoryResponse) {
       this.selectedCategory = item;
       this.transactionForm.patchValue({ categoryId: item.id });
     } else if (item instanceof Account) {
@@ -492,42 +525,5 @@ export class TransactionDialogComponent implements OnInit {
 
   cleanForm() {
     this.transactionForm.reset();
-  }
-
-  formatedDate() {
-    const date = this.transactionForm.value.purchaseDate!;
-
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = String(date.getFullYear());
-
-    // Formata a data como "dd/mm/yyyy"
-    return `${day}/${month}/${year}`;
-  }
-
-  /* Criar nova conta ou cartão */
-  openAccountDialog() {
-    /* const dialogRef = this.dialog.open(AccountDialogComponent, {
-      panelClass: 'dialog-responsive',
-      data: { newAccount: true },
-    });
-    dialogRef.afterClosed().subscribe((sucess) => {
-      if ((sucess as boolean) === true) {
-        this.updateAccounts();
-      }
-    }); */
-  }
-
-  openCreditCardDialog() {
-    /* const dialogRef = this.dialog.open(CreateCreditCardDialogComponent, {
-      data: {
-        newCreditCard: true,
-      },
-    });
-    dialogRef.afterClosed().subscribe((sucess) => {
-      if ((sucess as boolean) === true) {
-        this.updateCreditCards();
-      }
-    }); */
   }
 }

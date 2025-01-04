@@ -1,15 +1,6 @@
-export class InfoLimitResponse {
+export interface InfoLimitResponse {
+  isParentLimit: boolean;
   actualLimit: number;
   availableMonthLimit: number;
   accumulatedLimit: number;
-
-  constructor(
-    actualLimit: number,
-    availableMonthLimit: number,
-    accumulatedLimit: number
-  ) {
-    this.actualLimit = actualLimit;
-    this.availableMonthLimit = availableMonthLimit;
-    this.accumulatedLimit = accumulatedLimit;
-  }
 }

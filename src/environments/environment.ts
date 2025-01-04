@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  serverConnectionString: 'https://controlecerto.online/api',
+  serverConnectionString: 'https://api.controlecerto.online/api',
 };

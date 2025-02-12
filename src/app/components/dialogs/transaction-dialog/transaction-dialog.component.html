@@ -52,19 +52,20 @@
       <!-- SECOND COLUMN (CREDIT CARD) INSTALLMENT INPUT TO CREDIT -->
       @if(data.transactionType === 2){
       <div class="flex items-center gap-4">
-        <div class="md:w-6/12 w-4/12">
+        <div class="md:w-6/12 w-4/12 flex flex-col">
           <label class="label" for="installment">Parcelas</label>
           <p-inputNumber
             mode="decimal"
             id="installment"
-            [min]="0"
-            [max]="100"
+            [min]="1"
+            [max]="30"
             aria-describedby="installments-help"
             [(ngModel)]="installments"
             [ngModelOptions]="{ standalone: true }"
             class="w-full"
             required
             styleClass="w-full"
+            inputStyleClass="w-full"
           />
         </div>
 

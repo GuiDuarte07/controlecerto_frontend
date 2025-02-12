@@ -95,8 +95,17 @@ export class TransactionDialogComponent implements OnInit {
   selectedCategory?: InfoParentCategoryResponse;
   limitInfo?: InfoLimitResponse;
 
-  installments!: number;
+  private _installments!: number;
   amountPerInstallment!: number;
+
+  get installments(): number {
+    return this._installments;
+  }
+
+  set installments(value: number) {
+    this._installments = value;
+    this.changeAmountPerInstallment();
+  }
 
   constructor(
     private transactionService: TransactionService,
@@ -174,6 +183,8 @@ export class TransactionDialogComponent implements OnInit {
         (creditCard) => creditCard.id === id
       );
     });
+
+    this.transactionForm.get('');
   }
 
   openDialog(data: TransactionDialogDataType) {

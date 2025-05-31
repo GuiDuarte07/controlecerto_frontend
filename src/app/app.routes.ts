@@ -16,8 +16,10 @@ import { ConfirmEmailComponent } from './pages/confirm-email/confirm-email.compo
 import { ProfileComponent } from './pages/profile/profile.component';
 import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
 import { ArticlesComponent } from './pages/articles/articles.component';
+import { DefaultComponent } from './pages/default/default.component';
 
 export const routes: Routes = [
+  { path: '', component: DefaultComponent },
   {
     path: '',
     canActivate: [AuthGuard],
@@ -38,7 +40,7 @@ export const routes: Routes = [
           { path: 'creditcards/:id', component: CreditcardDetailsComponent },
         ],
       },
-      { path: '', redirectTo: '/home', pathMatch: 'full' },
+      /* { path: '', redirectTo: '/home', pathMatch: 'full' }, */
     ],
   },
   { path: 'login', component: LoginComponent },

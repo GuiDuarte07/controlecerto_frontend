@@ -1,7 +1,39 @@
 <main>
-  <header class="pb-8 bg-teal-50">Controle certo</header>
+  <header class="bg-teal-50 shadow-sm">
+    <div class="max-w-[1300px] mx-auto px-4 py-4">
+      <div class="flex items-center justify-between">
+        <!-- Logo/Nome do Site -->
+        <div class="flex items-center">
+          <h1 class="text-3xl font-bold text-teal-700 tracking-wide">
+            Controle Certo
+          </h1>
+        </div>
 
-  <div id="principal-container" class="w-full flex justify-center bg-teal-50 py-4">
+        <!-- Botões de Ação -->
+        <div class="flex items-center gap-3">
+          <p-button
+            label="Login"
+            severity="secondary"
+            [outlined]="true"
+            size="small"
+            routerLink="/login"
+            class="text-teal-700 border-teal-700 hover:bg-teal-50">
+          </p-button>
+          <p-button
+            label="Cadastrar"
+            severity="success"
+            size="small"
+            routerLink="/register">
+          </p-button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div
+    id="principal-container"
+    class="w-full flex justify-center bg-teal-50 py-4"
+  >
     <div id="principal" class="grid grid-cols-2 py-4 w-full md:max-w-[1300px]">
       <div
         id="use_controle-certo"
@@ -21,6 +53,7 @@
 
         <button
           class="py-2 px-5 m-0 border-0 bg-teal-500 shadow flex items-center gap-3 rounded-lg"
+          routerLink="/home"
         >
           <span class="text-white text-lg">Entrar agora</span>
           <i class="pi pi-arrow-right text-lg text-white"></i>
@@ -52,11 +85,187 @@
       </div>
 
       <div id="images_controle-certo" class="h-full">
-        <img src="assets/principal.png" alt="Imagem de Controle certo">
-
+        <img src="assets/principal.png" alt="Imagem de Controle certo" />
       </div>
     </div>
   </div>
 
-  
+  <!-- Seção Sobre o Site -->
+  <section class="flex justify-center w-full bg-white py-16">
+    <div class="max-w-[1300px] px-4">
+      <div class="text-center mb-12">
+        <h2 class="text-4xl font-bold text-slate-900 mb-4">Sobre o Controle Certo</h2>
+        <p class="text-xl text-slate-600 max-w-3xl mx-auto">
+          Controle Certo é um aplicativo desenvolvido para gerenciar os gastos
+          dos usuários. Onde será possível cadastrar bancos, gastos, receitas e despesas
+          de cartão, sendo possível também dividi-los em categorias, para melhor
+          gestão do usuário, acompanhe o quanto você está gastando ou recebendo
+          em cada mês.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Seção de Funcionalidades -->
+  <section class="flex justify-center w-full bg-slate-50 py-16">
+    <div class="max-w-[1300px] px-4">
+      <div class="text-center mb-12">
+        <h2 class="text-4xl font-bold text-slate-900 mb-4">Funcionalidades</h2>
+        <p class="text-xl text-slate-600">Tudo que você precisa para controlar suas finanças</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="bg-white p-6 rounded-lg shadow-sm border border-slate-200">
+          <div class="flex items-center mb-4">
+            <i class="pi pi-credit-card text-3xl text-teal-600 mr-3"></i>
+            <h3 class="text-xl font-semibold text-slate-900">Contas Bancárias</h3>
+          </div>
+          <p class="text-slate-600">Gerencie todas as suas contas bancárias em um só lugar</p>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow-sm border border-slate-200">
+          <div class="flex items-center mb-4">
+            <i class="pi pi-chart-line text-3xl text-teal-600 mr-3"></i>
+            <h3 class="text-xl font-semibold text-slate-900">Transações</h3>
+          </div>
+          <p class="text-slate-600">Registre e acompanhe todas as suas movimentações financeiras</p>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow-sm border border-slate-200">
+          <div class="flex items-center mb-4">
+            <i class="pi pi-tags text-3xl text-teal-600 mr-3"></i>
+            <h3 class="text-xl font-semibold text-slate-900">Categorias</h3>
+          </div>
+          <p class="text-slate-600">Organize seus gastos por categorias para melhor controle</p>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow-sm border border-slate-200">
+          <div class="flex items-center mb-4">
+            <i class="pi pi-calendar text-3xl text-teal-600 mr-3"></i>
+            <h3 class="text-xl font-semibold text-slate-900">Relatórios Mensais</h3>
+          </div>
+          <p class="text-slate-600">Acompanhe seus gastos e receitas mensalmente</p>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow-sm border border-slate-200">
+          <div class="flex items-center mb-4">
+            <i class="pi pi-mobile text-3xl text-teal-600 mr-3"></i>
+            <h3 class="text-xl font-semibold text-slate-900">Responsivo</h3>
+          </div>
+          <p class="text-slate-600">Acesse de qualquer dispositivo, a qualquer momento</p>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow-sm border border-slate-200">
+          <div class="flex items-center mb-4">
+            <i class="pi pi-shield text-3xl text-teal-600 mr-3"></i>
+            <h3 class="text-xl font-semibold text-slate-900">Seguro</h3>
+          </div>
+          <p class="text-slate-600">Seus dados financeiros protegidos com segurança</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Seção de Benefícios -->
+  <section class="flex justify-center w-full bg-teal-600 py-16">
+    <div class="max-w-[1300px] px-4">
+      <div class="text-center text-white">
+        <h2 class="text-4xl font-bold mb-4">Por que escolher o Controle Certo?</h2>
+        <p class="text-xl mb-12">Descubra os benefícios que fazem a diferença</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div class="text-center">
+            <div class="text-5xl font-bold mb-2">100%</div>
+            <div class="text-teal-100">Gratuito</div>
+            <p class="text-teal-200 text-sm mt-2">Sem taxas ocultas ou mensalidades</p>
+          </div>
+          <div class="text-center">
+            <div class="text-5xl font-bold mb-2">24/7</div>
+            <div class="text-teal-100">Disponível</div>
+            <p class="text-teal-200 text-sm mt-2">Acesse quando e onde quiser</p>
+          </div>
+          <div class="text-center">
+            <div class="text-5xl font-bold mb-2">∞</div>
+            <div class="text-teal-100">Ilimitado</div>
+            <p class="text-teal-200 text-sm mt-2">Transações e contas sem limite</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Seção CTA Final -->
+  <section class="flex justify-center w-full bg-white py-16">
+    <div class="max-w-[1300px] px-4 text-center">
+      <h2 class="text-4xl font-bold text-slate-900 mb-4">Pronto para começar?</h2>
+      <p class="text-xl text-slate-600 mb-8">Transforme sua vida financeira hoje mesmo</p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <p-button
+          label="Criar Conta Grátis"
+          severity="success"
+          size="large"
+          routerLink="/register"
+          icon="pi pi-user-plus">
+        </p-button>
+        <p-button
+          label="Fazer Login"
+          severity="secondary"
+          [outlined]="true"
+          size="large"
+          routerLink="/login"
+          icon="pi pi-sign-in">
+        </p-button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-slate-900 text-white py-12">
+    <div class="max-w-[1300px] mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Logo e Descrição -->
+        <div>
+          <h3 class="text-2xl font-bold text-teal-400 mb-4">Controle Certo</h3>
+          <p class="text-slate-300 mb-4">
+            A solução completa para o controle das suas finanças pessoais.
+          </p>
+        </div>
+
+        <!-- Links Úteis -->
+        <div>
+          <h4 class="text-lg font-semibold mb-4">Links Úteis</h4>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-slate-300 hover:text-teal-400 transition-colors">Sobre</a></li>
+            <li><a href="#" class="text-slate-300 hover:text-teal-400 transition-colors">Funcionalidades</a></li>
+            <li><a href="#" class="text-slate-300 hover:text-teal-400 transition-colors">Preços</a></li>
+            <li><a href="#" class="text-slate-300 hover:text-teal-400 transition-colors">Contato</a></li>
+          </ul>
+        </div>
+
+        <!-- Redes Sociais -->
+        <div>
+          <h4 class="text-lg font-semibold mb-4">Desenvolvido por</h4>
+          <p class="text-slate-300 mb-4">Guilherme Duarte</p>
+          <div class="flex space-x-4">
+            <a href="https://linkedin.com/in/guilherme-duarte" target="_blank"
+               class="text-slate-300 hover:text-teal-400 transition-colors text-2xl">
+              <i class="pi pi-linkedin"></i>
+            </a>
+            <a href="https://github.com/guilherme-duarte" target="_blank"
+               class="text-slate-300 hover:text-teal-400 transition-colors text-2xl">
+              <i class="pi pi-github"></i>
+            </a>
+            <a href="https://portfolio.guilherme-duarte.com" target="_blank"
+               class="text-slate-300 hover:text-teal-400 transition-colors text-2xl">
+              <i class="pi pi-globe"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="border-t border-slate-700 mt-8 pt-8 text-center">
+        <p class="text-slate-400">&copy; 2024 Controle Certo. Todos os direitos reservados.</p>
+      </div>
+    </div>
+  </footer>
 </main>

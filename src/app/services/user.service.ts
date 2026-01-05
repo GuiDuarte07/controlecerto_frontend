@@ -5,6 +5,8 @@ import { HttpClient } from '@angular/common/http';
 import { Createuser } from '../models/CreateUser';
 import { InfoUserResponse } from '../models/InfoUserResponse';
 import { DetailsUserResponse } from '../models/DetailsUserResponse';
+import { ResetUserDataRequest } from '../models/ResetUserDataRequest';
+import { ResetUserDataResponse } from '../models/ResetUserDataResponse';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 
 @Injectable({
@@ -76,5 +78,18 @@ export class UserService {
       `${this.hostAddress}/${rote}`,
       updateUserRequest
     );
+  }
+
+  resetUserData(request: ResetUserDataRequest) {
+    const rote = 'ResetUserData';
+    return this.httpClient.post<ResetUserDataResponse>(
+      `${this.hostAddress}/${rote}`,
+      request
+    );
+  }
+
+  deleteUser() {
+    const rote = 'DeleteUser';
+    return this.httpClient.delete(`${this.hostAddress}/${rote}`);
   }
 }

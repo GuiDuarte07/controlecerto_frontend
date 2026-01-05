@@ -1,0 +1,50 @@
+<p-dialog header="Resetar Dados" [(visible)]="visible" [modal]="true" [style]="{ width: '36rem' }" (onHide)="closeDialog(false)">
+  <ng-template pTemplate="body">
+    <form [formGroup]="resetForm" class="p-4 flex flex-col gap-3">
+      <p class="label">Selecione os dados a serem removidos</p>
+
+      <div class="grid">
+        <div class="col-12">
+          <p-checkbox formControlName="accounts" inputId="accounts" [binary]="true"></p-checkbox>
+          <label for="accounts" class="ml-2">Contas</label>
+        </div>
+        <div class="col-12">
+          <p-checkbox formControlName="transactions" inputId="transactions" [binary]="true"></p-checkbox>
+          <label for="transactions" class="ml-2">Transações</label>
+        </div>
+        <div class="col-12">
+          <p-checkbox formControlName="categories" inputId="categories" [binary]="true"></p-checkbox>
+          <label for="categories" class="ml-2">Categorias</label>
+        </div>
+        <div class="col-12">
+          <p-checkbox formControlName="creditCards" inputId="creditCards" [binary]="true"></p-checkbox>
+          <label for="creditCards" class="ml-2">Cartões de Crédito</label>
+        </div>
+        <div class="col-12">
+          <p-checkbox formControlName="invoices" inputId="invoices" [binary]="true"></p-checkbox>
+          <label for="invoices" class="ml-2">Faturas</label>
+        </div>
+        <div class="col-12">
+          <p-checkbox formControlName="recurringTransactions" inputId="recurringTransactions" [binary]="true"></p-checkbox>
+          <label for="recurringTransactions" class="ml-2">Transações Recorrentes</label>
+        </div>
+        <div class="col-12">
+          <p-checkbox formControlName="notifications" inputId="notifications" [binary]="true"></p-checkbox>
+          <label for="notifications" class="ml-2">Notificações</label>
+        </div>
+        <div class="col-12">
+          <p-checkbox formControlName="transferences" inputId="transferences" [binary]="true"></p-checkbox>
+          <label for="transferences" class="ml-2">Transferências</label>
+        </div>
+      </div>
+    </form>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <button pButton type="button" label="Fechar" class="p-button-danger" (click)="closeDialog(false)"></button>
+    <button pButton type="button" label="Resetar" class="p-button-primary" (click)="confirmAndReset()"></button>
+  </ng-template>
+</p-dialog>
+
+<p-confirmDialog appendTo="body"></p-confirmDialog>
+<p-toast></p-toast>

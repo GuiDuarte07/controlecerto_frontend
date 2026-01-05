@@ -29,6 +29,10 @@
   >
     <div class="flex w-full mb-4">
       <h2 class="text-2xl font-bold text-slate-700 tracking-wide">Perfil</h2>
+      <div class="ml-auto flex gap-2">
+        <button pButton type="button" label="Resetar Dados" class="p-button-warning" (click)="openResetDialog()"></button>
+        <button pButton type="button" label="Deletar Conta" class="p-button-danger" (click)="confirmDeleteUser($event)"></button>
+      </div>
     </div>
 
     @if (loading) {
@@ -223,6 +227,12 @@
     }
   </section>
 </main>
+
+<!-- Reset dialog component instance -->
+<app-reset-user-dialog></app-reset-user-dialog>
+<p-confirmDialog appendTo="body"></p-confirmDialog>
+<p-toast></p-toast>
+
 
 <!-- <div
               *ngIf="

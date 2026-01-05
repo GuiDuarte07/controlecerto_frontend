@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -7,9 +7,9 @@ import {
   Validators,
 } from '@angular/forms';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { InfoUserResponse } from '../../models/InfoUserResponse';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { UserService } from '../../services/user.service';
+import { AuthService } from '../../services/auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DetailsUserResponse } from '../../models/DetailsUserResponse';
@@ -19,6 +19,11 @@ import { InputTextModule } from 'primeng/inputtext';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { PasswordModule } from 'primeng/password';
+import { ResetUserDialogComponent } from '../../components/dialogs/reset-user-dialog/reset-user-dialog.component';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ToastModule } from 'primeng/toast';
+import { ButtonModule } from 'primeng/button';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { passwordsMatchValidator } from '../../validators/passwordsMatchValidator';
 
 interface IChangePasswordForm {
@@ -40,7 +45,12 @@ interface IChangePasswordForm {
     InputGroupModule,
     InputGroupAddonModule,
     PasswordModule,
+    ResetUserDialogComponent,
+    ConfirmDialogModule,
+    ToastModule,
+    ButtonModule,
   ],
+  providers: [ConfirmationService, MessageService],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss',
 })
@@ -62,9 +72,15 @@ export class ProfileComponent implements OnInit {
 
   user!: DetailsUserResponse | null;
 
+  @ViewChild(ResetUserDialogComponent)
+  resetDialog!: ResetUserDialogComponent;
+
   constructor(
     private readonly userService: UserService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -210,5 +226,48 @@ export class ProfileComponent implements OnInit {
 
   setPasswordVisibility() {
     this.passwordVisibility = !this.passwordVisibility;
+  }
+
+  openResetDialog() {
+    if (this.resetDialog) {
+      this.resetDialog.openDialog();
+    }
+  }
+
+  confirmDeleteUser(event: Event) {
+    this.confirmationService.confirm({
+      target: event.target as EventTarget,
+      header: 'Deletar Usuário',
+      message:
+        'Deseja deletar seu usuário permanentemente? Essa ação não pode ser revertida.',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Deletar',
+      acceptButtonStyleClass: 'p-button-danger',
+      rejectLabel: 'Cancelar',
+      accept: () => {
+        this.userService.deleteUser().subscribe({
+          next: () => {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Conta Deletada',
+              detail: 'Sua conta foi deletada com sucesso. Fazendo logout...',
+              life: 3000,
+            });
+
+            setTimeout(() => {
+              this.authService.logout().subscribe();
+            }, 1000);
+          },
+          error: (err) => {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Erro ao Deletar Conta',
+              detail: err.error || 'Ocorreu um erro ao deletar sua conta',
+              life: 4000,
+            });
+          },
+        });
+      },
+    });
   }
 }

@@ -8,6 +8,8 @@ import { CategoriesComponent } from './pages/categories/categories.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { TransactionsComponent } from './pages/transactions/transactions.component';
 import { CreditcardsComponent } from './pages/creditcards/creditcards.component';
+import { InvestmentsComponent } from './pages/investments/investments.component';
+import { InvestmentDetailsComponent } from './pages/investments/investment-details/investment-details.component';
 import { MasterComponent } from './layouts/master/master.component';
 import { RegistrationsComponent } from './layouts/registrations/registrations.component';
 import { InvoicesComponent } from './pages/invoices/invoices.component';
@@ -26,6 +28,8 @@ export const routes: Routes = [
     component: MasterComponent,
     children: [
       { path: 'home', component: HomeComponent },
+      { path: 'investments', component: InvestmentsComponent },
+      { path: 'investments/:id', component: InvestmentDetailsComponent },
       { path: 'transactions', component: TransactionsComponent },
       { path: 'invoices/:id', component: InvoicesComponent },
       { path: 'profile', component: ProfileComponent },

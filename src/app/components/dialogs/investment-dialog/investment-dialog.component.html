@@ -1,0 +1,29 @@
+<p-dialog header="Novo Investimento" [(visible)]="visible" [modal]="true" [style]="{ width: '36rem' }" appendTo="body">
+  <form [formGroup]="form" class="p-4">
+    <div class="p-fluid">
+      <label for="name">Nome <span class="text-red-500">*</span></label>
+      <input id="name" pInputText formControlName="name" placeholder="Digite o nome do investimento" />
+
+      <label for="description" class="mt-3">Descrição</label>
+      <input id="description" pInputText formControlName="description" placeholder="Descrição do investimento (opcional)" />
+
+      <label for="initialAmount" class="mt-3">Valor Inicial <span class="text-red-500">*</span></label>
+      <input
+        id="initialAmount"
+        pInputText
+        formControlName="initialAmount"
+        appCurrencyMask
+        thousandSeparator="."
+        prefix="R$ "
+        class="w-full font-semibold"
+        placeholder="R$ 0.00"
+        required
+      />
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <button pButton label="Fechar" class="p-button-text" (click)="closeDialog()"></button>
+    <button pButton label="Salvar" class="p-button-primary ml-2" (click)="save()" [disabled]="form.invalid"></button>
+  </ng-template>
+</p-dialog>

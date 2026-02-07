@@ -19,6 +19,14 @@
       </a>
 
       <a
+        [class.active-route-sidebar]="isCurrentRoute('/investments')"
+        routerLink="/investments"
+        class="flex items-center h-full pointer md:!mx-4 mx-1 text-slate-200 font-light md:text-base text-sm"
+      >
+        Investimentos
+      </a>
+
+      <a
         [class.active-route-sidebar]="isCurrentRoute('/transactions')"
         routerLink="/transactions"
         class="flex items-center h-full pointer md:!mx-4 mx-1 text-slate-200 font-light md:text-base text-sm"

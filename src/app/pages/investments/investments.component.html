@@ -1,0 +1,36 @@
+<main class="w-full mb-6">
+  <section class="registration-container !max-w-full overflow-hidden lg:!w-[800px]">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-xl font-semibold">Investimentos</h2>
+      <button pButton type="button" label="Novo Investimento" icon="pi pi-plus" class="p-button-primary" (click)="openNew()"></button>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="investments.length === 0" class="flex flex-col items-center justify-center py-16 px-4">
+      <i class="pi pi-inbox text-5xl text-gray-300 mb-4"></i>
+      <p class="text-gray-500 text-lg mb-2">Nenhum investimento cadastrado</p>
+      <p class="text-gray-400 text-sm mb-6">Comece a criar seu primeiro investimento</p>
+      <button pButton type="button" label="Criar Investimento" icon="pi pi-plus" class="p-button-primary" (click)="openNew()"></button>
+    </div>
+
+    <!-- Investments Grid -->
+    <div *ngIf="investments.length > 0" class="grid gap-4">
+      <div *ngFor="let inv of investments" class="col-12 md:col-6 lg:col-4 cursor-pointer group" (click)="openDetail(inv)">
+        <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-all duration-200 bg-white hover:border-primary-300">
+          <div class="flex justify-between items-start mb-3">
+            <div class="flex-1">
+              <h3 class="text-base font-semibold text-gray-900">{{ inv.name }}</h3>
+              <p class="text-sm text-gray-500 mt-1 line-clamp-2">{{ inv.description || 'Sem descrição' }}</p>
+            </div>
+          </div>
+          <div class="flex justify-between items-center pt-3 border-t border-gray-100">
+            <span class="text-xs text-gray-400">Valor atual</span>
+            <span class="text-lg font-bold text-green-600">{{ inv.currentValue | currency:'BRL' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <app-investment-dialog #dialog></app-investment-dialog>
+</main>

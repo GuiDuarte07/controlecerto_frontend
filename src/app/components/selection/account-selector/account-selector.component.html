@@ -1,0 +1,58 @@
+<p class="label" for="accountSelector">{{ label }}</p>
+<p-dropdown
+  id="accountSelector"
+  [options]="accounts"
+  [formControl]="selectControl"
+  optionLabel="bank"
+  optionValue="id"
+  [showClear]="!required"
+  [placeholder]="placeholder"
+  [style]="{ width: '100%' }"
+  appendTo="body"
+  [loading]="loading"
+  (onChange)="onSelectionChange()"
+>
+  <!-- Template para o item selecionado -->
+  <ng-template pTemplate="selectedItem">
+    <div
+      style="height: 20px"
+      class="flex items-center gap-2"
+      *ngIf="selectedAccount"
+    >
+      <div
+        [ngStyle]="{ 'background-color': selectedAccount.color }"
+        class="rounded-selection-item"
+      >
+        <span
+          class="material-symbols-outlined"
+          style="font-size: 1rem; color: white"
+        >
+          account_balance
+        </span>
+      </div>
+      <p class="custom-text-style">
+        {{ selectedAccount.bank }}
+      </p>
+    </div>
+  </ng-template>
+
+  <!-- Template para cada item na lista -->
+  <ng-template let-account pTemplate="item">
+    <div style="height: 20px" class="flex items-center gap-2">
+      <div
+        [ngStyle]="{ 'background-color': account.color }"
+        class="rounded-selection-item"
+      >
+        <span
+          class="material-symbols-outlined"
+          style="font-size: 1rem; color: white"
+        >
+          account_balance
+        </span>
+      </div>
+      <p class="custom-text-style">
+        {{ account.bank }}
+      </p>
+    </div>
+  </ng-template>
+</p-dropdown>

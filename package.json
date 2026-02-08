@@ -26,8 +26,10 @@
     "marked": "^15.0.4",
     "material-icons": "^1.13.12",
     "ngx-cookie-service": "^17.1.0",
+    "ngx-quill": "^23.0.3",
     "primeicons": "^7.0.0",
     "primeng": "^17.18.11",
+    "quill": "^2.0.3",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.2"

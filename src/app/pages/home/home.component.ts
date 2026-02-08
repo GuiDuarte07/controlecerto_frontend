@@ -19,8 +19,11 @@ import {
   TransactionDialogComponent,
   TransactionDialogDataType,
 } from '../../components/dialogs/transaction-dialog/transaction-dialog.component';
+import { InvestmentService } from '../../services/investment.service';
+import { InfoInvestmentResponse } from '../../models/investments/InfoInvestmentResponse';
+import { BoardButtonComponent } from '../../components/board-button/board-button.component';
 
-type boardType = 'balance' | 'income' | 'expense' | 'invoice';
+type boardType = 'balance' | 'income' | 'expense' | 'invoice' | 'investment';
 
 @Component({
   selector: 'app-home',
@@ -31,6 +34,7 @@ type boardType = 'balance' | 'income' | 'expense' | 'invoice';
     RouterLink,
     TransactionDialogComponent,
     TransferDialogComponent,
+    BoardButtonComponent,
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
@@ -55,21 +59,25 @@ export class HomeComponent implements OnInit {
   accounts: Account[] | undefined;
   invoices: InfoInvoiceResponse[] | undefined;
   transactions: InfoTransactionResponse[] | undefined;
+  investments: InfoInvestmentResponse[] | undefined;
 
   transactionsListSize: number = 5;
+  totalInvested: number = 0;
 
   constructor(
     private readonly accountService: AccountService,
     private readonly userService: UserService,
     private readonly creditCardService: CreditCardService,
     private readonly transactionService: TransactionService,
+    private readonly investmentService: InvestmentService,
     public formaterService: FormaterService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
     this.setBoardDetails('balance');
     this.userService.getUser().subscribe((user) => (this.user = user));
+    this.loadInvestments();
   }
 
   openTransactionDialog(type: TransactionTypeEnum) {
@@ -112,7 +120,7 @@ export class HomeComponent implements OnInit {
       const firstDayOfMonth = new Date(
         currentDate.getFullYear(),
         currentDate.getMonth(),
-        1
+        1,
       );
 
       this.creditCardService
@@ -126,7 +134,7 @@ export class HomeComponent implements OnInit {
       this.transactionService.getTransactions().subscribe({
         next: (transactions) => {
           this.transactions = transactions.transactions.filter(
-            (t) => t.type === TransactionTypeEnum.INCOME
+            (t) => t.type === TransactionTypeEnum.INCOME,
           );
           this.transactions = this.transactions;
         },
@@ -137,11 +145,15 @@ export class HomeComponent implements OnInit {
       this.transactionService.getTransactions().subscribe({
         next: (transactions) => {
           this.transactions = transactions.transactions.filter(
-            (t) => t.type === TransactionTypeEnum.EXPENSE
+            (t) => t.type === TransactionTypeEnum.EXPENSE,
           );
           this.transactions = this.transactions;
         },
       });
+    }
+
+    if (type === 'investment') {
+      this.loadInvestments();
     }
 
     this.getBalances();
@@ -155,5 +167,19 @@ export class HomeComponent implements OnInit {
     return this.transactions
       ?.slice(0, this.transactionsListSize)
       ?.reduce((prev, act) => prev + act.amount, 0);
+  }
+
+  sumInvestments() {
+    return this.investments?.reduce((prev, act) => prev + act.currentValue, 0);
+  }
+
+  private loadInvestments() {
+    this.investmentService.getInvestments().subscribe((inv) => {
+      this.investments = inv;
+      this.totalInvested = inv.reduce(
+        (total, current) => total + (current.currentValue ?? 0),
+        0,
+      );
+    });
   }
 }

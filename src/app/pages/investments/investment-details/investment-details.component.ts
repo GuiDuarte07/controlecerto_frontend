@@ -288,21 +288,21 @@ export class InvestmentDetailsComponent implements OnInit, OnDestroy {
 
   getOperationType(type: string): string {
     const types: { [key: string]: string } = {
-      DEPOSIT: 'Depósito',
+      INVEST: 'Depósito',
       WITHDRAW: 'Saque',
-      ADJUST: 'Ajuste',
+      ADJUSTMENT: 'Ajuste',
     };
     return types[type] || type;
   }
 
-  getOperationSign(type: string): string {
-    if (this.isDepositOrAdjust(type)) return '+';
-    if (this.isWithdraw(type)) return '-';
-    return '';
-  }
-
-  isDepositOrAdjust(type: string): boolean {
-    return type === 'DEPOSIT' || type === 'ADJUST';
+  isDepositOrAdjust(history: InvestmentHistoryResponse): boolean {
+    const type = history.type;
+    if (type === 'INVEST' || type === 'ADJUSTMENT') {
+      if (history.changeAmount < 0) {
+        return false;
+      }
+    }
+    return true;
   }
 
   isWithdraw(type: string): boolean {
@@ -377,20 +377,20 @@ export class InvestmentDetailsComponent implements OnInit, OnDestroy {
 
     // Preparar dados para gráfico de pizza (distribuição por tipo)
     const totals = {
-      DEPOSIT: 0,
+      INVEST: 0,
       WITHDRAW: 0,
-      ADJUST: 0,
+      ADJUSTMENT: 0,
     };
 
     console.log(sortedHistories);
 
     sortedHistories.forEach((h) => {
       if (h.type === 'INVEST') {
-        totals.DEPOSIT += h.changeAmount;
+        totals.INVEST += h.changeAmount;
       } else if (h.type === 'WITHDRAW') {
         totals.WITHDRAW += Math.abs(h.changeAmount);
       } else if (h.type === 'ADJUSTMENT') {
-        totals.ADJUST += Math.abs(h.changeAmount);
+        totals.ADJUSTMENT += Math.abs(h.changeAmount);
       }
     });
 
@@ -398,7 +398,7 @@ export class InvestmentDetailsComponent implements OnInit, OnDestroy {
       labels: ['Depósitos', 'Saques', 'Ajustes'],
       datasets: [
         {
-          data: [totals.DEPOSIT, totals.WITHDRAW, totals.ADJUST],
+          data: [totals.INVEST, totals.WITHDRAW, totals.ADJUSTMENT],
           backgroundColor: ['#10b981', '#f59e0b', '#3b82f6'],
           hoverBackgroundColor: ['#059669', '#d97706', '#2563eb'],
         },

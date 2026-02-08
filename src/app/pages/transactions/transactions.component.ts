@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
 import { TransactionService } from '../../services/transaction.service';
 import { InfoTransactionResponse } from '../../models/InfoTransactionResponse';
 import { SidebarComponent } from '../../components/sidebar/sidebar.component';
@@ -34,6 +34,7 @@ import {
   TransactionDialogComponent,
   TransactionDialogDataType,
 } from '../../components/dialogs/transaction-dialog/transaction-dialog.component';
+import { NoteOverlayService } from '../../services/note-overlay.service';
 
 @Component({
   selector: 'app-transactions',
@@ -66,7 +67,7 @@ import {
   templateUrl: './transactions.component.html',
   styleUrl: './transactions.component.scss',
 })
-export class TransactionsComponent implements OnInit {
+export class TransactionsComponent implements OnInit, OnDestroy {
   @ViewChild('invoicePaymentDialog')
   invoicePaymentDialog!: InvoicePaymentDialogComponent;
 
@@ -91,7 +92,7 @@ export class TransactionsComponent implements OnInit {
   filterDate: Date = new Date(
     this.todayDate.getFullYear(),
     this.todayDate.getMonth(),
-    1
+    1,
   );
 
   filterOptions: {
@@ -117,7 +118,8 @@ export class TransactionsComponent implements OnInit {
     private transactionService: TransactionService,
     private accountService: AccountService,
     public formaterService: FormaterService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private noteOverlayService: NoteOverlayService,
   ) {}
 
   ngOnInit(): void {
@@ -126,6 +128,8 @@ export class TransactionsComponent implements OnInit {
     this.accountService.getAccounts().subscribe((acc) => (this.accounts = acc));
   }
 
+  ngOnDestroy(): void {}
+
   get filteredTransactions() {
     let filtered = [...this.transactions];
 
@@ -133,7 +137,7 @@ export class TransactionsComponent implements OnInit {
     if (this.filterOptions.accountFilter !== null) {
       filtered = filtered.filter(
         (transaction) =>
-          transaction.account.id === this.filterOptions.accountFilter?.id
+          transaction.account.id === this.filterOptions.accountFilter?.id,
       );
     }
 
@@ -145,7 +149,7 @@ export class TransactionsComponent implements OnInit {
           transaction.description.toLowerCase().includes(searchText) ||
           transaction.amount.toString().includes(searchText) ||
           (transaction.observations &&
-            transaction.observations.toLowerCase().includes(searchText))
+            transaction.observations.toLowerCase().includes(searchText)),
       );
     }
 
@@ -167,7 +171,7 @@ export class TransactionsComponent implements OnInit {
       };
 
       filtered.sort(
-        (a, b) => transactionOrder[a.type] - transactionOrder[b.type]
+        (a, b) => transactionOrder[a.type] - transactionOrder[b.type],
       );
     }
 
@@ -205,7 +209,7 @@ export class TransactionsComponent implements OnInit {
       this.selectedTransactions.push(transaction);
     } else {
       this.selectedTransactions = this.selectedTransactions.filter(
-        (t) => t.id !== transaction.id
+        (t) => t.id !== transaction.id,
       );
     }
   }
@@ -214,20 +218,20 @@ export class TransactionsComponent implements OnInit {
     const firstDayOfMonth = new Date(
       this.filterDate.getFullYear(),
       this.filterDate.getMonth(),
-      1
+      1,
     );
     const lastDayOfMonth = new Date(
       this.filterDate.getFullYear(),
       this.filterDate.getMonth() + 1,
-      0
+      0,
     );
 
     const firstDayOfMonthUTC = new Date(
       Date.UTC(
         firstDayOfMonth.getFullYear(),
         firstDayOfMonth.getMonth(),
-        firstDayOfMonth.getDate()
-      )
+        firstDayOfMonth.getDate(),
+      ),
     );
 
     const lastDayOfMonthUTC = new Date(
@@ -237,15 +241,15 @@ export class TransactionsComponent implements OnInit {
         lastDayOfMonth.getDate(),
         23,
         59,
-        59
-      )
+        59,
+      ),
     );
 
     this.transactionService
       .getTransactions(
         firstDayOfMonthUTC,
         lastDayOfMonthUTC,
-        !this.filterOptions.hideInvoices
+        !this.filterOptions.hideInvoices,
       )
       .subscribe((result) => {
         this.transactions = result.transactions;
@@ -265,7 +269,7 @@ export class TransactionsComponent implements OnInit {
     this.filterDate = new Date(
       this.filterDate.getFullYear(),
       this.filterDate.getMonth() + 1,
-      1
+      1,
     );
 
     this.updateTransactions();
@@ -275,7 +279,7 @@ export class TransactionsComponent implements OnInit {
     this.filterDate = new Date(
       this.filterDate.getFullYear(),
       this.filterDate.getMonth() - 1,
-      1
+      1,
     );
 
     this.updateTransactions();
@@ -319,7 +323,7 @@ export class TransactionsComponent implements OnInit {
   invoiceTotal() {
     return this.invoices.reduce(
       (acc, current) => acc + (current.totalAmount - current.totalPaid),
-      0
+      0,
     );
   }
 

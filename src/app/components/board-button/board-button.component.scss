@@ -1,0 +1,21 @@
+.board-button-option {
+  @apply border-none min-w-40 bg-slate-50 shadow h-20 rounded-lg px-3 py-2;
+}
+
+.board-button-option-focused {
+  @apply border-2 border-solid border-gray-500 shadow-lg bg-white;
+}
+
+.board-button-option .board-button-container {
+  @apply h-full max-w-full flex flex-col justify-between w-full;
+}
+
+.board-button-option .board-button-container .board-button-text {
+  @apply text-slate-600 text-sm text-start m-0;
+}
+
+.board-button-option .board-button-container .board-button-amount {
+  @apply text-start w-full p-0 m-0 font-medium text-sm overflow-hidden text-ellipsis whitespace-normal;
+}
+
+

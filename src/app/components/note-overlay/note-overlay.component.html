@@ -1,0 +1,258 @@
+<button
+  class="note-launcher"
+  [class.opened]="isOpen()"
+  type="button"
+  aria-label="Abrir anotações"
+  (click)="togglePanel()"
+>
+  <span class="material-symbols-outlined">sticky_note_2</span>
+</button>
+
+<section class="note-panel" [class.opened]="isOpen()" [class.expanded]="isExpanded()">
+  <p-toast position="bottom-right"></p-toast>
+  <header class="panel-header">
+    <div class="panel-title">
+      <button
+        *ngIf="view() === 'editor'"
+        class="ghost-btn"
+        type="button"
+        (click)="goBackToList()"
+      >
+        <span class="material-symbols-outlined">arrow_back</span>
+      </button>
+      <div class="title-text">
+        <p class="heading">Anotações</p>
+        <small class="caption">{{ currentGroupLabel() }}</small>
+      </div>
+    </div>
+    <div class="panel-actions">
+      <button class="ghost-btn" type="button" (click)="toggleExpand()" title="Expandir painel">
+        <span class="material-symbols-outlined">{{ isExpanded() ? 'close_fullscreen' : 'open_in_full' }}</span>
+      </button>
+      <button class="ghost-btn" type="button" (click)="closePanel()">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="panel-body" *ngIf="view() === 'list'; else editorView">
+    <div class="filters-row">
+      <input
+        class="input"
+        type="text"
+        placeholder="Buscar"
+        [ngModel]="listFilter().search"
+        (ngModelChange)="updateFilter('search', $event)"
+      />
+      <select
+        class="select"
+        [ngModel]="listFilter().month"
+        (ngModelChange)="updateFilter('month', $event ? +$event : null)"
+      >
+        <option [ngValue]="null">Mes</option>
+        <option *ngFor="let m of monthOptions" [ngValue]="m.value">
+          {{ m.label }}
+        </option>
+      </select>
+      <select
+        class="select"
+        [ngModel]="listFilter().year"
+        (ngModelChange)="updateFilter('year', $event ? +$event : null)"
+      >
+        <option [ngValue]="null">Ano</option>
+        <option *ngFor="let y of yearOptions()" [ngValue]="y">{{ y }}</option>
+      </select>
+      <button
+        class="primary-btn"
+        type="button"
+        [disabled]="isSaving()"
+        (click)="showCreateForm() ? submitCreateForm() : toggleCreateForm()"
+      >
+        {{ showCreateForm() ? 'Salvar nova anotação' : 'Nova anotação' }}
+      </button>
+    </div>
+
+    <div class="quick-create" *ngIf="showCreateForm()">
+      <div class="qc-header">
+        <p class="qc-title">Preencha antes de criar</p>
+        <button class="ghost-btn" type="button" (click)="toggleCreateForm()">Cancelar</button>
+      </div>
+      <input
+        class="input"
+        type="text"
+        placeholder="Título da nova anotação"
+        [ngModel]="createForm().title"
+        (ngModelChange)="updateCreateForm('title', $event)"
+      />
+      <div class="type-switch">
+        <label>
+          <input
+            type="radio"
+            name="noteType"
+            [checked]="createForm().type === 'month'"
+            (change)="updateCreateForm('type', 'month')"
+          />
+          Mes/Ano
+        </label>
+        <label>
+          <input
+            type="radio"
+            name="noteType"
+            [checked]="createForm().type === 'general'"
+            (change)="updateCreateForm('type', 'general')"
+          />
+          Geral
+        </label>
+      </div>
+      <div class="compact-row" *ngIf="createForm().type === 'month'">
+        <select
+          class="select"
+          [ngModel]="createForm().month"
+          (ngModelChange)="updateCreateForm('month', +$event)"
+        >
+          <option *ngFor="let m of monthOptions" [ngValue]="m.value">
+            {{ m.label }}
+          </option>
+        </select>
+        <select
+          class="select"
+          [ngModel]="createForm().year"
+          (ngModelChange)="updateCreateForm('year', +$event)"
+        >
+          <option *ngFor="let y of yearOptions()" [ngValue]="y">
+            {{ y }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div class="list-section">
+      <div class="section-header">
+        <p>Gerais</p>
+        <span class="pill">{{ filteredGeneralNotes().length }}</span>
+      </div>
+      <div *ngIf="isLoadingList()" class="empty">Carregando...</div>
+      <div *ngIf="!isLoadingList() && !filteredGeneralNotes().length" class="empty">
+        Sem anotações gerais
+      </div>
+      <div class="note-grid">
+        <button
+          *ngFor="let note of filteredGeneralNotes()"
+          type="button"
+          class="note-card"
+          (click)="openNoteFromList(note)"
+        >
+          <div class="note-card__title">{{ note.title || 'Sem titulo' }}</div>
+           <div class="note-card__preview" [innerHTML]="note.content || 'Clique para editar'"></div>
+          <span class="pill">Geral</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="list-section">
+      <div class="section-header">
+        <p>Por mes</p>
+        <span class="pill">{{ filteredMonthlyKeys().length }}</span>
+      </div>
+      <div *ngIf="!filteredMonthlyKeys().length && !isLoadingList()" class="empty">
+        Nenhuma anotacao mensal encontrada
+      </div>
+      <div class="month-groups">
+        <div class="month-group" *ngFor="let key of filteredMonthlyKeys()">
+          <div class="month-group__title">{{ formatGroupLabel(key) }}</div>
+          <div class="note-grid">
+            <button
+              *ngFor="let note of (monthlyGroups().get(key) || [])"
+              type="button"
+              class="note-card"
+              (click)="openNoteFromList(note!)"
+            >
+              <div class="note-card__title">{{ note?.title || 'Sem titulo' }}</div>
+               <div class="note-card__preview" [innerHTML]="note?.content || 'Clique para editar'"></div>
+              <span class="pill">{{ formatBadge(note!) }}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #editorView>
+    <div class="tab-strip">
+      <button
+        type="button"
+        class="tab"
+        *ngFor="let note of currentGroupNotes()"
+        [class.active]="note.id === activeNote()?.id"
+        (click)="setActiveNote(note)"
+      >
+        {{ note.title || 'Sem titulo' }}
+      </button>
+      <button
+        type="button"
+        class="tab add-tab"
+        (click)="createNoteInCurrentGroup()"
+        [disabled]="isSaving()"
+        title="Nova anotação rápida"
+      >
+        <span class="material-symbols-outlined">add</span>
+      </button>
+    </div>
+
+    <div class="editor-shell" *ngIf="activeNote(); else emptyNote">
+      <div class="editor-meta">
+        <div class="badge">{{ formatBadge(activeNote()!) }}</div>
+        <div class="actions">
+          <button
+            class="ghost-btn"
+            type="button"
+            (click)="deleteActiveNote()"
+            [disabled]="isSaving()"
+          >
+            <span class="material-symbols-outlined">delete</span>
+          </button>
+        </div>
+      </div>
+
+      <input
+        class="editor-title"
+        placeholder="Titulo"
+        [(ngModel)]="noteTitle"
+      />
+      @if (editorVisible()) {
+        <quill-editor
+           [styles]="{ height: editorHeightPx() + 'px' }"
+          theme="snow"
+          format="html"
+          [(ngModel)]="noteContent"
+          [modules]="quillModules"
+          (onEditorCreated)="onEditorCreated($event)"
+        ></quill-editor>
+      } @else {
+        <p-skeleton
+          [height]="editorSkeletonHeightPx() + 'px'"
+          styleClass="editor-skeleton"
+        ></p-skeleton>
+      }
+      
+
+      <div class="footer-actions">
+        <button class="ghost-btn" type="button" (click)="goBackToList()">
+          Voltar para lista
+        </button>
+        <button
+          class="primary-btn"
+          type="button"
+          [disabled]="isSaving()"
+          (click)="saveNote()"
+        >
+          Salvar
+        </button>
+      </div>
+    </div>
+
+    <ng-template #emptyNote>
+      <div class="empty">Nenhuma anotacao selecionada</div>
+    </ng-template>
+  </ng-template>
+</section>

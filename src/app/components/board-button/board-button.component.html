@@ -1,0 +1,13 @@
+<button type="button" (click)="onClick()" [ngClass]="{ 'board-button-option-focused': active }"
+  class="board-button-option">
+  <div class="board-button-container">
+    <div class="flex items-center gap-2">
+      <p class="board-button-text">{{ title }}</p>
+      <div *ngIf="showBubble" class="rounded-full w-4 h-4" [ngClass]="bubbleClass"
+        [ngStyle]="bubbleColor ? { 'background-color': bubbleColor } : null"></div>
+    </div>
+    <p class="board-button-amount">
+      {{ amount | currency: "BRL" : "symbol" }}
+    </p>
+  </div>
+</button>

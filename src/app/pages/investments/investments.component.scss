@@ -1,1 +1,8 @@
-.registration-container { padding: 1rem; }
+:host {
+	display: block;
+	width: 100%;
+}
+
+.registration-container {
+	padding: 1rem;
+}

@@ -1,40 +1,36 @@
 <nav class="bg-teal-600 h-14 w-screen flex items-center !mb-12 justify-center">
-  <div class="w-full md:w-[800px] flex items-center h-full justify-between">
-    <div class="md:w-2/12 h-full overflow-hidden"></div>
-    <div class="flex items-center h-full flex-1 justify-center">
-      <a
-        [class.active-route-sidebar]="isCurrentRoute('/home')"
-        routerLink="/home"
-        class="flex items-center h-full pointer md:!mx-4 mx-1 text-slate-200 font-light md:text-base text-sm"
+  <div class="w-full md:w-[800px] flex items-center h-full justify-between px-3 md:px-0">
+    <div class="flex items-center h-full md:w-2/12">
+      <button
+        type="button"
+        aria-label="Abrir menu"
+        class="reset-button text-white text-2xl md:hidden"
+        (click)="mobileMenu.toggle($event)"
       >
-        Visão Geral
-      </a>
-
-      <a
-        [class.active-route-sidebar]="isCurrentRoute('/registrations')"
-        routerLink="/registrations/accounts"
-        class="flex items-center h-full pointer md:!mx-4 mx-1 text-slate-200 font-light md:text-base text-sm"
-      >
-        Cadastros
-      </a>
-
-      <a
-        [class.active-route-sidebar]="isCurrentRoute('/investments')"
-        routerLink="/investments"
-        class="flex items-center h-full pointer md:!mx-4 mx-1 text-slate-200 font-light md:text-base text-sm"
-      >
-        Investimentos
-      </a>
-
-      <a
-        [class.active-route-sidebar]="isCurrentRoute('/transactions')"
-        routerLink="/transactions"
-        class="flex items-center h-full pointer md:!mx-4 mx-1 text-slate-200 font-light md:text-base text-sm"
-      >
-        Lançamentos
-      </a>
+        <i class="pi pi-bars"></i>
+      </button>
+      <p-menu
+        #mobileMenu
+        class="md:hidden"
+        [model]="mobileMenuItems"
+        [popup]="true"
+        appendTo="body"
+      ></p-menu>
     </div>
-    <div class="md:w-2/12 flex gap-4 flex-end items-center">
+
+    <div class="hidden md:flex items-center h-full flex-1 justify-center overflow-x-auto">
+      @for (link of navLinks; track link.path) {
+      <a
+        [class.active-route-sidebar]="isCurrentRoute(link.path)"
+        [routerLink]="link.path"
+        class="flex items-center h-full pointer md:!mx-4 mx-1 text-slate-200 font-light md:text-base text-sm whitespace-nowrap"
+      >
+        {{ link.label }}
+      </a>
+      }
+    </div>
+
+    <div class="md:w-2/12 flex gap-4 items-center flex-shrink-0">
       <!-- NOTIFICATION BUTTON -->
       <div class="mx-1">
         <button

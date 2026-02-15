@@ -69,4 +69,8 @@ export class InvestmentService {
       `${this.hostAddress}/GetInvestmentHistory/${investmentId}`,
     );
   }
+
+  deleteInvestment(id: number) {
+    return this.http.delete<void>(`${this.hostAddress}/DeleteInvestment/${id}`);
+  }
 }

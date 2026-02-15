@@ -5,6 +5,7 @@ export interface InfoInvestmentResponse {
   name: string;
   currentValue: number;
   description?: string | null;
+  startDate?: string | null;
   createdAt: string; // ISO
   updatedAt?: string | null;
   histories?: InvestmentHistoryResponse[] | null;

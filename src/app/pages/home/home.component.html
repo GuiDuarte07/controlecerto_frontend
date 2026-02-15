@@ -1,4 +1,4 @@
-<section class="lg:w-[900px] md:w-full w-screen !mb-8 !mt-4">
+<section class="lg:w-[900px] w-full !mb-8 !mt-4">
   <div class="w-screen md:!px-6 !px-2 !mb-1">
     <h2 class="font-semibold text-slate-700 text-xl">
       Olá, {{user?.name || "usuário"}}. <br class="md:hidden" />Bem vindo novamente!
@@ -121,10 +121,20 @@
           </li>
           }
           <li class="!py-2">
-            <p class="text-sm font-medium text-slate-700">
-              Total
-              <span>{{ balance.balance | currency : "BRL" : "symbol" }}</span>
-            </p>
+            <div class="flex flex-col gap-1 text-sm text-slate-700 font-medium">
+              <div class="flex justify-between">
+                <span>Saldo em contas</span>
+                <span>{{ balance.balance | currency : "BRL" : "symbol" }}</span>
+              </div>
+              <div class="flex justify-between" *ngIf="totalInvested">
+                <span>Investimentos</span>
+                <span>{{ totalInvested | currency : "BRL" : "symbol" }}</span>
+              </div>
+              <div class="flex justify-between border-t border-slate-200 pt-1 mt-1">
+                <span>Patrimônio total</span>
+                <span>{{ totalNetWorth | currency : "BRL" : "symbol" }}</span>
+              </div>
+            </div>
           </li>
         </ul>
         } @else {

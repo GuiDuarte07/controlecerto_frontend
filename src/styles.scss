@@ -174,7 +174,7 @@ body {
 }
 
 .registration-container {
-  @apply flex flex-col sm:w-full w-screen gap-1 flex-1 flex-wrap bg-white rounded-lg md:p-4 md:pl-8 md:pt-8 p-2 pl-4 pt-4;
+  @apply flex flex-col w-full max-w-[960px] md:max-w-[1100px] gap-1 flex-1 flex-wrap bg-white rounded-lg md:p-4 md:pl-8 md:pt-8 p-2 pl-4 pt-4 overflow-hidden mx-auto;
 }
 
 

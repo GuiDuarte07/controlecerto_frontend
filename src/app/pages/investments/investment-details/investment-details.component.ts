@@ -25,6 +25,7 @@ import { InfoInvestmentResponse } from '../../../models/investments/InfoInvestme
 import { DepositInvestmentRequest } from '../../../models/investments/DepositInvestmentRequest';
 import { AdjustInvestmentRequest } from '../../../models/investments/AdjustInvestmentRequest';
 import { InvestmentHistoryResponse } from '../../../models/investments/InvestmentHistoryResponse';
+import { UpdateInvestmentRequest } from '../../../models/investments/UpdateInvestmentRequest';
 
 @Component({
   selector: 'app-investment-details',
@@ -53,6 +54,9 @@ export class InvestmentDetailsComponent implements OnInit, OnDestroy {
   depositVisible = false;
   withdrawVisible = false;
   adjustVisible = false;
+  editVisible = false;
+  deleteVisible = false;
+  isDeleting = false;
 
   activeTab: 'history' | 'charts' = 'history';
   lineChartData: any;
@@ -62,6 +66,52 @@ export class InvestmentDetailsComponent implements OnInit, OnDestroy {
   depositForm!: FormGroup;
   withdrawForm!: FormGroup;
   adjustForm!: FormGroup;
+  editForm!: FormGroup;
+
+  ptBr = {
+    firstDayOfWeek: 0,
+    dayNames: [
+      'Domingo',
+      'Segunda-feira',
+      'Terça-feira',
+      'Quarta-feira',
+      'Quinta-feira',
+      'Sexta-feira',
+      'Sábado',
+    ],
+    dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
+    dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'],
+    monthNames: [
+      'Janeiro',
+      'Fevereiro',
+      'Março',
+      'Abril',
+      'Maio',
+      'Junho',
+      'Julho',
+      'Agosto',
+      'Setembro',
+      'Outubro',
+      'Novembro',
+      'Dezembro',
+    ],
+    monthNamesShort: [
+      'Jan',
+      'Fev',
+      'Mar',
+      'Abr',
+      'Mai',
+      'Jun',
+      'Jul',
+      'Ago',
+      'Set',
+      'Out',
+      'Nov',
+      'Dez',
+    ],
+    today: 'Hoje',
+    clear: 'Limpar',
+  };
 
   private destroy$ = new Subject<void>();
 
@@ -109,6 +159,12 @@ export class InvestmentDetailsComponent implements OnInit, OnDestroy {
       occurredAt: new FormControl(today),
       note: new FormControl(''),
     });
+
+    this.editForm = new FormGroup({
+      name: new FormControl('', [Validators.required, Validators.minLength(3)]),
+      description: new FormControl(''),
+      startDate: new FormControl(today, [Validators.required]),
+    });
   }
 
   private loadInvestment(): void {
@@ -121,6 +177,7 @@ export class InvestmentDetailsComponent implements OnInit, OnDestroy {
           .subscribe({
             next: (investment) => {
               this.investment = investment;
+              this.patchEditForm(investment);
             },
             error: () => {
               this.messageService.add({
@@ -154,6 +211,17 @@ export class InvestmentDetailsComponent implements OnInit, OnDestroy {
       occurredAt: new Date(),
     });
     this.adjustVisible = true;
+  }
+
+  openEdit(): void {
+    if (!this.investment) return;
+
+    this.patchEditForm(this.investment);
+    this.editVisible = true;
+  }
+
+  openDelete(): void {
+    this.deleteVisible = true;
   }
 
   confirmDeposit(): void {
@@ -280,6 +348,85 @@ export class InvestmentDetailsComponent implements OnInit, OnDestroy {
           });
         },
       });
+  }
+
+  confirmEdit(): void {
+    if (!this.investment || this.editForm.invalid) return;
+
+    const payload: UpdateInvestmentRequest = {
+      id: this.investment.id,
+      name: this.editForm.value.name,
+      description: this.editForm.value.description,
+      startDate: this.editForm.value.startDate
+        ? new Date(this.editForm.value.startDate).toISOString()
+        : null,
+    };
+
+    this.investmentService
+      .updateInvestment(payload)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (updated) => {
+          this.investment = { ...this.investment!, ...updated };
+          this.patchEditForm(this.investment);
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Atualizado',
+            detail: 'Investimento atualizado com sucesso.',
+          });
+          this.editVisible = false;
+        },
+        error: () => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: 'Falha ao atualizar investimento.',
+          });
+        },
+      });
+  }
+
+  confirmDelete(): void {
+    if (!this.investment) return;
+
+    this.isDeleting = true;
+    this.investmentService
+      .deleteInvestment(this.investment.id)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Removido',
+            detail: 'Investimento excluído com sucesso.',
+          });
+          this.deleteVisible = false;
+          this.goBack();
+        },
+        error: () => {
+          this.isDeleting = false;
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: 'Falha ao excluir investimento.',
+          });
+        },
+        complete: () => {
+          this.isDeleting = false;
+        },
+      });
+  }
+
+  private patchEditForm(investment?: InfoInvestmentResponse): void {
+    if (!investment) return;
+
+    this.editForm.patchValue({
+      name: investment.name,
+      description: investment.description ?? '',
+      startDate: investment.startDate
+        ? new Date(investment.startDate)
+        : new Date(investment.createdAt),
+    });
   }
 
   goBack(): void {

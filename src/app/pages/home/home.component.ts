@@ -63,6 +63,7 @@ export class HomeComponent implements OnInit {
 
   transactionsListSize: number = 5;
   totalInvested: number = 0;
+  totalNetWorth: number = 0;
 
   constructor(
     private readonly accountService: AccountService,
@@ -101,6 +102,7 @@ export class HomeComponent implements OnInit {
   getBalances() {
     this.accountService.getBalance().subscribe((b) => {
       this.balance = b;
+      this.totalNetWorth = (b.balance ?? 0) + (this.totalInvested ?? 0);
     });
   }
 
@@ -180,6 +182,7 @@ export class HomeComponent implements OnInit {
         (total, current) => total + (current.currentValue ?? 0),
         0,
       );
+      this.totalNetWorth = (this.balance.balance ?? 0) + this.totalInvested;
     });
   }
 }

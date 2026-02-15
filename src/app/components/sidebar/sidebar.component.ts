@@ -34,6 +34,13 @@ export class SidebarComponent implements OnInit {
 
   notifications: InfoNotificationResponse[] = [];
 
+  readonly navLinks = [
+    { label: 'Visão Geral', path: '/home' },
+    { label: 'Cadastros', path: '/registrations/accounts' },
+    { label: 'Investimentos', path: '/investments' },
+    { label: 'Lançamentos', path: '/transactions' },
+  ];
+
   profileMenuItems: MenuItem[] = [
     {
       label: 'Perfil',
@@ -50,13 +57,20 @@ export class SidebarComponent implements OnInit {
   constructor(
     private router: Router,
     private authService: AuthService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
   ) {}
 
   ngOnInit(): void {
     this.notificationService
       .getRecentNotifications()
       .subscribe((ns) => (this.notifications = ns));
+  }
+
+  get mobileMenuItems(): MenuItem[] {
+    return this.navLinks.map((link) => ({
+      label: link.label,
+      command: () => this.router.navigateByUrl(link.path),
+    }));
   }
 
   isCurrentRoute(route: string): boolean {
@@ -66,7 +80,7 @@ export class SidebarComponent implements OnInit {
   newNotificationsCount() {
     return this.notifications.reduce(
       (count, n) => count + (n.isRead ? 0 : 1),
-      0
+      0,
     );
   }
 
@@ -76,7 +90,7 @@ export class SidebarComponent implements OnInit {
     if (this.notifications.some((n) => n.isRead === false)) {
       this.notificationService
         .markAsRead(
-          this.notifications.filter((n) => n.isRead === false).map((n) => n.id)
+          this.notifications.filter((n) => n.isRead === false).map((n) => n.id),
         )
         .subscribe();
     }

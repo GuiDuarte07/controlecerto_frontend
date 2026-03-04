@@ -1,0 +1,130 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* ---- Controle Certo - Light Theme ---- */
+    /* Green/Teal palette: #26532b #399E5A #5ABCB9 #63E2C6 #6EF9F5 */
+    --background: 0 0% 98%;
+    --foreground: 150 30% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 150 30% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 150 30% 10%;
+    --primary: 145 46% 42%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 174 38% 55%;
+    --secondary-foreground: 150 30% 10%;
+    --muted: 150 10% 94%;
+    --muted-foreground: 150 10% 45%;
+    --accent: 168 70% 62%;
+    --accent-foreground: 150 30% 10%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 150 10% 89%;
+    --input: 150 10% 89%;
+    --ring: 145 46% 42%;
+    --radius: 0.625rem;
+    --chart-1: 145 46% 42%;
+    --chart-2: 174 38% 55%;
+    --chart-3: 168 70% 62%;
+    --chart-4: 172 95% 70%;
+    --chart-5: 0 72% 51%;
+
+    /* Custom semantic tokens */
+    --income: 145 46% 42%;
+    --expense: 0 72% 51%;
+    --invoice: 174 38% 55%;
+    --investment: 168 70% 62%;
+    --transfer: 220 60% 55%;
+    --sidebar-background: 150 20% 97%;
+    --sidebar-foreground: 150 30% 10%;
+    --sidebar-primary: 145 46% 42%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 150 15% 92%;
+    --sidebar-accent-foreground: 150 30% 10%;
+    --sidebar-border: 150 10% 89%;
+    --sidebar-ring: 145 46% 42%;
+  }
+
+  .dark {
+    /* ---- Controle Certo - Dark Theme ---- */
+    --background: 160 15% 6%;
+    --foreground: 150 10% 92%;
+    --card: 160 15% 8%;
+    --card-foreground: 150 10% 92%;
+    --popover: 160 15% 8%;
+    --popover-foreground: 150 10% 92%;
+    --primary: 145 50% 48%;
+    --primary-foreground: 160 15% 6%;
+    --secondary: 174 35% 40%;
+    --secondary-foreground: 150 10% 92%;
+    --muted: 160 10% 14%;
+    --muted-foreground: 150 10% 55%;
+    --accent: 168 60% 45%;
+    --accent-foreground: 150 10% 92%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 160 10% 16%;
+    --input: 160 10% 16%;
+    --ring: 145 50% 48%;
+    --chart-1: 145 50% 48%;
+    --chart-2: 174 35% 40%;
+    --chart-3: 168 60% 45%;
+    --chart-4: 172 90% 65%;
+    --chart-5: 0 72% 51%;
+
+    /* Custom semantic tokens */
+    --income: 145 50% 48%;
+    --expense: 0 72% 51%;
+    --invoice: 174 35% 40%;
+    --investment: 168 60% 45%;
+    --transfer: 220 55% 55%;
+    --sidebar-background: 160 15% 7%;
+    --sidebar-foreground: 150 10% 92%;
+    --sidebar-primary: 145 50% 48%;
+    --sidebar-primary-foreground: 160 15% 6%;
+    --sidebar-accent: 160 10% 12%;
+    --sidebar-accent-foreground: 150 10% 92%;
+    --sidebar-border: 160 10% 16%;
+    --sidebar-ring: 145 50% 48%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+}
+
+/* Custom utility classes */
+@layer utilities {
+  .text-income {
+    color: hsl(var(--income));
+  }
+  .text-expense {
+    color: hsl(var(--expense));
+  }
+  .text-invoice {
+    color: hsl(var(--invoice));
+  }
+  .text-investment {
+    color: hsl(var(--investment));
+  }
+  .bg-income {
+    background-color: hsl(var(--income));
+  }
+  .bg-expense {
+    background-color: hsl(var(--expense));
+  }
+  .bg-invoice {
+    background-color: hsl(var(--invoice));
+  }
+  .bg-investment {
+    background-color: hsl(var(--investment));
+  }
+}
